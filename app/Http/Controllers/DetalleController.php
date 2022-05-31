@@ -24,8 +24,10 @@ class DetalleController extends Controller
         ->join("users","users.id", "=", "detalle_cupos.id_usuario")
         ->join("cupos","cupos.id","=","detalle_cupos.id_cupo")
         ->join("oficinas","oficinas.id","=","cupos.id_oficina")
+        ->join("estados","estados.id","=","detalle_cupos.id_estado")
+
         
-        ->select("clientes.*","clientes.nombre as nombrec","detalle_cupos.*","cupos.*","users.*","oficinas.*")
+        ->select("clientes.*","clientes.nombre as nombrec","estados.nombre as nombreestado","detalle_cupos.*","cupos.*","users.*","oficinas.*","oficinas.nombre as nombreo")
         
         ->where("detalle_cupos.id_cliente", "=", $idc)
         ->where("detalle_cupos.estado_cupo", "=",null)
