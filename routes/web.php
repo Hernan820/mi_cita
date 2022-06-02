@@ -23,4 +23,15 @@ Route::get('/', function () {
 //Route::get('cliente/cita/{idc}', [App\Http\Controllers\DetalleController::class, 'index']);
 
 
-Route::get('/{id}', [App\Http\Controllers\DetalleController::class, 'index']);
+Route::get('/{idc}', [App\Http\Controllers\DetalleController::class, 'index']);
+
+Route::post('cliente/confirmar/{idcita}', [App\Http\Controllers\DetalleController::class, 'create']);
+
+Route::post('cliente/cancelar/{idcita}', [App\Http\Controllers\DetalleController::class, 'cancelar']);
+
+Route::post('cliente/cupos', [App\Http\Controllers\DetalleController::class, 'cupos']);
+
+Route::post('cita/listarHorario/{id}', [App\Http\Controllers\DetalleController::class, 'listarhoras']);
+
+Route::post('cita/reagendar', [App\Http\Controllers\DetalleController::class, 'reagendar']);
+
