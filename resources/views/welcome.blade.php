@@ -58,13 +58,16 @@ table.display {
 
 
 <input type="hidden" value="{{$cliente->idcita}}" id="idcita" name="idcita"></input>
-
 <input type="hidden" value="{{$cliente->idcupo}}" id="idcupo" name="idcupo"></input>
 
 
 <input type="hidden" value="{{$cliente->nombrec}}" name="nombre" id="nombre" />
 
 <input type="hidden" value="{{$cliente->apellidos}}" name="apellidos" id="apellidos" />
+
+<input type="hidden" value="{{$cliente->nombreo}}" name="nombreoficina" id="nombreoficina" />
+
+<input type="hidden" value="{{ \Carbon\Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y')}}" name="fechac" id="fechac" />
 
 
 <div class="col-md-12" style="background-color: ">
@@ -99,7 +102,7 @@ table.display {
             </thead>
             <tbody>
                 <tr>
-                    <td>{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $cliente->hora)->format('H:i a')}}</td>
+                    <td>{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $cliente->hora)->locale('es')->format('h:i a')}}</td>
                     <td>{{$cliente->nombrec}}&nbsp;{{$cliente->apellidos}}</td>
                     <td>{{$cliente->telefono}}</td>
                     <td>{{$cliente->descripcion}}</td>
@@ -111,7 +114,7 @@ table.display {
     </div>
 </div>
 
-<br><br><br><br>
+<br>
 
 
 
@@ -175,7 +178,7 @@ table.display {
                 </button>
             </div>
             <div class="modal-body">
-                <form action="" id="reagendar">
+                <form action="" id="reagendarform">
                     {!! csrf_field() !!}
                     <div class="form-group ">
                         <label for="start">Fechas y oficina :</label>
@@ -188,22 +191,27 @@ table.display {
                         <label for="hora">Hora Cita </label>
                         <div style="display: flex;justify-content: space-around;">
                             <select name="horaReagendar" onchange="" id="horaReagendar"
-                                class="form-control col-md-3">
+                                class="form-control col-md-3 hora">
                             </select>
 
                             <select name="minutosReagendar" id="minutosReagendar"
-                                class="form-control col-md-3">
+                                class="form-control col-md-3 hora">
                                 <option value="00" selected>00</option>
                                 <option value="30">30</option>
                             </select>
-                            <input type="text" class="form-control col-md-3" required="" name="horarioreagenda"
+                            <input type="text" class="form-control col-md-3 hora" required="" name="horarioreagenda"
                                 id="horarioreagenda" readonly="readonly" value="">
                         </div>
                     </div>
 
                     <input type="hidden" value="" id="horareagenda" name="horareagenda"></input>
                     <input type="hidden" value="" id="num_citas" name="num_citas"></input>
-                    <input type="hidden" id="cita_id" name="cita_id" value="" />
+                    <input type="hidden" id="cita_id" name="cita_id" value="{{$cliente->idcita}}" />
+
+                    <input type="hidden" id="fecharea" name="fecharea" value="" />
+                    <input type="hidden" id="nombreofic" name="nombreofic" value="" />
+
+
                 </form>
             </div>
             <div class="modal-footer">

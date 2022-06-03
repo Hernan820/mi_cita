@@ -104,10 +104,10 @@ class DetalleController extends Controller
     public function listarhoras($id)
     {
 
-        $hora =CuposHorario::join("horarios","horarios.id", "=", "cupos_horarios.id_horario")
+       /* $hora =CuposHorario::join("horarios","horarios.id", "=", "cupos_horarios.id_horario")
         ->select("cupos_horarios.id_cupo","horarios.hora12","horarios.hora24")
         ->where("cupos_horarios.id_cupo","=",$id)
-        ->get();
+        ->get();*/
 
         $sql = "SELECT h.hora24, h.hora12, 
         (select COUNT(*) from detalle_cupos dc 
@@ -122,7 +122,13 @@ class DetalleController extends Controller
         
         $hora = DB::select($sql);
 
-        $cantCitas= Cupo::find($id);
+        $cantCitas= Cupo::join("oficinas","oficinas.id","=","cupos.id_oficina")
+                          ->select("cupos.*","oficinas.nombre as nombreoficina") 
+                          ->where("cupos.id","=", $id)
+                          ->first();
+        
+        
+        
 
         return response()->json(['hora' => $hora, 'cantCitas' => $cantCitas],200);
     

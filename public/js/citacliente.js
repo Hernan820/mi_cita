@@ -2,7 +2,7 @@ var principalUrl = "http://localhost/mi_cita/public/";
 
 let formCancelar = document.getElementById("cancelarCita");
 
-let formreagendar = document.getElementById("reagendar");
+let formreagendar = document.getElementById("reagendarform");
 
 
 
@@ -13,10 +13,13 @@ let formreagendar = document.getElementById("reagendar");
         var nombre = $("#nombre").val();
         var apellidos = $("#apellidos").val();
 
+        var oficina = $("#nombreoficina").val();
+        var fecha = $("#fechac").val();
+
 
     Swal.fire({
         title: "Eliminar",
-        text: "¿Estas seguro de confirmar tu cita "+nombre+" "+apellidos+" ?",
+        text: "¿Estas seguro de confirmar tu cita "+nombre+" "+apellidos+" para la fecha: "+fecha+", en la oficina de "+oficina+" ?",
 
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -37,8 +40,7 @@ let formreagendar = document.getElementById("reagendar");
                         showConfirmButton: false,
                     }); 
                 }
-                mostrarboton();
-                $('#registro_horas').DataTable().ajax.reload(null, false);
+                location.reload();
                
             }).catch((error) => {
                 if (error.response) {
@@ -88,8 +90,8 @@ let formreagendar = document.getElementById("reagendar");
                         showConfirmButton: false,
                     }); 
                 }
-               // mostrarboton();
-               // $('#registro_horas').DataTable().ajax.reload(null, false);
+               location.reload();
+
                
             }).catch((error) => {
                 if (error.response) {
@@ -126,23 +128,20 @@ let formreagendar = document.getElementById("reagendar");
 
         $("#cuposid").html("");
 
+        var cupoid = $("#idcupo").val();
 
         axios.post(principalUrl + "cliente/cupos")
         .then((respuesta) => {
             moment.locale("es");
+            $("#cuposid").append( "<option enabled='true' value=''>Elige una Fecha &nbsp;&nbsp;&nbsp;&nbsp; Oficina</option>");
 
+                respuesta.data.forEach(function (element) {   
+                    if(element.id != cupoid){                                 
 
-            $("#cuposid").append( "<option  value=''>00</option>");
-
-
-                respuesta.data.forEach(function (element) {
-                    $("#cuposid").append("<option value=" +element.id+">"+moment(element.start).locale('es').format("dddd DD [de] MMMM [del] YYYY")+" ---------- "+element.nombre+"</option>");
+                    $("#cuposid").append("<option value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+" ---------- "+element.nombre+"</option>");
+                    }
                 });
 
-
-
-
-    
             if(respuesta.data == 1){
                 Swal.fire({
                     position: "top-end",
@@ -151,8 +150,6 @@ let formreagendar = document.getElementById("reagendar");
                     showConfirmButton: false,
                 }); 
             }
-           // mostrarboton();
-           // $('#registro_horas').DataTable().ajax.reload(null, false);
            
         }).catch((error) => {
             if (error.response) {
@@ -160,6 +157,8 @@ let formreagendar = document.getElementById("reagendar");
             }
         });
 
+        
+        $(".hora").val("");
         $("#reagendar").trigger("reset");
         $("#popup_reagendar").modal("show");
     });
@@ -168,17 +167,23 @@ let formreagendar = document.getElementById("reagendar");
     
     $('#cuposid').on('change', function() {
         
-        
-        var id = $("#idcupo").val();
+        $(".hora").val("");
+
+        var id = $("#cuposid").val();
         $("#horaReagendar").html("");
     axios.post(principalUrl + "cita/listarHorario/"+id)
         .then((respuesta) => { 
 
+            
+
+            
+            $("#nombreofic").val(respuesta.data.cantCitas.nombreoficina);
 
             
             $("#num_citas").val(respuesta.data.cantCitas.cant_citas);
 
-          //  formreagendar.num_citas.value = respuesta.data.cantCitas.cant_citas;
+            $("#fecharea").val( moment(respuesta.data.cantCitas.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY"));
+           
             $("#horaReagendar").append(
                 "<option enabled selected value=''>Horas</option>"
                 );
@@ -232,6 +237,10 @@ let formreagendar = document.getElementById("reagendar");
                     }
                 }
             });
+
+
+           
+
         })
         .catch((error) => {
             if (error.response) {
@@ -259,6 +268,13 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
     var cupo = $("#idcupo").val();
     var hora = $("#horaReagendar").val();
 
+    var nombre = $("#nombre").val();
+    var apellidos = $("#nombreofic").val();
+
+    var oficina = $("#nombreofic").val();
+    var fecha = $("#fecharea").val();
+
+
     if (cupo === "" || hora === "" ) {
         Swal.fire("¡Debe llenar todos los datos requeridos!");
         return;
@@ -266,7 +282,7 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
 
     Swal.fire({
         title: "Reagendar cita",
-        text: "¿Estas seguro de reagendar en otra fecha?",
+        text: "¿Estas seguro de reagendar cita para la fecha: "+fecha+", en la oficina: "+oficina+" ?",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
@@ -274,8 +290,6 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
         cancelButtonText: "Cancelar",
     }).then((result) => {
         if (result.isConfirmed) {
-
-            formreagendar
 
             var reagendaCita = new FormData(formreagendar);
 
@@ -302,6 +316,9 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
                         });
                     }
 
+                    location.reload();
+
+                    
 
                 })
                 .catch((error) => {
