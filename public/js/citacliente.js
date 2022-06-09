@@ -1,26 +1,20 @@
 var principalUrl = "http://localhost/mi_cita/public/";
 
 let formCancelar = document.getElementById("cancelarCita");
-
 let formreagendar = document.getElementById("reagendarform");
-
 
 
     document.getElementById("confirmar").addEventListener("click", function () {
 
         var idcita = $("#idcita").val();
-
         var nombre = $("#nombre").val();
         var apellidos = $("#apellidos").val();
-
         var oficina = $("#nombreoficina").val();
         var fecha = $("#fechac").val();
-
 
     Swal.fire({
         title: "Confirmar cita",
         text: "¿Estas seguro de confirmar tu cita "+nombre+" "+apellidos+" para la fecha: "+fecha+", en la oficina de "+oficina+" ?",
-
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
@@ -41,7 +35,6 @@ let formreagendar = document.getElementById("reagendarform");
                     }); 
                 }
                 location.reload();
-               
             }).catch((error) => {
                 if (error.response) {
                     console.log(error.response.data);
@@ -50,23 +43,16 @@ let formreagendar = document.getElementById("reagendarform");
         } else {
         }
     });
-
     });
 
 
-    
     document.getElementById("btnCancelar").addEventListener("click", function () {
         if (validardatos() == false) { return;}
 
         var datos = new FormData(formCancelar);
-
-
         var idcita = $("#idcita").val();
-
         var nombre = $("#nombre").val();
         var apellidos = $("#apellidos").val();
-
-
 
     Swal.fire({
         title: "Cancelar cita",
@@ -90,9 +76,7 @@ let formreagendar = document.getElementById("reagendarform");
                         showConfirmButton: false,
                     }); 
                 }
-               location.reload();
-
-               
+               location.reload(); 
             }).catch((error) => {
                 if (error.response) {
                     console.log(error.response.data);
@@ -101,7 +85,6 @@ let formreagendar = document.getElementById("reagendarform");
         } else {
         }
     });
-
     });
 
 
@@ -127,7 +110,6 @@ let formreagendar = document.getElementById("reagendarform");
     $('#reagendar').on('click', function() {
 
         $("#cuposid").html("");
-
         var cupoid = $("#idcupo").val();
 
         axios.post(principalUrl + "cliente/cupos")
@@ -137,7 +119,6 @@ let formreagendar = document.getElementById("reagendarform");
 
                 respuesta.data.forEach(function (element) {   
                     if(element.id != cupoid){                                 
-
                     $("#cuposid").append("<option value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+" ---------- "+element.nombre+"</option>");
                     }
                 });
@@ -150,38 +131,27 @@ let formreagendar = document.getElementById("reagendarform");
                     showConfirmButton: false,
                 }); 
             }
-           
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response.data);
             }
         });
 
-        
         $(".hora").val("");
         $("#reagendar").trigger("reset");
         $("#popup_reagendar").modal("show");
     });
 
-
-    
     $('#cuposid').on('change', function() {
         
         $(".hora").val("");
-
         var id = $("#cuposid").val();
         $("#horaReagendar").html("");
     axios.post(principalUrl + "cita/listarHorario/"+id)
         .then((respuesta) => { 
 
-            
-
-            
             $("#nombreofic").val(respuesta.data.cantCitas.nombreoficina);
-
-            
             $("#num_citas").val(respuesta.data.cantCitas.cant_citas);
-
             $("#fecharea").val( moment(respuesta.data.cantCitas.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY"));
            
             $("#horaReagendar").append(
@@ -205,12 +175,7 @@ let formreagendar = document.getElementById("reagendarform");
                 console.log(error.response.data);
             }
         }); 
-
-
     });
-
-
-
 
 
  $('#horaReagendar').on('change', function() {
@@ -237,18 +202,12 @@ let formreagendar = document.getElementById("reagendarform");
                     }
                 }
             });
-
-
-           
-
         })
         .catch((error) => {
             if (error.response) {
                 console.log(error.response.data);
             }
         });
-
-
 
         if(hora >= 7 && hora <= 11){
             $("#horarioreagenda").val("AM");
@@ -257,11 +216,6 @@ let formreagendar = document.getElementById("reagendarform");
 
         }
 });
-
-
-
-
-
 
 
 document.getElementById("btnReagendar").addEventListener("click", function () {
@@ -318,8 +272,5 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
             $("#popup_reagendar").modal("hide");
         }
     });
-
-
-
 
 });
