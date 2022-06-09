@@ -75,13 +75,13 @@ table.display {
 
 
     <div class="jumbotron">
-        <h1 class="display-4">Hola! {{$cliente->nombrec}} {{$cliente->apellidos}}</h1>
+        <h1 class="display-4" style="text-align: center;">Hola! {{$cliente->nombrec}} {{$cliente->apellidos}}</h1>
 </br>
 
-<h1>Gestiona tu cita</h1>
+<h1 style="text-align: center;" >Gestiona tu cita</h1>
 <hr>
         <p class="lead">
-        <h2> Oficina: {{$cliente->nombreo}} &nbsp; &nbsp; &nbsp;  Fecha:
+        <h2 > Oficina: {{$cliente->nombreo}} &nbsp; &nbsp;Fecha:
                 &nbsp;{{ \Carbon\Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y')}}
         </h2>
         </p>
@@ -95,7 +95,6 @@ table.display {
                     <th class="">Hora</th>
                     <th class="">Cliente</th>
                     <th class="">Telefono</th>
-                    <th class="">Descripcion</th>
                     <th class="">Operador</th>
                     <th class="">Estado</th>
                 </tr>
@@ -105,7 +104,6 @@ table.display {
                     <td>{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $cliente->hora)->locale('es')->format('h:i a')}}</td>
                     <td>{{$cliente->nombrec}}&nbsp;{{$cliente->apellidos}}</td>
                     <td>{{$cliente->telefono}}</td>
-                    <td>{{$cliente->descripcion}}</td>
                     <td>{{$cliente->name}}</td>
                     <td>{{$cliente->nombreestado}}</td>
                 </tr>
@@ -117,16 +115,28 @@ table.display {
 <br>
 
 
+<div class="container"  style="display: flex; align-items: center;  justify-content: center; ">
+<div class="col-md-12">
+      <div class="btn-group mr-3 " role="group" aria-label="button group">
+
+        <div  style="padding: 15px;">
+        <button type="button" id="reagendar" style="width: 300px;" class="btn btn-primary">Reagendar Cita</button>
+        </div>
+
+        <div style="padding: 15px;">
+        <button type="button" id="confirmar" style="width: 300px;"  class="btn btn-success">Confirmar Cita</button>
+        </div>
+
+        <div style="padding: 15px;">
+        <button type="button" id="cancelar" style="width: 300px;"  class="btn btn-danger">Cancelar Cita</button>
+        </div>
 
 
-    <div class="col-md-12">
-      <div class="btn-group mr-2 " role="group" aria-label="button group">
-
-      <button type="button" id="reagendar" class="btn btn-primary">Reagendar Cita</button>
-        <button type="button" id="confirmar" class="btn btn-success">Confirmar Cita</button>
-        <button type="button" id="cancelar" class="btn btn-danger">Cancelar Cita</button>
       </div>
     </div>
+</div>
+
+
  
 
 

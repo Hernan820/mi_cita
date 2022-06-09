@@ -18,7 +18,7 @@ let formreagendar = document.getElementById("reagendarform");
 
 
     Swal.fire({
-        title: "Eliminar",
+        title: "Confirmar cita",
         text: "¿Estas seguro de confirmar tu cita "+nombre+" "+apellidos+" para la fecha: "+fecha+", en la oficina de "+oficina+" ?",
 
         showCancelButton: true,
@@ -69,7 +69,7 @@ let formreagendar = document.getElementById("reagendarform");
 
 
     Swal.fire({
-        title: "Eliminar",
+        title: "Cancelar cita",
         text: "¿Estas seguro de cancelar tu cita "+nombre+" "+apellidos+" ?",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -286,7 +286,7 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Continuar",
+        confirmButtonText: "SI",
         cancelButtonText: "Cancelar",
     }).then((result) => {
         if (result.isConfirmed) {
@@ -296,29 +296,17 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
             axios.post(principalUrl + "cita/reagendar", reagendaCita)
                 .then((respuesta) => {
 
-                    if(respuesta.data.reagendacita == 1){
-                        if(respuesta.data.mensaje == 2){
-                            Swal.fire({
-                                position: "top-end",
-                                icon: "success",
-                                title: "La notificacion a su numero no se envio, por favor envie manualmente!",
-                                showConfirmButton: false,
-                            });
-                        }
-                        location.reload();
-                        $("#popup_reagendar").modal("hide");
-                    }else if(respuesta.data.reagendacita == 2){
+                    if(respuesta.data == 1){
+
                         Swal.fire({
                             position: "top-end",
-                            icon: "error",
-                            title: "los cupos en esta hora ya estan llenos!",
+                            icon: "success",
+                            title: "Cita Reagendada exitosamente!",
                             showConfirmButton: false,
                         });
+
                     }
-
                     location.reload();
-
-                    
 
                 })
                 .catch((error) => {
@@ -330,4 +318,8 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
             $("#popup_reagendar").modal("hide");
         }
     });
+
+
+
+
 });

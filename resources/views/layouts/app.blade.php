@@ -65,7 +65,7 @@
             <div class="section__content section__content--p35" style="background: #1d3668;">
                 <div class="header3-wrap">
                     <div class="header__logo">
-                        <a class="image" href="{{ url('/banker')}}">
+                        <a class="image" href="#">
                             <img class="image" style=" width:90px ;" src="{{ asset('images/icon/logo.png') }}"
                                 alt="Cool Admin" />
                         </a>
@@ -82,33 +82,7 @@
                         </div>
                         <div class="account-wrap">
                             <div class="account-item account-item--style2 clearfix js-item-menu">
-                                <div class="image">
-                                    <img src="{{ asset('images/icon/avatar-01.jpg') }}" alt="John Doe" />
-                                </div>
-                                <div class="content">
-                                    <a class="js-acc-btn" href="#"></a>
-                                </div>
-                                <div class="account-dropdown js-dropdown">
-                                    <div class="info clearfix">
-                                        <div class="image">
-                                            <a href="#">
-                                                <img src="{{ asset('images/icon/avatar-01.jpg') }}" alt="John Doe" />
-                                            </a>
-                                        </div>
-                                        <div class="content">
-                                            <h5 class="name">
-                                                <a href="#"></a>
-                                            </h5>
-                                            <span class="email"></span>
-                                        </div>
-                                    </div>
-                                    <div class="account-dropdown__body">
-
-                                    </div>
-                                    <div class="account-dropdown__footer">
-                             
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -122,7 +96,7 @@
             <div class="header-mobile__bar" style="background: #1d3668;">
                 <div class="container-fluid">
                     <div class="header-mobile-inner" style="background: #1d3668;">
-                        <a class="logo" href="{{ url('/banker')}}">
+                        <a class="logo" href="#">
                             <img src="{{ asset('images/icon/logo.png') }}" alt="CoolAdmin" />
                         </a>
 
