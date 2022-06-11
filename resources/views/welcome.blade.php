@@ -99,13 +99,13 @@ table.display {
                     <th class="">Estado</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="citacliente">
                 <tr>
                     <td>{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $cliente->hora)->locale('es')->format('h:i a')}}</td>
                     <td>{{$cliente->nombrec}}&nbsp;{{$cliente->apellidos}}</td>
                     <td>{{$cliente->telefono}}</td>
                     <td>{{$cliente->name}}</td>
-                    <td>{{$cliente->nombreestado}}</td>
+                    <td style=" " >{{$cliente->nombreestado}}</td>
                 </tr>
             </tbody>
         </table>

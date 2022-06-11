@@ -22,10 +22,14 @@ let formreagendar = document.getElementById("reagendarform");
         cancelButtonText: "NO",
     }).then((result) => {
         if (result.isConfirmed) {
+
+            $('#confirmar').attr('disabled', true);
+
     
             axios.post(principalUrl + "cliente/confirmar/"+idcita)
             .then((respuesta) => {
-        
+                $('#confirmar').attr('disabled', false);
+
                 if(respuesta.data == 1){
                     Swal.fire({
                         position: "top-end",
@@ -49,6 +53,8 @@ let formreagendar = document.getElementById("reagendarform");
     document.getElementById("btnCancelar").addEventListener("click", function () {
         if (validardatos() == false) { return;}
 
+
+
         var datos = new FormData(formCancelar);
         var idcita = $("#idcita").val();
         var nombre = $("#nombre").val();
@@ -64,9 +70,15 @@ let formreagendar = document.getElementById("reagendarform");
         cancelButtonText: "NO",
     }).then((result) => {
         if (result.isConfirmed) {
+
+            $('#btnCancelar').attr('disabled', true);
+
     
            axios.post(principalUrl + "cliente/cancelar/"+idcita , datos )
             .then((respuesta) => {
+
+              $('#btnCancelar').attr('disabled', false);
+
         
                 if(respuesta.data == 1){
                     Swal.fire({
@@ -76,7 +88,7 @@ let formreagendar = document.getElementById("reagendarform");
                         showConfirmButton: false,
                     }); 
                 }
-               location.reload(); 
+              location.reload(); 
             }).catch((error) => {
                 if (error.response) {
                     console.log(error.response.data);
@@ -221,10 +233,6 @@ let formreagendar = document.getElementById("reagendarform");
 document.getElementById("btnReagendar").addEventListener("click", function () {
     var cupo = $("#idcupo").val();
     var hora = $("#horaReagendar").val();
-
-    var nombre = $("#nombre").val();
-    var apellidos = $("#nombreofic").val();
-
     var oficina = $("#nombreofic").val();
     var fecha = $("#fecharea").val();
 
@@ -233,6 +241,7 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
         Swal.fire("¡Debe llenar todos los datos requeridos!");
         return;
     }
+
 
     Swal.fire({
         title: "Reagendar cita",
@@ -247,8 +256,12 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
 
             var reagendaCita = new FormData(formreagendar);
 
+            $('#btnReagendar').attr('disabled', true);
+
+
             axios.post(principalUrl + "cita/reagendar", reagendaCita)
                 .then((respuesta) => {
+                    $('#btnReagendar').attr('disabled', false);
 
                     if(respuesta.data == 1){
 
@@ -274,3 +287,23 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
     });
 
 });
+
+
+$(document).ready(function () {
+
+    if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "cancelado"){
+
+        $('#citacliente tr').eq(0).find('td').eq(4).css("background-color", "#FA3C25");
+
+    }else if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "confirmado"){
+
+        $('#citacliente tr').eq(0).find('td').eq(4).css("background-color", "#00FE1F");
+
+    }else if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "pendiente"){
+        $('#citacliente tr').eq(0).find('td').eq(4).css("background-color", "#FEE700");
+
+    }
+
+});
+
+
