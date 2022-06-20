@@ -294,6 +294,7 @@ $(document).ready(function () {
     if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "cancelado"){
 
         $('#citacliente tr').eq(0).find('td').eq(4).css("background-color", "#FA3C25");
+        $('#citacliente tr').eq(0).find('td').eq(4).css("color", "white");
 
     }else if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "confirmado"){
 

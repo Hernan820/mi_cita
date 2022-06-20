@@ -65,7 +65,7 @@
             <div class="section__content section__content--p35" style="background: #1d3668;">
                 <div class="header3-wrap">
                     <div class="header__logo">
-                        <a class="image" href="#">
+                        <a class="image" href="">
                             <img class="image" style=" width:90px ;" src="{{ asset('images/icon/logo.png') }}"
                                 alt="Cool Admin" />
                         </a>
@@ -96,7 +96,7 @@
             <div class="header-mobile__bar" style="background: #1d3668;">
                 <div class="container-fluid">
                     <div class="header-mobile-inner" style="background: #1d3668;">
-                        <a class="logo" href="#">
+                        <a class="logo" href="">
                             <img src="{{ asset('images/icon/logo.png') }}" alt="CoolAdmin" />
                         </a>
 
