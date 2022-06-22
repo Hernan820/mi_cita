@@ -12,6 +12,17 @@ let formreagendar = document.getElementById("reagendarform");
         var oficina = $("#nombreoficina").val();
         var fecha = $("#fechac").val();
 
+     if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "confirmado"){
+
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "¡Registro ya esta confirmado !",
+            showConfirmButton: false,
+            timer: 1500
+        }); 
+     }else {
+        
     Swal.fire({
         title: "Confirmar cita",
         text: "¿Estas seguro de confirmar tu cita "+nombre+" "+apellidos+" para la fecha: "+fecha+", en la oficina de "+oficina+" ?",
@@ -47,13 +58,12 @@ let formreagendar = document.getElementById("reagendarform");
         } else {
         }
     });
+   }
     });
 
 
     document.getElementById("btnCancelar").addEventListener("click", function () {
         if (validardatos() == false) { return;}
-
-
 
         var datos = new FormData(formCancelar);
         var idcita = $("#idcita").val();
@@ -97,7 +107,7 @@ let formreagendar = document.getElementById("reagendarform");
         } else {
         }
     });
-    });
+});
 
 
     function validardatos() {
@@ -112,9 +122,20 @@ let formreagendar = document.getElementById("reagendarform");
     }
 
     $('#cancelar').on('click', function() {
+
+        if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "cancelado"){
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "¡Cita ya ha sido  cancelada exitosamente!",
+                showConfirmButton: false,
+                timer: 1500
+            }); 
+        }else {
         $("#cancelarCita").trigger("reset");
         $("#popup_cancelar").modal("show");
         $("#motivo").focus();
+        }
     });
 
 
