@@ -217,7 +217,7 @@ let formreagendar = document.getElementById("reagendarform");
     $("#minutosReagendar").val("00");
 
         var hora = $("#horaReagendar").val();
-        var id = $("#idcupo").val();
+        var id = $("#cuposid").val();
 
     axios.post(principalUrl + "cita/listarHorario/"+id)
         .then((respuesta) => { 
