@@ -23,22 +23,16 @@ $dia_siguiente =date("Y-m-d", strtotime("+1 day"));
 
 // DIA DE AHORA 
 //$ahora =strftime("%A");
-$ahora ='Friday';
+$ahora =date('Y-m-d');
 
 
-if($ahora == "Wednesday" || $ahora == "Thursday" ){
 
     $consulta = "SELECT clientes.telefono  FROM detalle_cupos
     INNER JOIN clientes on clientes.id = detalle_cupos.id_cliente
     INNER JOIN cupos on cupos.id = detalle_cupos.id_cupo
-    WHERE cupos.start IN('$dia_siguiente','$sabado','$domingo') AND detalle_cupos.id_estado IN(4,5);";
+    WHERE cupos.start IN('$ahora') AND detalle_cupos.id_estado IN(4,5);";
 
-}else {
-    $consulta = "SELECT clientes.telefono  FROM detalle_cupos
-    INNER JOIN clientes on clientes.id = detalle_cupos.id_cliente
-    INNER JOIN cupos on cupos.id = detalle_cupos.id_cupo
-    WHERE cupos.start IN('$dia_siguiente') AND detalle_cupos.id_estado IN(4,5);";
-}
+
 
 
 $numeros_clientes = mysqli_query( $conexion1, $consulta ) or die ( "Algo ha ido mal en la consulta a la base de datos111111111111");
