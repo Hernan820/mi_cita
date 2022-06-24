@@ -22,8 +22,7 @@ $domingo = date('Y-m-d', strtotime("next sunday"));
 $dia_siguiente =date("Y-m-d", strtotime("+1 day"));
 
 // DIA DE AHORA 
-//$ahora =strftime("%A");
-$ahora ='Friday';
+$ahora =strftime("%A");
 
 
 if($ahora == "Wednesday" || $ahora == "Thursday" ){

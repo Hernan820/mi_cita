@@ -25,15 +25,10 @@ $dia_siguiente =date("Y-m-d", strtotime("+1 day"));
 //$ahora =strftime("%A");
 $ahora =date('Y-m-d');
 
-
-
     $consulta = "SELECT clientes.telefono  FROM detalle_cupos
     INNER JOIN clientes on clientes.id = detalle_cupos.id_cliente
     INNER JOIN cupos on cupos.id = detalle_cupos.id_cupo
     WHERE cupos.start IN('$ahora') AND detalle_cupos.id_estado IN(4,5);";
-
-
-
 
 $numeros_clientes = mysqli_query( $conexion1, $consulta ) or die ( "Algo ha ido mal en la consulta a la base de datos111111111111");
 
@@ -43,12 +38,9 @@ echo "ESTA ES LA FECHA ... $ahora.  </br>";
 
  function link_send($to,$url,$tipo)
 {
-
     $custom_uid = "unique-" . time();
     $to = filter_var($to, FILTER_SANITIZE_NUMBER_INT);
     $msg = urlencode($url);
-  
-    
   
     switch ($tipo) {
         case 1:
@@ -122,8 +114,5 @@ echo "ESTA ES LA FECHA ... $ahora.  </br>";
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
         
         $r = link_send(+50379776604,$msg,$tipo=4);
-
     }
-
-
 ?>
