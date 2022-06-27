@@ -76,9 +76,11 @@ table.display {
 
     <div class="jumbotron">
         <h1 class="display-4" style="text-align: center;">Hola! {{$cliente->nombrec}} {{$cliente->apellidos}}</h1>
-</br>
+
 
 <h1 style="text-align: center;" >Gestiona tu cita</h1>
+<hr>
+<p class="" style ="margin-bottom: 0 !important"><strong><h4>Tu cita esta agendada en la siguiente oficina y fecha:</h4></strong> </p>
 <hr>
         <p class="lead">
         <h2 > Oficina: {{$cliente->nombreo}} &nbsp; &nbsp;Fecha:
@@ -133,6 +135,41 @@ table.display {
 
 
       </div>
+    </div>
+</div>
+
+
+<div class="col-md-12  mb-4">
+        <div class="card">
+            <div class="card-body">
+            <h5 class="cart-title"><strong>Recuerda que todas nuestras asesorias son completamente gartis</strong></h5>
+<br>
+                <h5 class="cart-title"><strong>Documentos a presentar al dia de la cita</strong></h5>
+                <div class="row mb-3 mt-3">
+        
+                    <div class="col-md-7 my-auto" >
+                    <p class="" style ="margin-bottom: 0 !important"><strong>Los documentos requeridos para personas con social:</strong> </p>
+
+                        <p class="" style ="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2020</p>
+                        <p class="" style ="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2021</p>
+                        <p class=""  style ="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia o el pasaporte</p>
+                        <p class="" style ="margin-bottom: 0 !important">✅ Comprobantes de ingreso o colilla de pago</p>
+                        <p class="" style ="margin-bottom: 0 !important">✅ Copia de Social Security Number </p>
+                        <p class="" style ="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se refleje el Down-payment</p>
+
+                        <br>
+                        <p class="" style ="margin-bottom: 0 !important"><strong>Los documentos requeridos para PERSONAS CON TAX ID:</strong> </p>
+
+                        <p class="" style ="margin-bottom: 0 !important">✅ COPIA DE SU TAX ID</p>
+                        <p class="" style ="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia o el pasaporte</p>
+                        <p class=""  style ="margin-bottom: 0 !important">✅ Comprobantes de ingreso o colilla de pago</p>
+                        <p class="" style ="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se refleje el Down-payment</p>
+
+                    </div>
+                </div>
+
+            </div>    
+        </div>
     </div>
 </div>
 
