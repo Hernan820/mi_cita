@@ -23,7 +23,7 @@ $dia_siguiente =date("Y-m-d", strtotime("+1 day"));
 
 // DIA DE AHORA 
 //$ahora =strftime("%A");
-$ahora =date('Y-m-d');
+$ahora =date('2022-06-22 w');
 
     $consulta = "SELECT clientes.telefono  FROM detalle_cupos
     INNER JOIN clientes on clientes.id = detalle_cupos.id_cliente
@@ -33,8 +33,6 @@ $ahora =date('Y-m-d');
 $numeros_clientes = mysqli_query( $conexion1, $consulta ) or die ( "Algo ha ido mal en la consulta a la base de datos111111111111");
 
 echo "ESTA ES LA FECHA ... $ahora.  </br>";
-
-
 
  function link_send($to,$url,$tipo)
 {
@@ -101,18 +99,34 @@ echo "ESTA ES LA FECHA ... $ahora.  </br>";
         return false;
 };
 
+
+$msg="Hola Buenas Noches  nombre cliente! le saluda $usuario->name de parte del Team Acevedo y Casa de Mis Sueños 🏠✅
+
+El motivo de nuestro mensaje , es por que uste tiene agendando una cita con nosotros para el dia ***** a la *****
+
+haciendo click en el siguiente enlace puedes GESTIONAR a (confirmar , cancelar o reagendar).
+
+link
+
+si tienes alguna consulta puedes comunicarte con nosotros al 631-609-9108
+
+
+$conta";
+
+
   $conta=0;
+
 
   foreach ($numeros_clientes as $num) 
     {
-        $msg="ESTE ES UNA PRUEBA DE NOTIFICACIONES $conta";
-
-    $conta=$conta + 1;
-       // echo "ESTA ES LA FECHA ... $num.";
-        echo '<td> '.$num['telefono'].'</td></br>';
         $array =str_split($num['telefono']);
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
         
         $r = link_send(+50379776604,$msg,$tipo=4);
+
+
+        $conta=$conta + 1;
+        echo '<td> '.$num['telefono'].'</td></br>';
+
     }
 ?>
