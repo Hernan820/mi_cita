@@ -94,13 +94,16 @@
         <!-- HEADER MOBILE-->
         <header class="header-mobile header-mobile-2 d-block d-lg-none">
             <div class="header-mobile__bar" style="background: #1d3668;">
-                <div class="container-fluid">
-                    <div class="header-mobile-inner" style="background: #1d3668;">
-                        <a class="logo" href="">
+                <div class="container-fluid" style=" width: max-content; ext-align: center; padding: unset;">
+                <center>
+
+                    <div class="header-mobile-inner" style="background: #1d3668;     text-align: center;">
+                    <a class="logo" href="">
                             <img src="{{ asset('images/icon/logo.png') }}" width="150" height="150" alt="CoolAdmin" />
                         </a>
-
                     </div>
+                    </center>
+
                 </div>
             </div>
             <nav class="navbar-mobile">
@@ -211,7 +214,7 @@
         <div class="page-content--bgf7">
 
             <!-- BREADCRUMB-->
-            <section class="au-breadcrumb2">
+            <section class="au-breadcrumb2" style="padding-top:0px;">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">

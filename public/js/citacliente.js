@@ -312,17 +312,18 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
 
 $(document).ready(function () {
 
-    if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "cancelado"){
+    if( $('#estadocita').val() == "cancelado"){
 
-        $('#citacliente tr').eq(0).find('td').eq(4).css("background-color", "#FA3C25");
-        $('#citacliente tr').eq(0).find('td').eq(4).css("color", "white");
+        $(`#tarjetacita`).addClass(' border-danger');
 
-    }else if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "confirmado"){
 
-        $('#citacliente tr').eq(0).find('td').eq(4).css("background-color", "#00FE1F");
+    }else if( $('#estadocita').val() == "confirmado" ){
 
-    }else if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "pendiente"){
-        $('#citacliente tr').eq(0).find('td').eq(4).css("background-color", "#FEE700");
+        $(`#tarjetacita`).addClass(' border-success');
+
+    }else if( $('#estadocita').val() == "pendiente"){
+
+        $(`#tarjetacita`).addClass(' border-warning');
 
     }
 

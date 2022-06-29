@@ -93,6 +93,25 @@ table.display {
         </p>
     </div>
 
+    <br>
+
+    <div style="">
+        <div class="card border " style="  border: 50px solid; border-style: solid;" id="tarjetacita">
+            <div class="card-header" style=" text-align: center;"> <strong> MI CITA </strong></div>
+            <div class="card-body text-dark">
+                <h5 class="card-title">ESTADO DE LA CITA :&nbsp; {{$cliente->nombreestado}} </h5>
+
+                <p class="" style="margin-bottom: 0 !important"> HORA DE TU CITA:&nbsp;
+                    {{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $cliente->hora)->locale('es')->format('h:i a')}}
+                </p>
+                <p class="" style="margin-bottom: 0 !important">USTED FUE ATENDIDO POR:&nbsp; {{$cliente->name}}</p>
+
+            </div>
+        </div>
+    </div>
+
+
+
     <!-- 
     <idv class="col-md-12 table-responsive">
         <table id="registro_horas" class="table table-striped table-bordered dt-responsive nowrap datatable"
@@ -120,76 +139,50 @@ table.display {
  -->
 
 
+    <div class="col-md-12 border border-dark"
+        style="display: flex; align-items: center; justify-content: center; text-align: center;">
+        <div class="col-md-12">
+            <div class="btn-group mr-3 " role="group" aria-label="button group">
 
 
 
-    <div class="col-md-12  mb-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="cart-title"><strong>TU CITA </strong></h5>
-                <div class="row mb-3 mt-3">
-
-                    <div class="col-md-7 my-auto">
-
-                        <p class="" style="margin-bottom: 0 !important"> HORA DE TU CITA:
-                            {{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $cliente->hora)->locale('es')->format('h:i a')}}
-                        </p>
-                        <p class="" style="margin-bottom: 0 !important">USTED FUE ATENDIDO POR: {{$cliente->name}}</p>
-                        <p class="" style="margin-bottom: 0 !important">EL ESTADO DE TU CITA ES :
-                            {{$cliente->nombreestado}} </p>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-<div class="container" style="display: flex; align-items: center;  justify-content: center; ">
-    <div class="col-md-12">
-        <div class="btn-group mr-3 " role="group" aria-label="button group">
-
-            <div style="padding: 15px;     text-align: center;">
-
-                <a data-target="#" data-toggle="modal" id="confirmar" class="MainNavText" id="modalmishoras"
-                    href="#"><img src="{{ asset('iconos/reagendar.png') }}" class="btnexcel" /></a>
-                <p>REAGENDAR CITA</p>
-
-                <!-- 
+                <div style="padding: 15px;     text-align: center;">
+                    <a data-target="#" data-toggle="modal" id="confirmar" class="MainNavText" id="modalmishoras"
+                        href="#"><img src="{{ asset('iconos/confirmar.png') }}" class="btnexcel" /></a>
+                    <p>CONFIRMAR CITA</p>
+                    <!-- 
         <button type="button" id="reagendar" style="width: 300px;" class="btn btn-primary">Reagendar Cita</button>
  -->
-            </div>
+                </div>
+                <div class="container" style="width: 200px;"></div>
+                <div style="padding: 15px; text-align: center;">
 
-            <div style="padding: 15px;     text-align: center;">
-                <a data-target="#" data-toggle="modal" id="confirmar" class="MainNavText" id="modalmishoras"
-                    href="#"><img src="{{ asset('iconos/confirmar.png') }}" class="btnexcel" /></a>
-                <p>CONFIRMAR CITA</p>
+                    <a data-target="#" data-toggle="modal" id="reagendar" class="MainNavText" id="modalmishoras"
+                        href="#"><img src="{{ asset('iconos/reagendar.png') }}" class="btnexcel" /></a>
+                    <p>REAGENDAR CITA</p>
 
-                <!-- 
+
+                    <!-- 
         <button type="button" id="confirmar" style="width: 300px;"  class="btn btn-success">Confirmar Cita</button>
  -->
-            </div>
+                </div>
+                <div class="container" style="width: 200px;"></div>
+                <div style="padding: 15px;     text-align: center;">
 
-            <div style="padding: 15px;     text-align: center;">
-
-                <a ata-target="#" data-toggle="modal" id="cancelar" class="MainNavText" id="modalmishoras" href="#"><img
-                        src="{{ asset('iconos/cerrar.png') }}" class="btnexcel" /></a>
-                <p>CANCELAR CITA</p>
-                <!-- 
+                    <a ata-target="#" data-toggle="modal" id="cancelar" class="MainNavText" id="modalmishoras"
+                        href="#"><img src="{{ asset('iconos/cerrar.png') }}" class="btnexcel" /></a>
+                    <p>CANCELAR CITA</p>
+                    <!-- 
         <button type="button" id="cancelar" style="width: 300px;"  class="btn btn-danger">Cancelar Cita</button>
  -->
+                </div>
+
+
             </div>
-
-
         </div>
     </div>
-</div>
 
-<br><br>
+    <br><br>
 
 
 
