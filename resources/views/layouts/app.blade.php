@@ -97,7 +97,7 @@
                 <div class="container-fluid">
                     <div class="header-mobile-inner" style="background: #1d3668;">
                         <a class="logo" href="">
-                            <img src="{{ asset('images/icon/logo.png') }}" alt="CoolAdmin" />
+                            <img src="{{ asset('images/icon/logo.png') }}" width="150" height="150" alt="CoolAdmin" />
                         </a>
 
                     </div>

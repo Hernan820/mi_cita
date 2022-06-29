@@ -12,7 +12,7 @@ let formreagendar = document.getElementById("reagendarform");
         var oficina = $("#nombreoficina").val();
         var fecha = $("#fechac").val();
 
-     if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "confirmado"){
+     if( $('#estadocita').val() == "confirmado"){
 
         Swal.fire({
             position: "top-end",
@@ -123,7 +123,7 @@ let formreagendar = document.getElementById("reagendarform");
 
     $('#cancelar').on('click', function() {
 
-        if( $('#citacliente tr').eq(0).find('td').eq(4).html() == "cancelado"){
+        if( $('#estadocita').val() == "cancelado"){
             Swal.fire({
                 position: "top-end",
                 icon: "success",

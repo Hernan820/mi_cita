@@ -15,12 +15,13 @@
  -->
 
 <style>
-    @media screen and (max-width:576px) {
-  .btn-group {
-    display: flex;
-    flex-direction: column;
-  }
+@media screen and (max-width:576px) {
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+    }
 }
+
 .todo {
     display: flex;
     gap: 12px;
@@ -60,14 +61,15 @@ table.display {
 <input type="hidden" value="{{$cliente->idcita}}" id="idcita" name="idcita"></input>
 <input type="hidden" value="{{$cliente->idcupo}}" id="idcupo" name="idcupo"></input>
 
+<input type="hidden" value="{{$cliente->nombreestado}}" name="estadocita" id="estadocita" />
 
 <input type="hidden" value="{{$cliente->nombrec}}" name="nombre" id="nombre" />
-
 <input type="hidden" value="{{$cliente->apellidos}}" name="apellidos" id="apellidos" />
-
 <input type="hidden" value="{{$cliente->nombreo}}" name="nombreoficina" id="nombreoficina" />
 
-<input type="hidden" value="{{ \Carbon\Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y')}}" name="fechac" id="fechac" />
+<input type="hidden"
+    value="{{ \Carbon\Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y')}}"
+    name="fechac" id="fechac" />
 
 
 <div class="col-md-12" style="background-color: ">
@@ -75,20 +77,23 @@ table.display {
 
 
     <div class="jumbotron">
-        <h1 class="display-4" style="text-align: center;">Hola! {{$cliente->nombrec}} {{$cliente->apellidos}}</h1>
+        <h1 class="display" style="text-align: center;">Hola! {{$cliente->nombrec}} {{$cliente->apellidos}}</h1>
 
 
-<h1 style="text-align: center;" >Gestiona tu cita</h1>
-<hr>
-<p class="" style ="margin-bottom: 0 !important"><strong><h4>Tu cita esta agendada en la siguiente oficina y fecha:</h4></strong> </p>
-<hr>
+        <h1 style="text-align: center;">Gestiona tu cita</h1>
+        <hr>
+        <p class="" style="margin-bottom: 0 !important"><strong>
+                <h4>Tu cita esta agendada en la siguiente oficina y fecha:</h4>
+            </strong> </p>
+        <hr>
         <p class="lead">
-        <h2 > Oficina: {{$cliente->nombreo}} &nbsp; &nbsp;Fecha:
-                &nbsp;{{ \Carbon\Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y')}}
+        <h2> Oficina: {{$cliente->nombreo}} &nbsp; &nbsp;Fecha:
+            &nbsp;{{ \Carbon\Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y')}}
         </h2>
         </p>
     </div>
 
+    <!-- 
     <idv class="col-md-12 table-responsive">
         <table id="registro_horas" class="table table-striped table-bordered dt-responsive nowrap datatable"
             class="display" cellspacing="0" cellpadding="3" width="100%" style="background-color: ">
@@ -112,79 +117,144 @@ table.display {
             </tbody>
         </table>
     </div>
-</div>
-
-<br>
+ -->
 
 
-<div class="container"  style="display: flex; align-items: center;  justify-content: center; ">
-<div class="col-md-12">
-      <div class="btn-group mr-3 " role="group" aria-label="button group">
-
-        <div  style="padding: 15px;">
-        <button type="button" id="reagendar" style="width: 300px;" class="btn btn-primary">Reagendar Cita</button>
-        </div>
-
-        <div style="padding: 15px;">
-        <button type="button" id="confirmar" style="width: 300px;"  class="btn btn-success">Confirmar Cita</button>
-        </div>
-
-        <div style="padding: 15px;">
-        <button type="button" id="cancelar" style="width: 300px;"  class="btn btn-danger">Cancelar Cita</button>
-        </div>
 
 
-      </div>
-    </div>
-</div>
 
-
-<div class="col-md-12  mb-4">
+    <div class="col-md-12  mb-4">
         <div class="card">
             <div class="card-body">
-            <h5 class="cart-title"><strong>Recuerda que todas nuestras asesorias son completamente gartis</strong></h5>
-<br>
-                <h5 class="cart-title"><strong>Documentos a presentar al dia de la cita</strong></h5>
+                <h5 class="cart-title"><strong>TU CITA </strong></h5>
                 <div class="row mb-3 mt-3">
-        
-                    <div class="col-md-7 my-auto" >
-                    <p class="" style ="margin-bottom: 0 !important"><strong>Los documentos requeridos para personas con social:</strong> </p>
 
-                        <p class="" style ="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2020</p>
-                        <p class="" style ="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2021</p>
-                        <p class=""  style ="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia o el pasaporte</p>
-                        <p class="" style ="margin-bottom: 0 !important">✅ Comprobantes de ingreso o colilla de pago</p>
-                        <p class="" style ="margin-bottom: 0 !important">✅ Copia de Social Security Number </p>
-                        <p class="" style ="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se refleje el Down-payment</p>
+                    <div class="col-md-7 my-auto">
 
-                        <br>
-                        <p class="" style ="margin-bottom: 0 !important"><strong>Los documentos requeridos para PERSONAS CON TAX ID:</strong> </p>
-
-                        <p class="" style ="margin-bottom: 0 !important">✅ COPIA DE SU TAX ID</p>
-                        <p class="" style ="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia o el pasaporte</p>
-                        <p class=""  style ="margin-bottom: 0 !important">✅ Comprobantes de ingreso o colilla de pago</p>
-                        <p class="" style ="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se refleje el Down-payment</p>
+                        <p class="" style="margin-bottom: 0 !important"> HORA DE TU CITA:
+                            {{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $cliente->hora)->locale('es')->format('h:i a')}}
+                        </p>
+                        <p class="" style="margin-bottom: 0 !important">USTED FUE ATENDIDO POR: {{$cliente->name}}</p>
+                        <p class="" style="margin-bottom: 0 !important">EL ESTADO DE TU CITA ES :
+                            {{$cliente->nombreestado}} </p>
 
                     </div>
                 </div>
 
-            </div>    
+            </div>
         </div>
     </div>
 </div>
 
 
- 
 
 
-    <!-- Modal cancelar-->
+<div class="container" style="display: flex; align-items: center;  justify-content: center; ">
+    <div class="col-md-12">
+        <div class="btn-group mr-3 " role="group" aria-label="button group">
+
+            <div style="padding: 15px;     text-align: center;">
+
+                <a data-target="#" data-toggle="modal" id="confirmar" class="MainNavText" id="modalmishoras"
+                    href="#"><img src="{{ asset('iconos/reagendar.png') }}" class="btnexcel" /></a>
+                <p>REAGENDAR CITA</p>
+
+                <!-- 
+        <button type="button" id="reagendar" style="width: 300px;" class="btn btn-primary">Reagendar Cita</button>
+ -->
+            </div>
+
+            <div style="padding: 15px;     text-align: center;">
+                <a data-target="#" data-toggle="modal" id="confirmar" class="MainNavText" id="modalmishoras"
+                    href="#"><img src="{{ asset('iconos/confirmar.png') }}" class="btnexcel" /></a>
+                <p>CONFIRMAR CITA</p>
+
+                <!-- 
+        <button type="button" id="confirmar" style="width: 300px;"  class="btn btn-success">Confirmar Cita</button>
+ -->
+            </div>
+
+            <div style="padding: 15px;     text-align: center;">
+
+                <a ata-target="#" data-toggle="modal" id="cancelar" class="MainNavText" id="modalmishoras" href="#"><img
+                        src="{{ asset('iconos/cerrar.png') }}" class="btnexcel" /></a>
+                <p>CANCELAR CITA</p>
+                <!-- 
+        <button type="button" id="cancelar" style="width: 300px;"  class="btn btn-danger">Cancelar Cita</button>
+ -->
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<br><br>
+
+
+
+
+
+</div>
+
+<br>
+
+
+<div class="col-md-12  mb-4">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="cart-title"><strong>Recuerda que todas nuestras asesorias son completamente gartis</strong></h5>
+            <br>
+            <h5 class="cart-title"><strong>Documentos a presentar al dia de la cita</strong></h5>
+            <div class="row mb-3 mt-3">
+
+                <div class="col-md-7 my-auto">
+                    <p class="" style="margin-bottom: 0 !important"><strong>Los documentos requeridos para personas con
+                            social:</strong> </p>
+
+                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2020</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2021</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia
+                        o el pasaporte</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de ingreso o colilla de pago</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Copia de Social Security Number </p>
+                    <p class="" style="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se
+                        refleje el Down-payment</p>
+
+                    <br>
+                    <p class="" style="margin-bottom: 0 !important"><strong>Los documentos requeridos para PERSONAS CON
+                            TAX ID:</strong> </p>
+
+                    <p class="" style="margin-bottom: 0 !important">✅ COPIA DE SU TAX ID</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia
+                        o el pasaporte</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de ingreso o colilla de pago</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se
+                        refleje el Down-payment</p>
+                    <br>
+                    <p class="" style="margin-bottom: 0 !important"><strong> Si necesitas mas ayuda llama al <a
+                                href="tel:+1">631-609-9108</a></strong></p>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+
+<!-- Modal cancelar-->
 <div class="modal fade" id="popup_cancelar" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                ¿ Por que quiere cancelar su cita ?
+                    ¿ Por que quiere cancelar su cita ?
                 </h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -230,7 +300,7 @@ table.display {
                     <div class="form-group ">
                         <label for="start">Fechas y oficina :</label>
                         <select name="cuposid" id="cuposid" onchange="" class="form-control">
-                            
+
                         </select>
                     </div>
 
@@ -241,8 +311,7 @@ table.display {
                                 class="form-control col-md-3 hora">
                             </select>
 
-                            <select name="minutosReagendar" id="minutosReagendar"
-                                class="form-control col-md-3 hora">
+                            <select name="minutosReagendar" id="minutosReagendar" class="form-control col-md-3 hora">
                                 <option value="00" selected>00</option>
                                 <option value="30">30</option>
                             </select>
