@@ -22,14 +22,12 @@ $domingo = date('Y-m-d', strtotime("next sunday"));
 $dia_siguiente =date("Y-m-d", strtotime("+1 day"));
 
 // DIA DE AHORA 
-$ahora =strftime("%A %d de %B del %Y");
+$ahora =strftime("%A");
 
 
 if($ahora == "Wednesday" || $ahora == "Thursday" ){
 
-
-
-    $consulta = "SELECT clientes.telefono, clientes.nombre, detalle_cupos.hora, cupos.start , users.name FROM detalle_cupos
+    $consulta = "SELECT clientes.telefono, clientes.nombre,cupos.start, detalle_cupos.hora,DATE_FORMAT(cupos.start,'%W %e de %M de %Y')  as fecha  ,(CASE WHEN DATE_FORMAT(detalle_cupos.hora,'%p') = 'AM' THEN CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la mañana') ELSE CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la tarde')  END)  as horaforma ,users.name FROM detalle_cupos
     INNER JOIN clientes on clientes.id = detalle_cupos.id_cliente
     INNER JOIN users on users.id = detalle_cupos.id_usuario
     INNER JOIN cupos on cupos.id = detalle_cupos.id_cupo
@@ -53,7 +51,7 @@ $numeros_clientes = mysqli_query( $conexion1, $consulta ) or die ( "Algo ha ido 
 
 
 
-//echo "ESTA ES LA <FECHA></FECHA> ... $ahora.  </br>";
+echo "ESTA ES LA <FECHA></FECHA> ... $ahora.  </br>";
 
 
 

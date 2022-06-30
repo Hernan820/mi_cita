@@ -17,7 +17,7 @@ let formreagendar = document.getElementById("reagendarform");
         Swal.fire({
             position: "top-end",
             icon: "success",
-            title: "¡Registro ya esta confirmado !",
+            title: "¡Tu cita ya esta confirmada!",
             showConfirmButton: false,
             timer: 1500
         }); 
@@ -127,7 +127,7 @@ let formreagendar = document.getElementById("reagendarform");
             Swal.fire({
                 position: "top-end",
                 icon: "success",
-                title: "¡Cita ya ha sido  cancelada exitosamente!",
+                title: "¡Cita ya ha sido cancelada exitosamente!",
                 showConfirmButton: false,
                 timer: 1500
             }); 
