@@ -249,9 +249,14 @@ table.display {
                 <form action="" id="reagendarform">
                     {!! csrf_field() !!}
                     <div class="form-group ">
-                        <label for="start">Fechas y oficina :</label>
-                        <select name="cuposid" id="cuposid" onchange="" class="form-control">
+                        <label for="start">Oficina :</label>
+                        <select name="oficinas" id="oficinas" onchange="" class="form-control">
+                        </select>
+                    </div>
 
+                    <div class="form-group ">
+                        <label for="start">Fechas:</label>
+                        <select name="fechascupos" id="fechascupos" onchange="" class="form-control">
                         </select>
                     </div>
 

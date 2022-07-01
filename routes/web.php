@@ -25,7 +25,7 @@ Route::get('/', function () {
 
 Route::get('/{idc}', [App\Http\Controllers\DetalleController::class, 'index']);
 
-Route::post('cliente/confirmar/{idcita}', [App\Http\Controllers\DetalleController::class, 'create']);
+Route::post('cliente/confirmar/{idcita}', [App\Http\Controllers\DetalleController::class, 'confirmar']);
 
 Route::post('cliente/cancelar/{idcita}', [App\Http\Controllers\DetalleController::class, 'cancelar']);
 
