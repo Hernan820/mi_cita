@@ -77,7 +77,7 @@ table.display {
 
 
     <div class="jumbotron">
-        <h1 class="display" style="text-align: center;">Hola! {{$cliente->nombrec}} {{$cliente->apellidos}}</h1>
+        <h1 class="display" style="text-align: center;">¡Hola! {{$cliente->nombrec}} {{$cliente->apellidos}}</h1>
 
 
         <h1 style="text-align: center;">Gestiona tu cita</h1>
@@ -154,9 +154,9 @@ table.display {
 <div class="col-md-12  mb-4">
     <div class="card">
         <div class="card-body">
-            <h5 class="cart-title"><strong>Recuerda que todas nuestras asesorias son completamente gartis</strong></h5>
+            <h5 class="cart-title"><strong>Recuerda que todas nuestras asesorías son completamente gratis</strong></h5>
             <br>
-            <h5 class="cart-title"><strong>Documentos a presentar al dia de la cita</strong></h5>
+            <h5 class="cart-title"><strong>Documentos a presentar al día de la cita</strong></h5>
             <div class="row mb-3 mt-3">
 
                 <div class="col-md-7 my-auto">
@@ -250,7 +250,7 @@ table.display {
                     {!! csrf_field() !!}
                     <div class="form-group ">
                         <label for="start">Oficina :</label>
-                        <select name="oficinas" id="oficinas" onchange="" class="form-control">
+                        <select name="oficinas" id="oficinas" class="form-control">
                         </select>
                     </div>
 

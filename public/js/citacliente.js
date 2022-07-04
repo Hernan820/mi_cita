@@ -141,29 +141,29 @@ let formreagendar = document.getElementById("reagendarform");
 
 
     $('#reagendar').on('click', function() {
-
-        $("#cuposid").html("");
-        var cupoid = $("#idcupo").val();
-
-        axios.post(principalUrl + "cliente/cupos")
+        $("#fechascupos").html("");
+        $("#oficinas").html("");
+        var ofici = $("#nombreoficina").val();
+        var idcita= $("#idcita").val();
+        axios.post(principalUrl + "cliente/oficinas/"+idcita)
         .then((respuesta) => {
             moment.locale("es");
-            $("#cuposid").append( "<option enabled='true' value=''>Elige una Fecha &nbsp;&nbsp;&nbsp;&nbsp; Oficina</option>");
+            $("#oficinas").append( "<option enabled='true' value=''>Elige una Fecha &nbsp;&nbsp;&nbsp;&nbsp; Oficina</option>");
+            $("#fechascupos").append("<option selected value=''>Fechas</option>");
 
-                respuesta.data.forEach(function (element) {   
-                    if(element.id != cupoid){                                 
-                    $("#cuposid").append("<option value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+" ---------- "+element.nombre+"</option>");
+                respuesta.data.ofi.forEach(function (element) {   
+                    if(element.nombre == ofici){     
+                    $("#oficinas").append("<option selected value=" +element.id+">"+element.nombre+"</option>");
+                    }else{
+                    $("#oficinas").append("<option value=" +element.id+">"+element.nombre+"</option>");
                     }
                 });
 
-            if(respuesta.data == 1){
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "¡Cita cancelada exitosamente!",
-                    showConfirmButton: false,
-                }); 
-            }
+                respuesta.data.cupos.forEach(function (element) {   
+
+                    $("#fechascupos").append("<option  value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+"</option>");
+                  
+                });
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response.data);
@@ -175,10 +175,10 @@ let formreagendar = document.getElementById("reagendarform");
         $("#popup_reagendar").modal("show");
     });
 
-    $('#cuposid').on('change', function() {
+    $('#fechascupos').on('change', function() {
         
         $(".hora").val("");
-        var id = $("#cuposid").val();
+        var id = $("#fechascupos").val();
         $("#horaReagendar").html("");
     axios.post(principalUrl + "cita/listarHorario/"+id)
         .then((respuesta) => { 
@@ -209,6 +209,47 @@ let formreagendar = document.getElementById("reagendarform");
             }
         }); 
     });
+
+
+    $('#oficinas').on('change', function() {
+        var idcita= $("#oficinas").val();
+
+        $("#fechascupos").html("");
+        $("#oficinas").html("");
+       // var ofici = $("#nombreoficina").val();
+        console.log(idcita);
+        axios.post(principalUrl + "cliente/oficinas/"+idcita)
+        .then((respuesta) => {
+            moment.locale("es");
+            $("#oficinas").append( "<option enabled='true' value=''>Elige una Fecha &nbsp;&nbsp;&nbsp;&nbsp; Oficina</option>");
+            $("#fechascupos").append("<option selected value=''>Fechas</option>");
+
+                respuesta.data.ofi.forEach(function (element) {   
+                    if(element.id == idcita){     
+                    $("#oficinas").append("<option selected value=" +element.id+">"+element.nombre+"</option>");
+                    }else{
+                    $("#oficinas").append("<option value=" +element.id+">"+element.nombre+"</option>");
+                    }
+                });
+
+                respuesta.data.cupos.forEach(function (element) {   
+
+                    $("#fechascupos").append("<option  value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+"</option>");
+                  
+                });
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error.response.data);
+            }
+        });
+
+        $(".hora").val("");
+      //  $("#reagendar").trigger("reset");
+      //  $("#popup_reagendar").modal("show");
+       
+    });
+
+
 
 
  $('#horaReagendar').on('change', function() {
@@ -252,7 +293,7 @@ let formreagendar = document.getElementById("reagendarform");
 
 
 document.getElementById("btnReagendar").addEventListener("click", function () {
-    var cupo = $("#idcupo").val();
+    var cupo = $("#fechascupos").val();
     var hora = $("#horaReagendar").val();
     var oficina = $("#nombreofic").val();
     var fecha = $("#fecharea").val();

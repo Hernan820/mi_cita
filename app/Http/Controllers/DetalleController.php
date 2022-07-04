@@ -320,7 +320,7 @@ http://localhost/mi_cita/public/8710
 
             $cupo = Cupo::join("oficinas","oficinas.id", "=", "cupos.id_oficina")
             ->select("oficinas.nombre as title", "cupos.start","cupos.id")
-            ->where("cupos.id", "=", $request->cuposid)
+            ->where("cupos.id", "=", $request->fechascupos)
             ->get()
             ->first();
     
@@ -329,7 +329,7 @@ http://localhost/mi_cita/public/8710
     
             //crea una cita con las mismas propiedades
             $detallecupo= new DetalleCupo;
-            $detallecupo->id_cupo = $request->cuposid;
+            $detallecupo->id_cupo = $request->fechascupos;
             $detallecupo->id_cliente =$cita->id_cliente;
             $detallecupo->id_estado = 4;
             $detallecupo->id_usuario = $cita->id_usuario;
@@ -347,7 +347,7 @@ http://localhost/mi_cita/public/8710
             ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
             ->join("clientes","clientes.id", "=", "detalle_cupos.id_cliente") 
             ->select("users.name","cupos.start","clientes.telefono","oficinas.direccion")
-            ->where("detalle_cupos.id_cupo","=",$request->cuposid)
+            ->where("detalle_cupos.id_cupo","=",$request->fechascupos)
             ->get()
             ->first();
 
@@ -404,7 +404,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
            
 
     
-             $r = $this->link_send(+50379776604,$msg,$tipo=3);
+             $r = $this->link_send(+50379776604,$msg,$tipo=4);
         
         return 1 ;
          }else{
@@ -421,8 +421,30 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function oficinas($idcita)
     {
-        //
+
+        
+        $cita= DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+        ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+        ->select('cupos.start','oficinas.id')
+        ->where('detalle_cupos.id','=',$idcita)
+        ->first();
+
+        $ofi= Oficina::join("cupos","cupos.id_oficina", "=", "oficinas.id")
+        ->select('oficinas.id','oficinas.nombre')
+        ->where('cupos.start','>=', $cita->start)
+        ->groupBy('oficinas.id','oficinas.nombre')
+
+        ->get();
+
+
+        $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
+        ->where('cupos.id_oficina','=', $cita->id)
+        ->where('cupos.start','>', $cita->start)
+        ->get();
+
+        return response()->json(['ofi' => $ofi, 'cupos' => $cupos],200);
+
     }
 }

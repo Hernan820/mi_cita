@@ -29,7 +29,7 @@ Route::post('cliente/confirmar/{idcita}', [App\Http\Controllers\DetalleControlle
 
 Route::post('cliente/cancelar/{idcita}', [App\Http\Controllers\DetalleController::class, 'cancelar']);
 
-Route::post('cliente/cupos', [App\Http\Controllers\DetalleController::class, 'cupos']);
+Route::post('cliente/oficinas/{idcita}', [App\Http\Controllers\DetalleController::class, 'oficinas']);
 
 Route::post('cita/listarHorario/{id}', [App\Http\Controllers\DetalleController::class, 'listarhoras']);
 
