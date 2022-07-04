@@ -183,7 +183,7 @@ Estos documentos son por cada persona interesada en comprar la casa!
         $array =str_split($cliente->telefono);
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
 
-        $r = $this->link_send(+50379776604,$msg,$tipo=3); 
+        $r = $this->link_send(+50379776604,$msg,$tipo=4); 
 
 
         return 1 ;
@@ -227,7 +227,7 @@ http://localhost/mi_cita/public/8710
          $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
         
  
-          $r = $this->link_send(+50379776604,$msg,$tipo=3);  
+          $r = $this->link_send(+50379776604,$msg,$tipo=4);  
 
         return 1 ;
      }

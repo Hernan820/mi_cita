@@ -25,7 +25,7 @@ let formreagendar = document.getElementById("reagendarform");
         
     Swal.fire({
         title: "Confirmar cita",
-        text: "¿Estas seguro de confirmar tu cita "+nombre+" "+apellidos+" para la fecha: "+fecha+", en la oficina de "+oficina+" ?",
+        text: "¿Estás seguro de confirmar tu cita "+nombre+" "+apellidos+" para la fecha: "+fecha+", en la oficina de "+oficina+"?",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
@@ -72,7 +72,7 @@ let formreagendar = document.getElementById("reagendarform");
 
     Swal.fire({
         title: "Cancelar cita",
-        text: "¿Estas seguro de cancelar tu cita "+nombre+" "+apellidos+" ?",
+        text: "¿Estás seguro de cancelar tu cita "+nombre+" "+apellidos+"?",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",

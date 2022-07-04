@@ -183,7 +183,7 @@ table.display {
                     <p class="" style="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se
                         refleje el Down-payment</p>
                     <br>
-                    <p class="" style="margin-bottom: 0 !important"><strong> Si necesitas mas ayuda llama al <a
+                    <p class="" style="margin-bottom: 0 !important"><strong> Si necesitas más ayuda llama al <a
                                 href="tel:+1">631-609-9108</a></strong></p>
 
                 </div>
@@ -205,7 +205,7 @@ table.display {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    ¿ Por que quiere cancelar su cita ?
+                ¿Por qué quiere cancelar su cita?
                 </h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
