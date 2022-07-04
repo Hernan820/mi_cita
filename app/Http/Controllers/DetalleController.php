@@ -402,17 +402,12 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
             $array =str_split($usuario->telefono);
             $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
            
-
-    
              $r = $this->link_send(+50379776604,$msg,$tipo=4);
         
         return 1 ;
          }else{
-
             return 2;
          }
-        
-        
         }
 
     /**
@@ -423,6 +418,9 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
      */
     public function oficinas($idcita)
     {
+
+        $fechaActual = date('Y-m-d');
+
         $cita= DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
         ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
         ->select('cupos.start','oficinas.id')
@@ -431,13 +429,15 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
 
         $ofi= Oficina::join("cupos","cupos.id_oficina", "=", "oficinas.id")
         ->select('oficinas.id','oficinas.nombre')
-        ->where('cupos.start','>=', $cita->start)
+        ->where('cupos.start','>=', $fechaActual)
+        //->where('cupos.start','>=', $cita->start)
         ->groupBy('oficinas.id','oficinas.nombre')
         ->get();
 
         $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
         ->where('cupos.id_oficina','=', $cita->id)
-        ->where('cupos.start','>', $cita->start)
+        //->where('cupos.start','>', $cita->start)
+        ->where('cupos.start','>=', $fechaActual)
         ->get();
 
         return response()->json(['ofi' => $ofi, 'cupos' => $cupos],200);
@@ -445,6 +445,8 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
 
     public function fechas($idcita,$idofi)
     {
+        $fechaActual = date('Y-m-d');
+
         $cita= DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
         ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
         ->select('cupos.start','oficinas.id')
@@ -453,11 +455,11 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
 
         $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
         ->where('cupos.id_oficina','=', $idofi)
-        ->where('cupos.start','>', $cita->start)
+        //->where('cupos.start','>', $cita->start)
+        ->where('cupos.start','>=', $fechaActual)
         ->get();
 
         return response()->json($cupos);
-
     }
 
 }
