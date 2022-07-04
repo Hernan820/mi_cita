@@ -148,8 +148,8 @@ let formreagendar = document.getElementById("reagendarform");
         axios.post(principalUrl + "cliente/oficinas/"+idcita)
         .then((respuesta) => {
             moment.locale("es");
-            $("#oficinas").append( "<option enabled='true' value=''>Elige una Fecha &nbsp;&nbsp;&nbsp;&nbsp; Oficina</option>");
-            $("#fechascupos").append("<option selected value=''>Fechas</option>");
+            $("#oficinas").append( "<option  disabled='true'  value=''>Elige una Fecha &nbsp;&nbsp;&nbsp;&nbsp; Oficina</option>");
+            $("#fechascupos").append("<option selected disabled='true' value=''>Fechas</option>");
 
                 respuesta.data.ofi.forEach(function (element) {   
                     if(element.nombre == ofici){     
@@ -159,15 +159,19 @@ let formreagendar = document.getElementById("reagendarform");
                     }
                 });
 
+               if(respuesta.data.cupos.length > 0 ){
                 respuesta.data.cupos.forEach(function (element) {   
-
                     $("#fechascupos").append("<option  value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+"</option>");
-                  
                 });
+
+               }else{
+                $("#fechascupos").append("<option disabled='true' value=''>No hay mas fechas para esta oficina</option>");
+               } 
+ 
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response.data);
-            }
+            }h5ki5
         });
 
         $(".hora").val("");
@@ -200,7 +204,7 @@ let formreagendar = document.getElementById("reagendarform");
                 });
 
                 if(horasvacias == 0){
-                    $("#horaReagendar").append("<option value=''>No hay horas vacias</option>");
+                    $("#horaReagendar").append("<option readonly='true' value=''>No hay horas vacias</option>");
                 }
         })
         .catch((error) => {
@@ -212,31 +216,27 @@ let formreagendar = document.getElementById("reagendarform");
 
 
     $('#oficinas').on('change', function() {
-        var idcita= $("#oficinas").val();
+        var idofi= $("#oficinas").val();
+        var idcita= $("#idcita").val();
 
         $("#fechascupos").html("");
-        $("#oficinas").html("");
+        //$("#oficinas").html("");
        // var ofici = $("#nombreoficina").val();
         console.log(idcita);
-        axios.post(principalUrl + "cliente/oficinas/"+idcita)
+        axios.post(principalUrl + "cliente/fechasoficinas/"+idcita+"/"+idofi)
         .then((respuesta) => {
             moment.locale("es");
-            $("#oficinas").append( "<option enabled='true' value=''>Elige una Fecha &nbsp;&nbsp;&nbsp;&nbsp; Oficina</option>");
-            $("#fechascupos").append("<option selected value=''>Fechas</option>");
+            $("#fechascupos").append("<option selected readonly value=''>Fechas</option>");
 
-                respuesta.data.ofi.forEach(function (element) {   
-                    if(element.id == idcita){     
-                    $("#oficinas").append("<option selected value=" +element.id+">"+element.nombre+"</option>");
-                    }else{
-                    $("#oficinas").append("<option value=" +element.id+">"+element.nombre+"</option>");
-                    }
-                });
 
-                respuesta.data.cupos.forEach(function (element) {   
-
-                    $("#fechascupos").append("<option  value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+"</option>");
-                  
-                });
+                if(respuesta.data.length > 0 ){
+                    respuesta.data.forEach(function (element) {   
+                        $("#fechascupos").append("<option  value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+"</option>");
+                    });
+    
+                   }else{
+                    $("#fechascupos").append("<option readonly='true'  value=''>No hay mas fechas para esta oficina</option>");
+                   } 
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response.data);
@@ -258,7 +258,7 @@ let formreagendar = document.getElementById("reagendarform");
     $("#minutosReagendar").val("00");
 
         var hora = $("#horaReagendar").val();
-        var id = $("#cuposid").val();
+        var id = $("#fechascupos").val();
 
     axios.post(principalUrl + "cita/listarHorario/"+id)
         .then((respuesta) => { 

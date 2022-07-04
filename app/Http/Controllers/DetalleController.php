@@ -423,8 +423,6 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
      */
     public function oficinas($idcita)
     {
-
-        
         $cita= DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
         ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
         ->select('cupos.start','oficinas.id')
@@ -435,9 +433,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
         ->select('oficinas.id','oficinas.nombre')
         ->where('cupos.start','>=', $cita->start)
         ->groupBy('oficinas.id','oficinas.nombre')
-
         ->get();
-
 
         $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
         ->where('cupos.id_oficina','=', $cita->id)
@@ -445,6 +441,23 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
         ->get();
 
         return response()->json(['ofi' => $ofi, 'cupos' => $cupos],200);
+    }
+
+    public function fechas($idcita,$idofi)
+    {
+        $cita= DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+        ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+        ->select('cupos.start','oficinas.id')
+        ->where('detalle_cupos.id','=',$idcita)
+        ->first();
+
+        $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
+        ->where('cupos.id_oficina','=', $idofi)
+        ->where('cupos.start','>', $cita->start)
+        ->get();
+
+        return response()->json($cupos);
 
     }
+
 }

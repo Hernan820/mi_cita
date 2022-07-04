@@ -31,6 +31,8 @@ Route::post('cliente/cancelar/{idcita}', [App\Http\Controllers\DetalleController
 
 Route::post('cliente/oficinas/{idcita}', [App\Http\Controllers\DetalleController::class, 'oficinas']);
 
+Route::post('cliente/fechasoficinas/{idcita}/{idofi}', [App\Http\Controllers\DetalleController::class, 'fechas']);
+
 Route::post('cita/listarHorario/{id}', [App\Http\Controllers\DetalleController::class, 'listarhoras']);
 
 Route::post('cita/reagendar', [App\Http\Controllers\DetalleController::class, 'reagendar']);
