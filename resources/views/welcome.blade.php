@@ -74,7 +74,7 @@ table.display {
 
 <div class="col-md-12" style="background-color: ">
 
-
+ 
 
     <div class="jumbotron">
         <h1 class="display" style="text-align: center;">¡Hola! {{$cliente->nombrec}} {{$cliente->apellidos}}</h1>
@@ -87,9 +87,8 @@ table.display {
             </strong> </p>
         <hr>
         <p class="lead">
-        <h2> Oficina: {{$cliente->nombreo}} &nbsp; &nbsp;Fecha:
-            &nbsp;{{ \Carbon\Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y')}}
-        </h2>
+        <h2>Oficina: {{$cliente->nombreo}}</h2> 
+        <h2>Fecha:  {{ \Carbon\Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y')}}</h2>
         </p>
     </div>
 
@@ -160,8 +159,7 @@ table.display {
             <div class="row mb-3 mt-3">
 
                 <div class="col-md-7 my-auto">
-                    <p class="" style="margin-bottom: 0 !important"><strong>Los documentos requeridos para personas con
-                            social:</strong> </p>
+                    <p class="" style="margin-bottom: 0 !important"><strong>Los documentos requeridos para PERSONAS CON SOCIAL:</strong> </p>
 
                     <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2020</p>
                     <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2021</p>
