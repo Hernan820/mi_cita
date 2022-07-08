@@ -27,19 +27,19 @@ $ahora =strftime("%A");
 
 if($ahora == "Wednesday" || $ahora == "Thursday" ){
 
-    $consulta = "SELECT clientes.telefono, clientes.nombre,cupos.start, detalle_cupos.hora,DATE_FORMAT(cupos.start,'%W %e de %M de %Y')  as fecha  ,(CASE WHEN DATE_FORMAT(detalle_cupos.hora,'%p') = 'AM' THEN CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la mañana') ELSE CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la tarde')  END)  as horaforma ,users.name FROM detalle_cupos
+    $consulta = "SELECT clientes.id , clientes.telefono, clientes.nombre,cupos.start, detalle_cupos.hora,DATE_FORMAT(cupos.start,'%W %e de %M de %Y')  as fecha  ,(CASE WHEN DATE_FORMAT(detalle_cupos.hora,'%p') = 'AM' THEN CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la mañana') ELSE CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la tarde')  END)  as horaforma ,users.name FROM detalle_cupos
     INNER JOIN clientes on clientes.id = detalle_cupos.id_cliente
     INNER JOIN users on users.id = detalle_cupos.id_usuario
     INNER JOIN cupos on cupos.id = detalle_cupos.id_cupo
-    WHERE cupos.start IN('$dia_siguiente','$sabado','$domingo') AND detalle_cupos.id_estado IN(4,5);";
+    WHERE cupos.start IN('$dia_siguiente','$sabado','$domingo') AND detalle_cupos.id_estado IN(4,5) AND detalle_cupos.estado_cupo IS null;";
 
 }else {
 
-    $consulta ="SELECT clientes.telefono, clientes.nombre,cupos.start, detalle_cupos.hora,DATE_FORMAT(cupos.start,'%W %e de %M de %Y')  as fecha  ,(CASE WHEN DATE_FORMAT(detalle_cupos.hora,'%p') = 'AM' THEN CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la mañana') ELSE CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la tarde')  END)  as horaforma ,users.name FROM detalle_cupos
+    $consulta ="SELECT clientes.id , clientes.telefono, clientes.nombre,cupos.start, detalle_cupos.hora,DATE_FORMAT(cupos.start,'%W %e de %M de %Y')  as fecha  ,(CASE WHEN DATE_FORMAT(detalle_cupos.hora,'%p') = 'AM' THEN CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la mañana') ELSE CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la tarde')  END)  as horaforma ,users.name FROM detalle_cupos
     INNER JOIN clientes on clientes.id = detalle_cupos.id_cliente
     INNER JOIN users on users.id = detalle_cupos.id_usuario
     INNER JOIN cupos on cupos.id = detalle_cupos.id_cupo
-    WHERE cupos.start IN('$dia_siguiente') AND detalle_cupos.id_estado IN(4,5);";
+    WHERE cupos.start IN('$dia_siguiente') AND detalle_cupos.id_estado IN(4,5) AND detalle_cupos.estado_cupo IS null;";
 
 }
 
@@ -123,10 +123,30 @@ echo "ESTA ES LA <FECHA></FECHA> ... $ahora.  </br>";
         return false;
 };
 
-  $conta=0;
 
+  $clave  = 'Una cadena, muy, muy larga para mejorar la encriptacion';
+  //Metodo de encriptación
+  $method = 'aes-256-cbc';
+  // Puedes generar una diferente usando la funcion $getIV()
+  $iv = base64_decode("C9fBxl1EWtYTL1/M8jfstw");
+   /*
+   Encripta el contenido de la variable, enviada como parametro.
+    */
+   $encriptar = function ($valor) use ($method, $clave, $iv) {
+       return openssl_encrypt ($valor, $method, $clave, false, $iv);
+   };
+   /*
+   Genera un valor para IV
+   */
+   $getIV = function () use ($method) {
+       return base64_encode(openssl_random_pseudo_bytes(openssl_cipher_iv_length($method)));
+   };
+  
+
+  
   foreach ($numeros_clientes as $num) 
     {
+        $idcliente = $encriptar($num['id']);
 
 
         $msg='Hola Buenas noches  '.$num['nombre'].'! le saluda '.$num['name'].' de parte del Team Acevedo y Casa de Mis Sueños 🏠✅
@@ -135,7 +155,10 @@ El motivo de nuestro mensaje , es por que uste tiene agendando una cita con noso
         
 haciendo click en el siguiente enlace puedes GESTIONAR a (confirmar , cancelar o reagendar).
         
-link
+http://localhost/mi_cita/public/'.$idcliente.'
+
+              
+https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
         
 si tienes alguna consulta puedes comunicarte con nosotros al 631-609-9108';
 
@@ -147,10 +170,10 @@ si tienes alguna consulta puedes comunicarte con nosotros al 631-609-9108';
 
  
                 
-    $conta=$conta + 1;
 
     echo '<td> '.$num['telefono'].'nmnmn '.$num['fecha'].'</td></br>';
     }
 
 
 ?>
+

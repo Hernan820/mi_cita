@@ -16,6 +16,7 @@ define('WB_TOKEN', '963fe4d6878286fc02a3b4571b84162f6176c9f6c3fc4');
 define('WB_FROM', '16315067068');
 date_default_timezone_set("America/New_York");
 
+
 class DetalleController extends Controller
 {
     /**
@@ -23,8 +24,18 @@ class DetalleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+     
+   public function encriptacion($valor){
+        $encrypted_data = base64_decode($valor);
+        return openssl_decrypt($valor, 'aes-256-cbc', 'Una cadena, muy, muy larga para mejorar la encriptacion', false, base64_decode("C9fBxl1EWtYTL1/M8jfstw"));
+    }
+ 
+
     public function index($idc)
     {
+        $idcliente = $this->encriptacion($idc);
 
         $cliente = DetalleCupo::join("clientes","clientes.id", "=", "detalle_cupos.id_cliente")
         ->join("users","users.id", "=", "detalle_cupos.id_usuario")
@@ -34,7 +45,7 @@ class DetalleController extends Controller
 
         ->select("clientes.*","clientes.nombre as nombrec","estados.nombre as nombreestado","detalle_cupos.*","detalle_cupos.id as idcita","cupos.*","cupos.id as idcupo","users.*","oficinas.*","oficinas.nombre as nombreo")
         
-        ->where("detalle_cupos.id_cliente", "=", $idc)
+        ->where("detalle_cupos.id_cliente", "=", $idcliente)
         ->where("detalle_cupos.estado_cupo", "=",null)
         ->where("detalle_cupos.id_estado", "!=",3)
         
