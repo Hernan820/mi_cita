@@ -25,10 +25,14 @@ $dia_siguiente =date("Y-m-d", strtotime("+1 day"));
 //$ahora =strftime("%A");
 $ahora =date('2022-06-22 w');
 
-    $consulta = "SELECT clientes.telefono  FROM detalle_cupos
-    INNER JOIN clientes on clientes.id = detalle_cupos.id_cliente
-    INNER JOIN cupos on cupos.id = detalle_cupos.id_cupo
-    WHERE cupos.start IN('$ahora') AND detalle_cupos.id_estado IN(4,5);";
+   $consulta ="SELECT oficinas.direccion ,clientes.telefono, clientes.nombre,cupos.start, detalle_cupos.hora,DATE_FORMAT(cupos.start,'%W %e de %M de %Y')  as fecha  ,(CASE WHEN DATE_FORMAT(detalle_cupos.hora,'%p') = 'AM' THEN CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la mañana') ELSE CONCAT(DATE_FORMAT(detalle_cupos.hora,'%h:%i'), ' de la tarde')  END)  as horaforma ,users.name FROM detalle_cupos
+   INNER JOIN clientes on clientes.id = detalle_cupos.id_cliente
+   INNER JOIN users on users.id = detalle_cupos.id_usuario
+   INNER JOIN cupos on cupos.id = detalle_cupos.id_cupo
+   INNER JOIN oficinas  on oficinas.id = cupos.id_oficina
+   WHERE cupos.start IN('2022-07-10') AND detalle_cupos.id_estado IN(4,5) AND detalle_cupos.estado_cupo IS null;";
+
+mysqli_query( $conexion1, "SET lc_time_names = 'es_ES'" ) or die ( "Algo ha ido mal en la consulta de idioma a la base de datos");
 
 $numeros_clientes = mysqli_query( $conexion1, $consulta ) or die ( "Algo ha ido mal en la consulta a la base de datos111111111111");
 
@@ -100,33 +104,96 @@ echo "ESTA ES LA FECHA ... $ahora.  </br>";
 };
 
 
-$msg="Hola Buenas Noches  nombre cliente! le saluda $usuario->name de parte del Team Acevedo y Casa de Mis Sueños 🏠✅
-
-El motivo de nuestro mensaje , es por que uste tiene agendando una cita con nosotros para el dia ***** a la *****
-
-haciendo click en el siguiente enlace puedes GESTIONAR a (confirmar , cancelar o reagendar).
-
-link
-
-si tienes alguna consulta puedes comunicarte con nosotros al 631-609-9108
-
-
-$conta";
-
-
-  $conta=0;
-
 
   foreach ($numeros_clientes as $num) 
     {
+        
+$msg='Hola! le saluda '.$num['name'].' de parte del Team Acevedo y Casa de Mis Sueños 🏠✅
+
+Recuerda que tienes tu cita agendada para el día '.$num['fecha'].' a las  '.$num['horaforma'].'
+            
+La dirección de nuestra oficina es 
+📍 '.$num['direccion'].'
+            
+Los documentos requeridos para personas con social:
+
+✅ Comprobantes de taxes del 2020
+✅ Comprobantes de taxes del 2021
+✅ Documento de identificación, puede ser la licencia o el pasaporte
+✅ Comprobantes de ingreso o colilla de pago
+✅ Copia de Social Security Number 
+✅ El último estado de cuenta bancario donde se refleje el Down-payment
+
+Los documentos requeridos para PERSONAS CON TAX ID:
+
+✅ COPIA DE SU TAX ID
+✅ Documento de identificación, puede ser la licencia o el pasaporte
+✅ Comprobantes de ingreso o colilla de pago
+✅ El último estado de cuenta bancario donde se refleje el Down-payment
+
+Estos documentos son por cada persona interesada en comprar la casa!
+            
+*Por favor ayudanos a confirmar tu asistencia a traves de este whatsapp y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos. *
+            
+Cualquier consulta puedes llamarnos al 631-609-9108
+            
+Si tiene alguna duda estoy a la orden✅
+            
+            
+Conócenos:
+            
+https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s';
+
         $array =str_split($num['telefono']);
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
         
         $r = link_send(+50379776604,$msg,$tipo=4);
 
 
-        $conta=$conta + 1;
         echo '<td> '.$num['telefono'].'</td></br>';
 
     }
 ?>
+
+<?php
+//Configuración del algoritmo de encriptación
+//Debes cambiar esta cadena, debe ser larga y unica
+//nadie mas debe conocerla
+$clave  = 'Una cadena, muy, muy larga para mejorar la encriptacion';
+//Metodo de encriptación
+$method = 'aes-256-cbc';
+// Puedes generar una diferente usando la funcion $getIV()
+$iv = base64_decode("C9fBxl1EWtYTL1/M8jfstw==");
+ /*
+ Encripta el contenido de la variable, enviada como parametro.
+  */
+ $encriptar = function ($valor) use ($method, $clave, $iv) {
+     return openssl_encrypt ($valor, $method, $clave, false, $iv);
+ };
+ /*
+ Desencripta el texto recibido
+ */
+ $desencriptar = function ($valor) use ($method, $clave, $iv) {
+     $encrypted_data = base64_decode($valor);
+     return openssl_decrypt($valor, $method, $clave, false, $iv);
+ };
+ /*
+ Genera un valor para IV
+ */
+ $getIV = function () use ($method) {
+     return base64_encode(openssl_random_pseudo_bytes(openssl_cipher_iv_length($method)));
+ };
+
+
+
+ <?php
+include "mcript.php";
+// Como usar las funciones para encriptar y desencriptar.
+$dato = "Esta es información importante";
+//Encripta información:
+$dato_encriptado = $encriptar($dato);
+//Desencripta información:
+$dato_desencriptado = $desencriptar($dato_encriptado);
+echo 'Dato encriptado: '. $dato_encriptado . '<br>';
+echo 'Dato desencriptado: '. $dato_desencriptado . '<br>';
+echo "IV generado: " . $getIV();
