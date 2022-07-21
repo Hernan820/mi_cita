@@ -29,7 +29,7 @@ class DetalleController extends Controller
      
    public function encriptacion($valor){
         $encrypted_data = base64_decode($valor);
-        return openssl_decrypt($valor, 'aes-256-cbc', 'Una cadena, muy, muy larga para mejorar la encriptacion', false, base64_decode("C9fBxl1EWtYTL1/M8jfstw"));
+        return openssl_decrypt($valor, 'aes-256-cbc', 'Una cadena, muy, muy larga para mejorar la encriptacion', false, base64_decode("C9fBxl1EWtYTL1/M8jfstw=="));
     }
  
 
@@ -52,11 +52,13 @@ class DetalleController extends Controller
         ->orderBy("detalle_cupos.hora", 'asc')
         ->first();
 
+            if($cliente == null){
+                return view('errors.404');
+            }else{
+                return view('welcome',compact('cliente'));
+            }
 
 //        return response()->json($cliente);
-
-       return view('welcome',compact('cliente'));
-
     }
 
     /**
@@ -229,7 +231,7 @@ Si tiene alguna duda estoy a la orden✅
                     
 Conócenos:
                     
-http://localhost/mi_cita/public/8710
+https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 
 ";
 
@@ -237,7 +239,6 @@ http://localhost/mi_cita/public/8710
          $array =str_split($usuario->telefono);
          $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
         
- 
           $r = $this->link_send(+50379776604,$msg,$tipo=4);  
 
         return 1 ;
@@ -449,6 +450,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
         ->where('cupos.id_oficina','=', $cita->id)
         //->where('cupos.start','>', $cita->start)
         ->where('cupos.start','>=', $fechaActual)
+        ->orderBy('cupos.start','asc')
         ->get();
 
         return response()->json(['ofi' => $ofi, 'cupos' => $cupos],200);
@@ -468,6 +470,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
         ->where('cupos.id_oficina','=', $idofi)
         //->where('cupos.start','>', $cita->start)
         ->where('cupos.start','>=', $fechaActual)
+        ->orderBy('cupos.start','asc')
         ->get();
 
         return response()->json($cupos);

@@ -247,7 +247,7 @@ table.display {
                 <form action="" id="reagendarform">
                     {!! csrf_field() !!}
                     <div class="form-group ">
-                        <label for="start">Oficina :</label>
+                        <label for="start">Oficinas :</label>
                         <select name="oficinas" id="oficinas" class="form-control">
                         </select>
                     </div>
