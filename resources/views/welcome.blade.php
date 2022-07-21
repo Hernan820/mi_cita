@@ -182,7 +182,7 @@ table.display {
                         refleje el Down-payment</p>
                     <br>
                     <p class="" style="margin-bottom: 0 !important"><strong> Si necesitas más ayuda llama al <a
-                                href="tel:+1">631-609-9108</a></strong></p>
+                                href="tel:+1631-609-9108">631-609-9108</a></strong></p>
 
                 </div>
             </div>

@@ -12,6 +12,8 @@ use App\Models\DetalleCupo;
 use App\Models\CuposHorario;
 use Carbon\Carbon;
 
+use Twilio\Rest\Client;
+
 define('WB_TOKEN', '963fe4d6878286fc02a3b4571b84162f6176c9f6c3fc4');
 define('WB_FROM', '16315067068');
 date_default_timezone_set("America/New_York");
@@ -193,11 +195,42 @@ Los documentos requeridos para PERSONAS CON TAX ID:
 Estos documentos son por cada persona interesada en comprar la casa!
 ";
 
+$msgtxt="Hola! le saluda $cliente->name de parte del Team Acevedo y Casa de Mis Sueños 
+        
+Su cita ha sido confirmada para el día $fechatexto a las $horatexto
+
+La dirección de nuestra oficina es 
+ $cliente->direccion
+
+Los documentos requeridos para personas con social:
+
+ Comprobantes de taxes del 2020
+ Comprobantes de taxes del 2021
+ Documento de identificación, puede ser la licencia o el pasaporte
+ Comprobantes de ingreso o colilla de pago
+ Copia de Social Security Number 
+ El último estado de cuenta bancario donde se refleje el Down-payment
+
+Los documentos requeridos para PERSONAS CON TAX ID:
+
+ COPIA DE SU TAX ID
+ Documento de identificación, puede ser la licencia o el pasaporte
+ Comprobantes de ingreso o colilla de pago
+ El último estado de cuenta bancario donde se refleje el Down-payment
+
+Estos documentos son por cada persona interesada en comprar la casa!";
+
         $array =str_split($cliente->telefono);
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
 
         $r = $this->link_send(+50379776604,$msg,$tipo=4); 
 
+        $sid = getenv("TWILIO_SID");
+        $token  = getenv("TWILIO_AUTH_TOKEN");
+        $from= getenv("TWILIO_NUMBER");
+        $twilio = new Client($sid, $token);
+            
+        $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
 
         return 1 ;
     }
@@ -235,11 +268,27 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 
 ";
 
+$msgtxt="Hola! recuerda que pudes reagendar tu cita, contactandonos al 631-609-9108
+Si tiene alguna duda estoy a la orden
+                    
+                    
+Conócenos:
+                    
+https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
+";
+
 
          $array =str_split($usuario->telefono);
          $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
         
           $r = $this->link_send(+50379776604,$msg,$tipo=4);  
+
+          $sid = getenv("TWILIO_SID");
+          $token  = getenv("TWILIO_AUTH_TOKEN");
+          $from= getenv("TWILIO_NUMBER");
+          $twilio = new Client($sid, $token);
+              
+          $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
 
         return 1 ;
      }
@@ -399,11 +448,47 @@ Los documentos requeridos para PERSONAS CON TAX ID:
 
 Estos documentos son por cada persona interesada en comprar la casa!
             
-*Por favor ayudanos a confirmar tu asistencia a traves de este whatsapp y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos. *
+*Por favor ayudanos a confirmar tu asistencia a traves de este whatsapp y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos.*
             
 Cualquier consulta puedes llamarnos al 631-609-9108
             
 Si tiene alguna duda estoy a la orden✅
+            
+            
+Conócenos:
+            
+https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
+
+$msgtxt="Hola! le saluda $usuario->name de parte del Team Acevedo y Casa de Mis Sueños 
+
+Su cita ha sido reagendada para el día $fechatexto a las $horatexto
+            
+La dirección de nuestra oficina es 
+ $usuario->
+            
+Los documentos requeridos para personas con social:
+
+ Comprobantes de taxes del 2020
+ Comprobantes de taxes del 2021
+ Documento de identificación, puede ser la licencia o el pasaporte
+ Comprobantes de ingreso o colilla de pago
+ Copia de Social Security Number 
+ El último estado de cuenta bancario donde se refleje el Down-payment
+
+Los documentos requeridos para PERSONAS CON TAX ID:
+
+ COPIA DE SU TAX ID
+ Documento de identificación, puede ser la licencia o el pasaporte
+ Comprobantes de ingreso o colilla de pago
+ El último estado de cuenta bancario donde se refleje el Down-payment
+
+Estos documentos son por cada persona interesada en comprar la casa!
+            
+Por favor ayudanos a confirmar tu asistencia a traves de este whatsapp y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos.
+            
+Cualquier consulta puedes llamarnos al 631-609-9108
+            
+Si tiene alguna duda estoy a la orden
             
             
 Conócenos:
@@ -415,6 +500,13 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
             $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
            
              $r = $this->link_send(+50379776604,$msg,$tipo=4);
+
+             $sid = getenv("TWILIO_SID");
+             $token  = getenv("TWILIO_AUTH_TOKEN");
+             $from= getenv("TWILIO_NUMBER");
+             $twilio = new Client($sid, $token);
+                 
+             $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
         
         return 1 ;
          }else{

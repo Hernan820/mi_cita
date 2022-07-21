@@ -142,20 +142,20 @@ let formreagendar = document.getElementById("reagendarform");
 
     $('#reagendar').on('click', function() {
         $("#fechascupos").html("");
-        $("#oficinas").html("");
+      //  $("#oficinas").html("");
         var ofici = $("#nombreoficina").val();
         var idcita= $("#idcita").val();
         axios.post(principalUrl + "cliente/oficinas/"+idcita)
         .then((respuesta) => {
             moment.locale("es");
-            $("#oficinas").append( "<option  disabled='true'  value=''>Elige una Fecha &nbsp;&nbsp;&nbsp;&nbsp; Oficina</option>");
+           // $("#oficinas").append( "<option  disabled='true'  value=''>Elige una Fecha &nbsp;&nbsp;&nbsp;&nbsp; Oficina</option>");
             $("#fechascupos").append("<option selected disabled='true' value=''>Fechas</option>");
 
                 respuesta.data.ofi.forEach(function (element) {   
                     if(element.nombre == ofici){     
-                    $("#oficinas").append("<option selected value=" +element.id+">"+element.nombre+"</option>");
+                  //  $("#oficinas").append("<option selected value=" +element.id+">"+element.nombre+"</option>");
                     }else{
-                    $("#oficinas").append("<option value=" +element.id+">"+element.nombre+"</option>");
+                   // $("#oficinas").append("<option value=" +element.id+">"+element.nombre+"</option>");
                     }
                 });
 
@@ -216,7 +216,7 @@ let formreagendar = document.getElementById("reagendarform");
 
 
     $('#oficinas').on('change', function() {
-        var idofi= $("#oficinas").val();
+       // var idofi= $("#oficinas").val();
         var idcita= $("#idcita").val();
 
         $("#fechascupos").html("");
