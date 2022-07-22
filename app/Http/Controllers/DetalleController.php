@@ -194,7 +194,7 @@ Los documentos requeridos para PERSONAS CON TAX ID:
 
 Estos documentos son por cada persona interesada en comprar la casa!
 ";
-
+/************************************************************************************** */
 $msgtxt="Hola! le saluda $cliente->name de parte del Team Acevedo y Casa de Mis Sueños 
         
 Su cita ha sido confirmada para el día $fechatexto a las $horatexto
@@ -230,7 +230,7 @@ Estos documentos son por cada persona interesada en comprar la casa!";
         $from= getenv("TWILIO_NUMBER");
         $twilio = new Client($sid, $token);
             
-        $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+       // $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
 
         return 1 ;
     }
@@ -260,18 +260,16 @@ Estos documentos son por cada persona interesada en comprar la casa!";
 
         $msg="Hola! recuerda que pudes reagendar tu cita, contactandonos al 631-609-9108
 Si tiene alguna duda estoy a la orden✅
-                    
-                    
+                                
 Conócenos:
                     
 https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 
 ";
-
+/*************************************************************************** */
 $msgtxt="Hola! recuerda que pudes reagendar tu cita, contactandonos al 631-609-9108
 Si tiene alguna duda estoy a la orden
-                    
-                    
+                                       
 Conócenos:
                     
 https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
@@ -288,7 +286,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
           $from= getenv("TWILIO_NUMBER");
           $twilio = new Client($sid, $token);
               
-          $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+         // $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
 
         return 1 ;
      }
@@ -458,7 +456,7 @@ Si tiene alguna duda estoy a la orden✅
 Conócenos:
             
 https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
-
+/****************************************************************************************************** */
 $msgtxt="Hola! le saluda $usuario->name de parte del Team Acevedo y Casa de Mis Sueños 
 
 Su cita ha sido reagendada para el día $fechatexto a las $horatexto
@@ -489,8 +487,7 @@ Por favor ayudanos a confirmar tu asistencia a traves de este whatsapp y atender
 Cualquier consulta puedes llamarnos al 631-609-9108
             
 Si tiene alguna duda estoy a la orden
-            
-            
+              
 Conócenos:
             
 https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
@@ -506,7 +503,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
              $from= getenv("TWILIO_NUMBER");
              $twilio = new Client($sid, $token);
                  
-             $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+           //  $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
         
         return 1 ;
          }else{
