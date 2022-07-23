@@ -45,7 +45,7 @@ class DetalleController extends Controller
         ->join("oficinas","oficinas.id","=","cupos.id_oficina")
         ->join("estados","estados.id","=","detalle_cupos.id_estado")
 
-        ->select("clientes.*","clientes.nombre as nombrec","estados.nombre as nombreestado","detalle_cupos.*","detalle_cupos.id as idcita","cupos.*","cupos.id as idcupo","users.*","oficinas.*","oficinas.nombre as nombreo")
+        ->select(DB::raw('(CASE WHEN estados.nombre = "pendiente" THEN "PENDIENTE" ELSE (CASE WHEN estados.nombre = "confirmado" THEN "CONFIRMADA" ELSE (CASE WHEN estados.nombre = "cancelado" THEN "CANCELADA" ELSE (CASE WHEN estados.nombre = "no answer" THEN "NO ANSWER" END) END)  END) END) AS nombreestado'),"clientes.*","clientes.nombre as nombrec","detalle_cupos.*","detalle_cupos.id as idcita","cupos.*","cupos.id as idcupo","users.*","oficinas.*","oficinas.nombre as nombreo")
         
         ->where("detalle_cupos.id_cliente", "=", $idcliente)
         ->where("detalle_cupos.estado_cupo", "=",null)
@@ -224,12 +224,12 @@ Estos documentos son por cada persona interesada en comprar la casa!";
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
 
         $r = $this->link_send(+50379776604,$msg,$tipo=4); 
-
+/*
         $sid = getenv("TWILIO_SID");
         $token  = getenv("TWILIO_AUTH_TOKEN");
         $from= getenv("TWILIO_NUMBER");
         $twilio = new Client($sid, $token);
-            
+    */        
        // $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
 
         return 1 ;
@@ -281,11 +281,11 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
         
           $r = $this->link_send(+50379776604,$msg,$tipo=4);  
 
-          $sid = getenv("TWILIO_SID");
+      /*    $sid = getenv("TWILIO_SID");
           $token  = getenv("TWILIO_AUTH_TOKEN");
           $from= getenv("TWILIO_NUMBER");
           $twilio = new Client($sid, $token);
-              
+         */     
          // $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
 
         return 1 ;
@@ -497,12 +497,12 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
             $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
            
              $r = $this->link_send(+50379776604,$msg,$tipo=4);
-
+/*
              $sid = getenv("TWILIO_SID");
              $token  = getenv("TWILIO_AUTH_TOKEN");
              $from= getenv("TWILIO_NUMBER");
              $twilio = new Client($sid, $token);
-                 
+           */      
            //  $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
         
         return 1 ;

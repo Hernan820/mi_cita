@@ -12,7 +12,7 @@ let formreagendar = document.getElementById("reagendarform");
         var oficina = $("#nombreoficina").val();
         var fecha = $("#fechac").val();
 
-     if( $('#estadocita').val() == "confirmado"){
+     if( $('#estadocita').val() == "CONFIRMADA"){
 
         Swal.fire({
             position: "top-end",
@@ -123,7 +123,7 @@ let formreagendar = document.getElementById("reagendarform");
 
     $('#cancelar').on('click', function() {
 
-        if( $('#estadocita').val() == "cancelado"){
+        if( $('#estadocita').val() == "CANCELADA"){
             Swal.fire({
                 position: "top-end",
                 icon: "success",
@@ -353,18 +353,27 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
 
 $(document).ready(function () {
 
-    if( $('#estadocita').val() == "cancelado"){
+    if( $('#estadocita').val() == "CANCELADA"){
 
         $(`#tarjetacita`).addClass(' border-danger');
 
+        $(`.cita`).addClass('list-group-item-danger');
 
-    }else if( $('#estadocita').val() == "confirmado" ){
+
+    }else if( $('#estadocita').val() == "CONFIRMADA" ){
 
         $(`#tarjetacita`).addClass(' border-success');
 
-    }else if( $('#estadocita').val() == "pendiente"){
+      
+        $(`.cita`).addClass('list-group-item-success');
+
+
+        
+    }else if( $('#estadocita').val() == "PENDIENTE"){
 
         $(`#tarjetacita`).addClass(' border-warning');
+
+        $(`.cita`).addClass('list-group-item-warning');
 
     }
 

@@ -55,6 +55,10 @@ table.display {
     background-color: #e9ecef;
     border-radius: .3rem;
 }
+
+.cita {
+    color: black;
+}
 </style>
 
 
@@ -83,7 +87,7 @@ table.display {
         <h1 style="text-align: center;">Gestiona tu cita</h1>
         <hr>
         <p class="" style="margin-bottom: 0 !important"><strong>
-                <h4>Tu cita esta agendada en la siguiente oficina y fecha:</h4>
+                <h4>Tu cita esta agendada es la siguiente:</h4>
             </strong> </p>
         <hr>
         <p class="lead">
@@ -98,12 +102,15 @@ table.display {
         <div class="card border " style="  border: 50px solid; border-style: solid;" id="tarjetacita">
             <div class="card-header" style=" text-align: center;"> <strong> MI CITA </strong></div>
             <div class="card-body text-dark">
-                <h5 class="card-title">ESTADO DE LA CITA :&nbsp; {{$cliente->nombreestado}} </h5>
-
-                <p class="" style="margin-bottom: 0 !important"> HORA DE TU CITA:&nbsp;
+                
+                <li class="list-group-item cita "> <h5 class="card-title">ESTADO DE LA CITA :&nbsp; {{$cliente->nombreestado}} </h5>   </li>
+                <br>
+                <li class="list-group-item cita ">  <p class="" style="margin-bottom: 0 !important"> HORA DE TU CITA:&nbsp;
                     {{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $cliente->hora)->locale('es')->format('h:i a')}}
-                </p>
-                <p class="" style="margin-bottom: 0 !important">USTED FUE ATENDIDO POR:&nbsp; {{$cliente->name}}</p>
+                </p>   </li>
+               <br>
+               
+                <li class="list-group-item cita ">  <p class="" style="margin-bottom: 0 !important">USTED FUE ATENDIDO POR:&nbsp; {{$cliente->name}}</p>  </li>
 
             </div>
         </div>
