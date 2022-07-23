@@ -224,13 +224,13 @@ Estos documentos son por cada persona interesada en comprar la casa!";
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
 
         $r = $this->link_send(+50379776604,$msg,$tipo=4); 
-/*
-        $sid = getenv("TWILIO_SID");
-        $token  = getenv("TWILIO_AUTH_TOKEN");
-        $from= getenv("TWILIO_NUMBER");
+
+        $sid = "AC9e1475e1b32fec62e6dd712768584a72";
+        $token  = "4a65bbb3b1de0b73e67b43a2097af99c";
+        $from= "+18334941535";
         $twilio = new Client($sid, $token);
-    */        
-       // $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+            
+        $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
 
         return 1 ;
     }
@@ -269,6 +269,9 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 /*************************************************************************** */
 $msgtxt="Hola! recuerda que pudes reagendar tu cita, contactandonos al 631-609-9108
 Si tiene alguna duda estoy a la orden
+
+Puedes comunicarte a traves de este whatsapp https://wa.me/message/F4D3UQUHQTFAO1
+ te esperamos. 
                                        
 Conócenos:
                     
@@ -281,12 +284,12 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
         
           $r = $this->link_send(+50379776604,$msg,$tipo=4);  
 
-      /*    $sid = getenv("TWILIO_SID");
-          $token  = getenv("TWILIO_AUTH_TOKEN");
-          $from= getenv("TWILIO_NUMBER");
+          $sid = "AC9e1475e1b32fec62e6dd712768584a72";
+          $token  = "4a65bbb3b1de0b73e67b43a2097af99c";
+          $from= "+18334941535";
           $twilio = new Client($sid, $token);
-         */     
-         // $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+             
+          $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
 
         return 1 ;
      }
@@ -481,8 +484,9 @@ Los documentos requeridos para PERSONAS CON TAX ID:
  El último estado de cuenta bancario donde se refleje el Down-payment
 
 Estos documentos son por cada persona interesada en comprar la casa!
-            
-Por favor ayudanos a confirmar tu asistencia a traves de este whatsapp y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos.
+               
+Por favor ayudanos a confirmar tu asistencia a traves de este whatsapp https://wa.me/message/F4D3UQUHQTFAO1
+y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos. 
             
 Cualquier consulta puedes llamarnos al 631-609-9108
             
@@ -497,13 +501,13 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
             $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
            
              $r = $this->link_send(+50379776604,$msg,$tipo=4);
-/*
-             $sid = getenv("TWILIO_SID");
-             $token  = getenv("TWILIO_AUTH_TOKEN");
-             $from= getenv("TWILIO_NUMBER");
+
+             $sid = "AC9e1475e1b32fec62e6dd712768584a72";
+             $token  = "4a65bbb3b1de0b73e67b43a2097af99c";
+             $from= "+18334941535";
              $twilio = new Client($sid, $token);
-           */      
-           //  $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+             
+             $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
         
         return 1 ;
          }else{
