@@ -51,7 +51,7 @@ $numeros_clientes = mysqli_query( $conexion1, $consulta ) or die ( "Algo ha ido 
 
 
 
-echo "ESTA ES LA <FECHA></FECHA> ... $ahora.  </br>";
+//echo "ESTA ES LA <FECHA></FECHA> ... $ahora.  </br>";
 
 
 
@@ -138,7 +138,7 @@ echo "ESTA ES LA <FECHA></FECHA> ... $ahora.  </br>";
        return base64_encode(openssl_random_pseudo_bytes(openssl_cipher_iv_length($method)));
    };
   
-
+$cuenta=0;
   
   foreach ($numeros_clientes as $num) 
     {
@@ -162,14 +162,18 @@ si tienes alguna consulta puedes comunicarte con nosotros al 631-609-9108';
         $array =str_split($num['telefono']);
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
         
-        $r = link_send(+50379776604,$msg,$tipo=3);
-
- 
-                
+        $r = link_send(+50379776604,$msg,$tipo=4);
 
     echo '<td> '.$num['telefono'].'nmnmn '.$num['fecha'].'</td></br>';
-    }
 
+        echo '<td> '.$idcliente.'  </td></br>';
+
+    $cuenta++;
+    }
+    	
+    date_default_timezone_set("America/El_Salvador");
+
+    echo '<td>notificaciones: '.$cuenta.'./</td> hora: '.$horaexacta = date('m-d-Y h:i:s a');
 
 ?>
 

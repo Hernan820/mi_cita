@@ -364,18 +364,16 @@ $(document).ready(function () {
 
         $(`#tarjetacita`).addClass(' border-success');
 
-      
         $(`.cita`).addClass('list-group-item-success');
 
-
-        
     }else if( $('#estadocita').val() == "PENDIENTE"){
 
         $(`#tarjetacita`).addClass(' border-warning');
 
         $(`.cita`).addClass('list-group-item-warning');
-
     }
+
+    $("#modal_informativo").modal("show");
 
 });
 

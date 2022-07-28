@@ -230,7 +230,7 @@ Estos documentos son por cada persona interesada en comprar la casa!";
         $from= "+18334941535";
         $twilio = new Client($sid, $token);
             
-        $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+      //  $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
 
         return 1 ;
     }
@@ -289,7 +289,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
           $from= "+18334941535";
           $twilio = new Client($sid, $token);
              
-          $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+        //  $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
 
         return 1 ;
      }
@@ -507,7 +507,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
              $from= "+18334941535";
              $twilio = new Client($sid, $token);
              
-             $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+            // $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
         
         return 1 ;
          }else{

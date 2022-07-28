@@ -78,7 +78,7 @@ table.display {
 
 <div class="col-md-12" style="background-color: ">
 
- 
+
 
     <div class="jumbotron">
         <h1 class="display" style="text-align: center;">¡Hola! {{$cliente->nombrec}} {{$cliente->apellidos}}</h1>
@@ -91,8 +91,9 @@ table.display {
             </strong> </p>
         <hr>
         <p class="lead">
-        <h2>Oficina: {{$cliente->nombreo}}</h2> 
-        <h2>Fecha:  {{ \Carbon\Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y')}}</h2>
+        <h2>Oficina: {{$cliente->nombreo}}</h2>
+        <h2>Fecha: {{ \Carbon\Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y')}}
+        </h2>
         </p>
     </div>
 
@@ -102,15 +103,21 @@ table.display {
         <div class="card border " style="  border: 50px solid; border-style: solid;" id="tarjetacita">
             <div class="card-header" style=" text-align: center;"> <strong> MI CITA </strong></div>
             <div class="card-body text-dark">
-                
-                <li class="list-group-item cita "> <h5 class="card-title">ESTADO DE LA CITA :&nbsp; {{$cliente->nombreestado}} </h5>   </li>
+
+                <li class="list-group-item cita ">
+                    <h5 class="card-title">ESTADO DE LA CITA :&nbsp; {{$cliente->nombreestado}} </h5>
+                </li>
                 <br>
-                <li class="list-group-item cita ">  <p class="" style="margin-bottom: 0 !important"> HORA DE TU CITA:&nbsp;
-                    {{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $cliente->hora)->locale('es')->format('h:i a')}}
-                </p>   </li>
-               <br>
-               
-                <li class="list-group-item cita ">  <p class="" style="margin-bottom: 0 !important">USTED FUE ATENDIDO POR:&nbsp; {{$cliente->name}}</p>  </li>
+                <li class="list-group-item cita ">
+                    <p class="" style="margin-bottom: 0 !important"> HORA DE TU CITA:&nbsp;
+                        {{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $cliente->hora)->locale('es')->format('h:i a')}}
+                    </p>
+                </li>
+                <br>
+
+                <li class="list-group-item cita ">
+                    <p class="" style="margin-bottom: 0 !important">USTED FUE ATENDIDO POR:&nbsp; {{$cliente->name}}</p>
+                </li>
 
             </div>
         </div>
@@ -166,7 +173,8 @@ table.display {
             <div class="row mb-3 mt-3">
 
                 <div class="col-md-7 my-auto">
-                    <p class="" style="margin-bottom: 0 !important"><strong>Los documentos requeridos para PERSONAS CON SOCIAL:</strong> </p>
+                    <p class="" style="margin-bottom: 0 !important"><strong>Los documentos requeridos para PERSONAS CON
+                            SOCIAL:</strong> </p>
 
                     <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2020</p>
                     <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2021</p>
@@ -210,7 +218,7 @@ table.display {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                ¿Por qué quiere cancelar su cita?
+                    ¿Por qué quiere cancelar su cita?
                 </h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -298,5 +306,50 @@ table.display {
         </div>
     </div>
 </div>
+
+
+<!-- Modal informativo-->
+<div class="modal fade" id="modal_informativo" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Administra tu cita
+                </h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" id="modal_informativo">
+
+                    {!! csrf_field() !!}
+                    <div class="col-md-12 my-auto">
+                        <p class="" style="margin-bottom: 0 !important"><strong>Bienvenido a tu cita de Team Acevedo </strong> </p>
+
+<br>
+                        <p class="" style="margin-bottom: 0 !important">✅ <strong>Confirmar cita:</strong> es donde tu confirmas que asistiras a las cita que agendaste.</p>
+                       <br>
+                        <p class="" style="margin-bottom: 0 !important">📅 <strong>Reagendar cita:</strong> puedes agendar tu cita en otro dia </p>
+                        <br>
+                        <p class="" style="margin-bottom: 0 !important">❌ <strong>Cancela cita:</strong>  podras cancelar tu cita, ingresar un motivo por el cual cancelas tu cita, recuerda que tienes la opcion de reagendar por si algun motivo no puedes presentarte en ese dia </p>
+
+                        <br>
+                        <p class="" style="margin-bottom: 0 !important"><strong> Si necesitas más ayuda llama al <a
+                                    href="tel:+1631-609-9108">631-609-9108</a></strong></p>
+
+                    </div>
+                    <input type="hidden" name="cita_id" value="" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 @endsection
