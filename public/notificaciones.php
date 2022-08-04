@@ -152,9 +152,6 @@ El motivo de nuestro mensaje , es por que uste tiene agendando una cita con noso
 haciendo click en el siguiente enlace puedes GESTIONAR a (confirmar , cancelar o reagendar).
         
 http://localhost/mi_cita/public/'.$idcliente.'
-
-              
-https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
         
 si tienes alguna consulta puedes comunicarte con nosotros al 631-609-9108';
 
