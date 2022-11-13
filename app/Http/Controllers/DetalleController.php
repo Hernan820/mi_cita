@@ -27,17 +27,20 @@ class DetalleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-
+  
      
    public function encriptacion($valor){
         $encrypted_data = base64_decode($valor);
-        return openssl_decrypt($valor, 'aes-256-cbc', 'Una cadena, muy, muy larga para mejorar la encriptacion', false, base64_decode("C9fBxl1EWtYTL1/M8jfstw=="));
+        return openssl_decrypt($valor, 'aes-256-cbc', '1234567812345678', false, '1234567812345678');
     }
  
 
     public function index($idc)
     {
-        $idcliente = $this->encriptacion($idc);
+       // $idcliente = $this->encriptacion($idc);
+
+       $idcliente =base64_decode($idc);
+
 
         $cliente = DetalleCupo::join("clientes","clientes.id", "=", "detalle_cupos.id_cliente")
         ->join("users","users.id", "=", "detalle_cupos.id_usuario")
@@ -54,13 +57,15 @@ class DetalleController extends Controller
         ->orderBy("detalle_cupos.hora", 'asc')
         ->first();
 
-            if($cliente == null){
-                return view('errors.404');
-            }else{
-                return view('welcome',compact('cliente'));
-            }
+       // echo $cliente;
 
-//        return response()->json($cliente);
+        if($cliente == null){
+            return view('errors.404');
+        }else{
+            return view('welcome',compact('cliente'));
+        }
+       //return response()->json($idcliente);
+
     }
 
     /**
@@ -169,7 +174,7 @@ class DetalleController extends Controller
             $horatexto= $horamedia[0]." de la mañana"; 
         }
 
-        $msg="Hola! le saluda $cliente->name de parte del Team Acevedo y Casa de Mis Sueños 🏠✅
+        $msg="!Hola! le saluda $cliente->name de parte del Team Acevedo y Casa de Mis Sueños 🏠✅
         
 Su cita ha sido confirmada para el día $fechatexto a las $horatexto
 
@@ -192,10 +197,10 @@ Los documentos requeridos para PERSONAS CON TAX ID:
 ✅ Comprobantes de ingreso o colilla de pago
 ✅ El último estado de cuenta bancario donde se refleje el Down-payment
 
-Estos documentos son por cada persona interesada en comprar la casa!
+!Estos documentos son por cada persona interesada en comprar la casa!
 ";
 /************************************************************************************** */
-$msgtxt="Hola! le saluda $cliente->name de parte del Team Acevedo y Casa de Mis Sueños 
+$msgtxt="!Hola! le saluda $cliente->name de parte del Team Acevedo y Casa de Mis Sueños 
         
 Su cita ha sido confirmada para el día $fechatexto a las $horatexto
 
@@ -218,7 +223,7 @@ Los documentos requeridos para PERSONAS CON TAX ID:
  Comprobantes de ingreso o colilla de pago
  El último estado de cuenta bancario donde se refleje el Down-payment
 
-Estos documentos son por cada persona interesada en comprar la casa!";
+!Estos documentos son por cada persona interesada en comprar la casa!";
 
         $array =str_split($cliente->telefono);
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
@@ -231,8 +236,9 @@ Estos documentos son por cada persona interesada en comprar la casa!";
         $twilio = new Client($sid, $token);
             
       //  $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
-
-        return 1 ;
+      $idcliente = $this->encriptacion("RUHaptvoSjpyoQX1/G8gww==");
+      
+      return (response()->json($idcliente));
     }
 
     /**
@@ -258,22 +264,22 @@ Estos documentos son por cada persona interesada en comprar la casa!";
         ->first();
 
 
-        $msg="Hola! recuerda que pudes reagendar tu cita, contactandonos al 631-609-9108
+        $msg="¡Hola! recuerda que puedes reagendar tu cita, contactándonos al 631-609-9108
 Si tiene alguna duda estoy a la orden✅
-                                
-Conócenos:
+                                        
+Conócenos:        
                     
 https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 
 ";
 /*************************************************************************** */
-$msgtxt="Hola! recuerda que pudes reagendar tu cita, contactandonos al 631-609-9108
+$msgtxt="¡Hola! recuerda que puedes reagendar tu cita, contactándonos al 631-609-9108
 Si tiene alguna duda estoy a la orden
 
-Puedes comunicarte a traves de este whatsapp https://wa.me/message/F4D3UQUHQTFAO1
+Puedes comunicarte a través de este WhatsApp https://wa.me/message/F4D3UQUHQTFAO1
  te esperamos. 
                                        
-Conócenos:
+
                     
 https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 ";
@@ -449,7 +455,7 @@ Los documentos requeridos para PERSONAS CON TAX ID:
 
 Estos documentos son por cada persona interesada en comprar la casa!
             
-*Por favor ayudanos a confirmar tu asistencia a traves de este whatsapp y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos.*
+*Por favor ayúdanos a confirmar tu asistencia a través  de este WhatsApp y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos.*
             
 Cualquier consulta puedes llamarnos al 631-609-9108
             
@@ -460,7 +466,7 @@ Conócenos:
             
 https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
 /****************************************************************************************************** */
-$msgtxt="Hola! le saluda $usuario->name de parte del Team Acevedo y Casa de Mis Sueños 
+$msgtxt="¡Hola! le saluda $usuario->name de parte del Team Acevedo y Casa de Mis Sueños 
 
 Su cita ha sido reagendada para el día $fechatexto a las $horatexto
             
@@ -483,9 +489,9 @@ Los documentos requeridos para PERSONAS CON TAX ID:
  Comprobantes de ingreso o colilla de pago
  El último estado de cuenta bancario donde se refleje el Down-payment
 
-Estos documentos son por cada persona interesada en comprar la casa!
+!Estos documentos son por cada persona interesada en comprar la casa!
                
-Por favor ayudanos a confirmar tu asistencia a traves de este whatsapp https://wa.me/message/F4D3UQUHQTFAO1
+Por favor ayúdanos a confirmar tu asistencia a través de este WhatsApp https://wa.me/message/F4D3UQUHQTFAO1
 y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos. 
             
 Cualquier consulta puedes llamarnos al 631-609-9108

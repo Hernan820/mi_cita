@@ -131,7 +131,7 @@ table.display {
         <div class="col-md-12">
             <div class="btn-group mr-3 " role="group" aria-label="button group">
 
-                <div style="padding: 15px;     text-align: center;">
+                <div style="padding: 15px;     text-align: center;" class="border border-dark p-3">
                     <a data-target="#" data-toggle="modal" id="confirmar" class="MainNavText" id="modalmishoras"
                         href="#"><img src="{{ asset('iconos/confirmar.png') }}" class="btnexcel" /></a>
                     <p>CONFIRMAR CITA</p>
@@ -139,7 +139,7 @@ table.display {
 
                 <div class="container" style="width: 200px;"></div>
 
-                <div style="padding: 15px; text-align: center;">
+                <div style="padding: 15px; text-align: center;" class="border border-dark p-3">
                     <a data-target="#" data-toggle="modal" id="reagendar" class="MainNavText" id="modalmishoras"
                         href="#"><img src="{{ asset('iconos/reagendar.png') }}" class="btnexcel" /></a>
                     <p>REAGENDAR CITA</p>
@@ -147,7 +147,7 @@ table.display {
 
                 <div class="container" style="width: 200px;"></div>
 
-                <div style="padding: 15px;     text-align: center;">
+                <div style="padding: 15px;     text-align: center;" class="border border-dark p-3">
                     <a ata-target="#" data-toggle="modal" id="cancelar" class="MainNavText" id="modalmishoras"
                         href="#"><img src="{{ asset('iconos/cerrar.png') }}" class="btnexcel" /></a>
                     <p>CANCELAR CITA</p>
