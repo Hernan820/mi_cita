@@ -1,4 +1,7 @@
-var principalUrl = "http://localhost/mi_cita/public/";
+//var principalUrl = "http://localhost/mi_cita/public/";
+
+var principalUrl = "https://clientes.dailyappsetter.com/";
+
 
 let formCancelar = document.getElementById("cancelarCita");
 let formreagendar = document.getElementById("reagendarform");
@@ -177,7 +180,7 @@ let formreagendar = document.getElementById("reagendarform");
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response.data);
-            }h5ki5
+            }
         });
 
         $(".hora").val("");
