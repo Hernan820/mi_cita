@@ -231,7 +231,7 @@ Los documentos requeridos para PERSONAS CON TAX ID:
         $r = $this->link_send(+50379776604,$msg,$tipo=4); 
 
         $sid = "AC9e1475e1b32fec62e6dd712768584a72";
-        $token  = "4a65bbb3b1de0b73e67b43a2097af99c";
+        $token  = "58ea12aa01f49e1965736ea94d043b24";
         $from= "+18334941535";
         $twilio = new Client($sid, $token);
             
@@ -291,7 +291,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
           $r = $this->link_send(+50379776604,$msg,$tipo=4);  
 
           $sid = "AC9e1475e1b32fec62e6dd712768584a72";
-          $token  = "4a65bbb3b1de0b73e67b43a2097af99c";
+          $token  = "58ea12aa01f49e1965736ea94d043b24";
           $from= "+18334941535";
           $twilio = new Client($sid, $token);
              
@@ -506,14 +506,14 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
             $array =str_split($usuario->telefono);
             $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
            
-             $r = $this->link_send(+50379776604,$msg,$tipo=4);
+             $r = $this->link_send(+50379776604,$msg,$tipo=3);
 
              $sid = "AC9e1475e1b32fec62e6dd712768584a72";
-             $token  = "4a65bbb3b1de0b73e67b43a2097af99c";
+             $token  = "58ea12aa01f49e1965736ea94d043b24";
              $from= "+18334941535";
              $twilio = new Client($sid, $token);
              
-            // $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+             $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
         
         return 1 ;
          }else{

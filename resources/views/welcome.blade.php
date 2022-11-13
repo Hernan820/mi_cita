@@ -70,6 +70,7 @@ table.display {
 <input type="hidden" value="{{$cliente->nombrec}}" name="nombre" id="nombre" />
 <input type="hidden" value="{{$cliente->apellidos}}" name="apellidos" id="apellidos" />
 <input type="hidden" value="{{$cliente->nombreo}}" name="nombreoficina" id="nombreoficina" />
+<input type="hidden" value="{{$cliente->start}}" name="fechacita" id="fechacita" />
 
 <input type="hidden"
     value="{{ \Carbon\Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y')}}"
@@ -131,24 +132,24 @@ table.display {
         <div class="col-md-12">
             <div class="btn-group mr-3 " role="group" aria-label="button group">
 
-                <div style="padding: 15px;     text-align: center;" class="border border-dark p-3">
-                    <a data-target="#" data-toggle="modal" id="confirmar" class="MainNavText" id="modalmishoras"
+                <div style="padding: 15px;text-align: center;" id="confirmar" class="border border-dark p-3">
+                    <a data-target="#" data-toggle="modal"  class="MainNavText" 
                         href="#"><img src="{{ asset('iconos/confirmar.png') }}" class="btnexcel" /></a>
                     <p>CONFIRMAR CITA</p>
                 </div>
 
                 <div class="container" style="width: 200px;"></div>
 
-                <div style="padding: 15px; text-align: center;" class="border border-dark p-3">
-                    <a data-target="#" data-toggle="modal" id="reagendar" class="MainNavText" id="modalmishoras"
+                <div style="padding: 15px; text-align: center;" id="reagendar" class="border border-dark p-3">
+                    <a data-target="#" data-toggle="modal" id="" class="MainNavText" 
                         href="#"><img src="{{ asset('iconos/reagendar.png') }}" class="btnexcel" /></a>
-                    <p>REAGENDAR CITA</p>
+                    <p for="reagendar">REAGENDAR CITA</p>
                 </div>
 
                 <div class="container" style="width: 200px;"></div>
 
-                <div style="padding: 15px;     text-align: center;" class="border border-dark p-3">
-                    <a ata-target="#" data-toggle="modal" id="cancelar" class="MainNavText" id="modalmishoras"
+                <div style="padding: 15px;text-align: center;" id="cancelar" class="border border-dark p-3">
+                    <a ata-target="#" data-toggle="modal"  class="MainNavText" 
                         href="#"><img src="{{ asset('iconos/cerrar.png') }}" class="btnexcel" /></a>
                     <p>CANCELAR CITA</p>
                 </div>

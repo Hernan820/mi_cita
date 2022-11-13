@@ -145,6 +145,9 @@ let formreagendar = document.getElementById("reagendarform");
         $("#oficinas").html("");
         var ofici = $("#nombreoficina").val();
         var idcita= $("#idcita").val();
+        var fecha= moment($("#fechacita").val()).utc().locale('es').format("YYYY-MM-DD"); 
+        
+
         axios.post(principalUrl + "cliente/oficinas/"+idcita)
         .then((respuesta) => {
             moment.locale("es");
@@ -160,8 +163,11 @@ let formreagendar = document.getElementById("reagendarform");
                 });
 
                if(respuesta.data.cupos.length > 0 ){
-                respuesta.data.cupos.forEach(function (element) {   
-                    $("#fechascupos").append("<option  value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+"</option>");
+                respuesta.data.cupos.forEach(function (element) {  
+                    var fecha2 = moment(element.start).utc().locale('es').format("YYYY-MM-DD");
+                    if(fecha != fecha2){
+                        $("#fechascupos").append("<option  value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+"</option>");
+                    } 
                 });
 
                }else{
