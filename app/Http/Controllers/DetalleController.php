@@ -174,7 +174,7 @@ class DetalleController extends Controller
             $horatexto= $horamedia[0]." de la mañana"; 
         }
 
-        $msg="!Hola! le saluda $cliente->name de parte del Team Acevedo y Casa de Mis Sueños 🏠✅
+        $msg="!Hola! le saluda $cliente->name de parte de *Contigo Mortgage* 🏠✅
         
 Su cita ha sido confirmada para el día $fechatexto a las $horatexto
 
@@ -200,7 +200,7 @@ Los documentos requeridos para PERSONAS CON TAX ID:
 !Estos documentos son por cada persona interesada en comprar la casa!
 ";
 /************************************************************************************** */
-$msgtxt="!Hola! le saluda $cliente->name de parte del Team Acevedo y Casa de Mis Sueños 
+$msgtxt="!Hola! le saluda $cliente->name de parte de *Contigo Mortgage* 
         
 Su cita ha sido confirmada para el día $fechatexto a las $horatexto
 
@@ -430,7 +430,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
                     $horatexto= $horamedia[0]." de la mañana"; 
                 }
 
-            $msg="Hola! le saluda $usuario->name de parte del Team Acevedo y Casa de Mis Sueños 🏠✅
+            $msg="Hola! le saluda $usuario->name de parte de *Contigo Mortgage* 🏠✅
 
 Su cita ha sido reagendada para el día $fechatexto a las $horatexto
             
@@ -466,7 +466,7 @@ Conócenos:
             
 https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
 /****************************************************************************************************** */
-$msgtxt="¡Hola! le saluda $usuario->name de parte del Team Acevedo y Casa de Mis Sueños 
+$msgtxt="¡Hola! le saluda $usuario->name de parte de *Contigo Mortgage*
 
 Su cita ha sido reagendada para el día $fechatexto a las $horatexto
             
@@ -506,14 +506,14 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
             $array =str_split($usuario->telefono);
             $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
            
-             $r = $this->link_send(+50379776604,$msg,$tipo=3);
+             $r = $this->link_send(+50379776604,$msg,$tipo=4);
 
              $sid = "AC9e1475e1b32fec62e6dd712768584a72";
              $token  = "58ea12aa01f49e1965736ea94d043b24";
              $from= "+18334941535";
              $twilio = new Client($sid, $token);
              
-             $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+            // $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
         
         return 1 ;
          }else{
