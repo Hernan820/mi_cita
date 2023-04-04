@@ -284,8 +284,11 @@ Los documentos requeridos para PERSONAS CON TAX ID:
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function cancelar($idcita, Request $request)
+    public function cancelar(Request $request)
     {
+
+        if($request->vista == 'fisica'){
+
         $cita = DetalleCupo::find($idcita);
         $cita->motivo_cancelacion = $request->motivo ;
         $cita->id_estado = 2 ;
@@ -300,6 +303,24 @@ Los documentos requeridos para PERSONAS CON TAX ID:
         ->get()
         ->first();
 
+        }else if($request->vista == 'virtual'){ 
+
+            $cita = DB::connection('mysql2')->table('detalle_cupos')
+            ->where('id', $request->idcita)
+            ->update([
+                'id_estado' => 2,
+                'motivo_cancelacion' => $request->motivo
+            ]);
+
+            $usuario = DB::connection('mysql2')->table('detalle_cupos')
+             ->join("clientes","clientes.id", "=", "detalle_cupos.id_cliente")
+             ->join("users","users.id", "=", "detalle_cupos.id_usuario")
+             ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+             ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+             ->select("users.name","cupos.start","clientes.telefono","oficinas.direccion","detalle_cupos.hora")
+             ->where('detalle_cupos.id','=',$request->idcita)
+             ->first();
+        }
 
         $msg="¡Hola! recuerda que puedes reagendar tu cita, contactándonos al 631-609-9108
 Si tiene alguna duda estoy a la orden✅

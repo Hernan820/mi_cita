@@ -71,8 +71,9 @@ let tipovista = $('#tipecita').val();
     document.getElementById("btnCancelar").addEventListener("click", function () {
         if (validardatos() == false) { return;}
 
-        var datos = new FormData(formCancelar);
-        var idcita = $("#idcita").val();
+        var datoscancel = new FormData(formCancelar);
+        datoscancel.append("vista",tipovista );
+        datoscancel.append("idcita",$("#idcita").val());
         var nombre = $("#nombre").val();
         var apellidos = $("#apellidos").val();
 
@@ -89,8 +90,7 @@ let tipovista = $('#tipecita').val();
 
             $('#btnCancelar').attr('disabled', true);
 
-    
-           axios.post(principalUrl + "cliente/cancelar/"+idcita , datos )
+           axios.post(principalUrl + "cliente/cancelar" , datoscancel )
             .then((respuesta) => {
 
               $('#btnCancelar').attr('disabled', false);
