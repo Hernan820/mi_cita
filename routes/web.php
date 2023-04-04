@@ -25,7 +25,7 @@ Route::get('/', function () {
 
 Route::get('/{vista}/{idc}', [App\Http\Controllers\DetalleController::class, 'index']);
 
-Route::post('cliente/confirmar/{idcita}', [App\Http\Controllers\DetalleController::class, 'confirmar']);
+Route::post('cliente/confirmar', [App\Http\Controllers\DetalleController::class, 'confirmar']);
 
 Route::post('cliente/cancelar/{idcita}', [App\Http\Controllers\DetalleController::class, 'cancelar']);
 

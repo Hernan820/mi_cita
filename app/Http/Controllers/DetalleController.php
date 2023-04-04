@@ -80,7 +80,7 @@ class DetalleController extends Controller
         if($cliente == null){
             return view('errors.404');
         }else{
-            return view('welcome',compact('cliente'));
+            return view('welcome',compact('cliente','vista'));
         }
 
     }
@@ -166,19 +166,41 @@ class DetalleController extends Controller
      */
 
 
-    public function confirmar($idcita)
+    public function confirmar(Request $request)
     {
-        $cita = DetalleCupo::find($idcita);
-        $cita->id_estado = 1;
-        $cita->save();  
+        
+        if($request->vista == 'fisica'){
 
-        $cliente = DetalleCupo::join("clientes","clientes.id", "=", "detalle_cupos.id_cliente")
-        ->join("users","users.id", "=", "detalle_cupos.id_usuario")
-        ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
-        ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
-        ->select("users.name","cupos.start","clientes.telefono","oficinas.direccion","detalle_cupos.hora")
-        ->where('detalle_cupos.id','=',$idcita)
-        ->first();
+            $cita = DetalleCupo::find($request->idcita);
+            $cita->id_estado = 1;
+            $cita->save();  
+    
+            $cliente = DetalleCupo::join("clientes","clientes.id", "=", "detalle_cupos.id_cliente")
+            ->join("users","users.id", "=", "detalle_cupos.id_usuario")
+            ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+            ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+            ->select("users.name","cupos.start","clientes.telefono","oficinas.direccion","detalle_cupos.hora")
+            ->where('detalle_cupos.id','=',$request->idcita)
+            ->first();
+
+            $direcciondecita = "La dirección de nuestra oficina es 
+            📍 $cliente->direccion";
+
+        }else if($request->vista == 'virtual'){
+
+            $cita = DB::connection('mysql2')->table('detalle_cupos')->where('id', $request->idcita)->update(['id_estado' => 1]);
+
+            $cliente = DB::connection('mysql2')->table('detalle_cupos')
+             ->join("clientes","clientes.id", "=", "detalle_cupos.id_cliente")
+             ->join("users","users.id", "=", "detalle_cupos.id_usuario")
+             ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+             ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+             ->select("users.name","cupos.start","clientes.telefono","oficinas.direccion","detalle_cupos.hora")
+             ->where('detalle_cupos.id','=',$request->idcita)
+             ->first();
+
+             $direcciondecita = "";
+        }
 
         $fechatexto= Carbon::parse($cliente->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y');
 
@@ -193,10 +215,9 @@ class DetalleController extends Controller
 
         $msg="!Hola! le saluda $cliente->name de parte de *Contigo Mortgage* 🏠✅
         
-Su cita ha sido confirmada para el día $fechatexto a las $horatexto
+Su cita $request->vista ha sido confirmada para el día $fechatexto a las $horatexto
 
-La dirección de nuestra oficina es 
-📍 $cliente->direccion
+$direcciondecita
 
 Los documentos requeridos para personas con social:
 
@@ -219,10 +240,9 @@ Los documentos requeridos para PERSONAS CON TAX ID:
 /************************************************************************************** */
 $msgtxt="!Hola! le saluda $cliente->name de parte de *Contigo Mortgage* 
         
-Su cita ha sido confirmada para el día $fechatexto a las $horatexto
+Su cita $request->vista ha sido confirmada para el día $fechatexto a las $horatexto
 
-La dirección de nuestra oficina es 
- $cliente->direccion
+$direcciondecita
 
 Los documentos requeridos para personas con social:
 
@@ -245,7 +265,7 @@ Los documentos requeridos para PERSONAS CON TAX ID:
         $array =str_split($cliente->telefono);
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
 
-        $r = $this->link_send(+50379776604,$msg,$tipo=4); 
+        $r = $this->link_send(+50379776604,$msg,$tipo=3); 
 
         $sid = "AC9e1475e1b32fec62e6dd712768584a72";
         $token  = "58ea12aa01f49e1965736ea94d043b24";

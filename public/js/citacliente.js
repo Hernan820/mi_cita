@@ -1,15 +1,14 @@
-//var principalUrl = "http://localhost/mi_cita/public/";
+var principalUrl = "http://localhost/mi_cita/public/";
 
-var principalUrl = "https://clientes.dailyappsetter.com/";
+//var principalUrl = "https://clientes.dailyappsetter.com/";
 
 
 let formCancelar = document.getElementById("cancelarCita");
 let formreagendar = document.getElementById("reagendarform");
-
+let tipovista = $('#tipecita').val();
 
     document.getElementById("confirmar").addEventListener("click", function () {
 
-        var idcita = $("#idcita").val();
         var nombre = $("#nombre").val();
         var apellidos = $("#apellidos").val();
         var oficina = $("#nombreoficina").val();
@@ -39,8 +38,12 @@ let formreagendar = document.getElementById("reagendarform");
 
             $('#confirmar').attr('disabled', true);
 
+            var datosconfirm = new FormData();
+            datosconfirm.append("vista",tipovista );
+            datosconfirm.append("idcita",$("#idcita").val());
+
     
-            axios.post(principalUrl + "cliente/confirmar/"+idcita)
+            axios.post(principalUrl + "cliente/confirmar",datosconfirm)
             .then((respuesta) => {
                 $('#confirmar').attr('disabled', false);
 

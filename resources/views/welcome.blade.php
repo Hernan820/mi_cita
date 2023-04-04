@@ -61,6 +61,7 @@ table.display {
 }
 </style>
 
+<input type="hidden" value="{{$vista}}" id="tipecita" name="tipecita"></input>
 
 <input type="hidden" value="{{$cliente->idcita}}" id="idcita" name="idcita"></input>
 <input type="hidden" value="{{$cliente->idcupo}}" id="idcupo" name="idcupo"></input>
