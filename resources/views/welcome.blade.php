@@ -197,6 +197,20 @@ table.display {
                     <p class="" style="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se
                         refleje el Down-payment</p>
                     <br>
+
+                    <p class="" style="margin-bottom: 0 !important"><strong>Documentos requeridos para el programa TAX ID 3.5 Down-payment :</strong> </p>
+
+                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2021.</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2022.</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia o el pasaporte con vigencia mínima de 6 meses.</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Carta de TAX ID.</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment.</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Comprobante de renta por cualquier medio electrónico (No pagos en Cash).</p>
+                    <br>
+
+                    <p class="" style="margin-bottom: 0 !important"><strong>¡Estos documentos son por cada persona interesada en comprar la casa!</strong> </p>
+
+                    <br>
                     <p class="" style="margin-bottom: 0 !important"><strong> Si necesitas más ayuda llama al <a
                                 href="tel:+1631-609-9108">631-609-9108</a></strong></p>
 

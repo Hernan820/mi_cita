@@ -142,7 +142,7 @@ $cuenta=0;
   
   foreach ($numeros_clientes as $num) 
     {
-        $idcliente = $encriptar($num['id']);
+        $idcliente =  base64_encode($num['id']);
 
 
         $msg='Hola Buenas noches  '.$num['nombre'].'! le saluda '.$num['name'].' de parte del Team Acevedo y Casa de Mis Sueños 🏠✅
