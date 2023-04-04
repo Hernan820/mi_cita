@@ -10,6 +10,7 @@
         "laravel/framework": "^9.11",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
+        "nesbot/carbon": "^2.66",
         "twilio/sdk": "^6.39"
     },
     "require-dev": {

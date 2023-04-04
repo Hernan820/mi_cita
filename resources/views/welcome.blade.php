@@ -111,7 +111,7 @@ table.display {
                 <br>
                 <li class="list-group-item cita ">
                     <p class="" style="margin-bottom: 0 !important"> HORA DE TU CITA:&nbsp;
-                        {{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $cliente->hora)->locale('es')->format('h:i a')}}
+                    {{ \Carbon\Carbon::parse($cliente->hora)->format('h:i a') }}
                     </p>
                 </li>
                 <br>

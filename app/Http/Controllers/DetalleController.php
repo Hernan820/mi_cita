@@ -16,7 +16,7 @@ use Twilio\Rest\Client;
 
 define('WB_TOKEN', '963fe4d6878286fc02a3b4571b84162f6176c9f6c3fc4');
 define('WB_FROM', '16315067068');
-date_default_timezone_set("America/New_York");
+//date_default_timezone_set("America/New_York");
 
 
 class DetalleController extends Controller
@@ -35,36 +35,53 @@ class DetalleController extends Controller
     }
  
 
-    public function index($idc)
+    public function index($vista,$idc)
     {
        // $idcliente = $this->encriptacion($idc);
 
        $idcliente =base64_decode($idc);
 
+       if($vista == 'fisica'){
 
         $cliente = DetalleCupo::join("clientes","clientes.id", "=", "detalle_cupos.id_cliente")
         ->join("users","users.id", "=", "detalle_cupos.id_usuario")
         ->join("cupos","cupos.id","=","detalle_cupos.id_cupo")
         ->join("oficinas","oficinas.id","=","cupos.id_oficina")
         ->join("estados","estados.id","=","detalle_cupos.id_estado")
-
-        ->select(DB::raw('(CASE WHEN estados.nombre = "pendiente" THEN "PENDIENTE" ELSE (CASE WHEN estados.nombre = "confirmado" THEN "CONFIRMADA" ELSE (CASE WHEN estados.nombre = "cancelado" THEN "CANCELADA" ELSE (CASE WHEN estados.nombre = "no answer" THEN "NO ANSWER" END) END)  END) END) AS nombreestado'),"clientes.*","clientes.nombre as nombrec","detalle_cupos.*","detalle_cupos.id as idcita","cupos.*","cupos.id as idcupo","users.*","oficinas.*","oficinas.nombre as nombreo")
-        
+        ->select(DB::raw(''))
         ->where("detalle_cupos.id_cliente", "=", $idcliente)
         ->where("detalle_cupos.estado_cupo", "=",null)
         ->where("detalle_cupos.id_estado", "!=",3)
-        
         ->orderBy("detalle_cupos.hora", 'asc')
         ->first();
 
-       // echo $cliente;
+       }else if($vista == 'virtual'){
+
+
+       $cliente = DB::connection('mysql2')->table('detalle_cupos')
+        ->selectRaw("(CASE WHEN estados.nombre = 'pendiente' THEN 'PENDIENTE' ELSE (CASE WHEN estados.nombre = 'confirmado' THEN 'CONFIRMADA' ELSE (CASE WHEN estados.nombre = 'cancelado' THEN 'CANCELADA' ELSE (CASE WHEN estados.nombre = 'no answer' THEN 'NO ANSWER' END) END)  END) END) AS nombreestado ,clientes.*,clientes.nombre as nombrec,detalle_cupos.*,detalle_cupos.id as idcita,cupos.*,cupos.id as idcupo,users.*,oficinas.*,oficinas.nombre as nombreo")
+        ->join('clientes', 'clientes.id', '=', 'detalle_cupos.id_cliente')
+        ->join('users', 'users.id', '=', 'detalle_cupos.id_usuario')
+        ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
+        ->join('oficinas', 'oficinas.id', '=', 'cupos.id_oficina')
+        ->join('estados', 'estados.id', '=', 'detalle_cupos.id_estado')
+        ->where('detalle_cupos.id_cliente', $idcliente)
+        ->whereNull('detalle_cupos.estado_cupo')
+        ->where('detalle_cupos.id_estado', '<>', 3)
+        ->orderBy('detalle_cupos.hora', 'ASC')
+        ->first();
+
+
+       }else{
+        return view('errors.404');
+
+       }
 
         if($cliente == null){
             return view('errors.404');
         }else{
             return view('welcome',compact('cliente'));
         }
-       //return response()->json($idcliente);
 
     }
 

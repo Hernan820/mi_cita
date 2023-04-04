@@ -23,7 +23,7 @@ Route::get('/', function () {
 //Route::get('cliente/cita/{idc}', [App\Http\Controllers\DetalleController::class, 'index']);
 
 
-Route::get('/{idc}', [App\Http\Controllers\DetalleController::class, 'index']);
+Route::get('/{vista}/{idc}', [App\Http\Controllers\DetalleController::class, 'index']);
 
 Route::post('cliente/confirmar/{idcita}', [App\Http\Controllers\DetalleController::class, 'confirmar']);
 
