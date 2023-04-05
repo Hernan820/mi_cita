@@ -29,11 +29,11 @@ Route::post('cliente/confirmar', [App\Http\Controllers\DetalleController::class,
 
 Route::post('cliente/cancelar', [App\Http\Controllers\DetalleController::class, 'cancelar']);
 
-Route::post('cliente/oficinas/{idcita}', [App\Http\Controllers\DetalleController::class, 'oficinas']);
+Route::post('cliente/oficinas', [App\Http\Controllers\DetalleController::class, 'oficinas']);
 
-Route::post('cliente/fechasoficinas/{idcita}/{idofi}', [App\Http\Controllers\DetalleController::class, 'fechas']);
+Route::post('cliente/fechasoficinas', [App\Http\Controllers\DetalleController::class, 'fechas']);
 
-Route::post('cita/listarHorario/{id}', [App\Http\Controllers\DetalleController::class, 'listarhoras']);
+Route::post('cita/listarHorario', [App\Http\Controllers\DetalleController::class, 'listarhoras']);
 
 Route::post('cita/reagendar', [App\Http\Controllers\DetalleController::class, 'reagendar']);
 

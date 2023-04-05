@@ -150,11 +150,13 @@ let tipovista = $('#tipecita').val();
         $("#fechascupos").html("");
         $("#oficinas").html("");
         var ofici = $("#nombreoficina").val();
-        var idcita= $("#idcita").val();
         var fecha= moment($("#fechacita").val()).utc().locale('es').format("YYYY-MM-DD"); 
-        
 
-        axios.post(principalUrl + "cliente/oficinas/"+idcita)
+        var datoscita = new FormData();
+        datoscita.append("vista",tipovista );
+        datoscita.append("idcita",$("#idcita").val());
+
+        axios.post(principalUrl + "cliente/oficinas",datoscita)
         .then((respuesta) => {
             moment.locale("es");
             $("#oficinas").append( "<option  disabled='true'  value=''>Elige una Fecha &nbsp;&nbsp;&nbsp;&nbsp; Oficina</option>");
@@ -194,9 +196,13 @@ let tipovista = $('#tipecita').val();
     $('#fechascupos').on('change', function() {
         
         $(".hora").val("");
-        var id = $("#fechascupos").val();
+        var datosfechas = new FormData();
+        datosfechas.append("vista",tipovista );
+        datosfechas.append("idcupo",$("#fechascupos").val());
+
         $("#horaReagendar").html("");
-    axios.post(principalUrl + "cita/listarHorario/"+id)
+
+    axios.post(principalUrl + "cita/listarHorario",datosfechas)
         .then((respuesta) => { 
 
             $("#nombreofic").val(respuesta.data.cantCitas.nombreoficina);
@@ -231,11 +237,16 @@ let tipovista = $('#tipecita').val();
         var idofi= $("#oficinas").val();
         var idcita= $("#idcita").val();
 
+        var datosoficinas = new FormData();
+        datosoficinas.append("vista",tipovista );
+        datosoficinas.append("oficinas",$("#oficinas").val() );
+        datosoficinas.append("idcita",$("#idcita").val());
+
         $("#fechascupos").html("");
         //$("#oficinas").html("");
        // var ofici = $("#nombreoficina").val();
         console.log(idcita);
-        axios.post(principalUrl + "cliente/fechasoficinas/"+idcita+"/"+idofi)
+        axios.post(principalUrl + "cliente/fechasoficinas", datosoficinas )
         .then((respuesta) => {
             moment.locale("es");
             $("#fechascupos").append("<option selected readonly value=''>Fechas</option>");

@@ -342,7 +342,7 @@ table.display {
 
                     {!! csrf_field() !!}
                     <div class="col-md-12 my-auto">
-                        <p class="" style="margin-bottom: 0 !important"><strong>Bienvenido a tu cita de Team Acevedo </strong> </p>
+                        <p class="" style="margin-bottom: 0 !important"><strong>Bienvenido a tu cita de Contigo Mortgage </strong> </p>
 
 <br>
                         <p class="" style="margin-bottom: 0 !important">✅ <strong>Confirmar cita:</strong> es donde tu confirmas que asistiras a las cita que agendaste.</p>
