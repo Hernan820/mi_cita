@@ -385,7 +385,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function listarhoras($id)
+    public function listarhoras(Request $request)
     {
 
        /* $hora =CuposHorario::join("horarios","horarios.id", "=", "cupos_horarios.id_horario")
@@ -393,26 +393,47 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
         ->where("cupos_horarios.id_cupo","=",$id)
         ->get();*/
 
-        $sql = "SELECT h.hora24, h.hora12, 
-        (select COUNT(*) from detalle_cupos dc 
-         WHERE dc.id_cupo = $id and HOUR(dc.hora) = h.hora24 and MINUTE(dc.hora) = 0 and dc.id_estado != 3 AND dc.id_estado !=2 and dc.estado_cupo IS null ) as total00,
-        (select COUNT(*) from detalle_cupos dc
-        WHERE dc.id_cupo = $id and HOUR(dc.hora) = h.hora24 and MINUTE(dc.hora) = 30 and dc.id_estado != 3 AND dc.id_estado !=2 and dc.estado_cupo IS null ) as total30,
-        cupos.cant_citas
-        FROM cupos_horarios ch
-        LEFT JOIN horarios h on ch.id_horario = h.id
-        INNER JOIN cupos on cupos.id = ch.id_cupo
-        WHERE ch.id_cupo = $id";
-        
-        $hora = DB::select($sql);
+        if($request->vista == 'fisica'){ 
 
-        $cantCitas= Cupo::join("oficinas","oficinas.id","=","cupos.id_oficina")
-                          ->select("cupos.*","oficinas.nombre as nombreoficina") 
-                          ->where("cupos.id","=", $id)
-                          ->first();
-        
-        
-        
+            $sql = "SELECT h.hora24, h.hora12, 
+            (select COUNT(*) from detalle_cupos dc 
+             WHERE dc.id_cupo = $request->idcupo and HOUR(dc.hora) = h.hora24 and MINUTE(dc.hora) = 0 and dc.id_estado != 3 AND dc.id_estado !=2 and dc.estado_cupo IS null ) as total00,
+            (select COUNT(*) from detalle_cupos dc
+            WHERE dc.id_cupo = $request->idcupo and HOUR(dc.hora) = h.hora24 and MINUTE(dc.hora) = 30 and dc.id_estado != 3 AND dc.id_estado !=2 and dc.estado_cupo IS null ) as total30,
+            cupos.cant_citas
+            FROM cupos_horarios ch
+            LEFT JOIN horarios h on ch.id_horario = h.id
+            INNER JOIN cupos on cupos.id = ch.id_cupo
+            WHERE ch.id_cupo = $request->idcupo";
+            
+            $hora = DB::select($sql);
+    
+            $cantCitas= Cupo::join("oficinas","oficinas.id","=","cupos.id_oficina")
+                              ->select("cupos.*","oficinas.nombre as nombreoficina") 
+                              ->where("cupos.id","=", $request->idcupo)
+                              ->first();
+            
+        }else if($request->vista == 'virtual'){ 
+
+            $hora = DB::connection('mysql2')
+             ->table('cupos_horarios')
+             ->selectRaw('horarios.hora24, horarios.hora12, 
+                (select COUNT(*) from detalle_cupos dc 
+                WHERE dc.id_cupo = ? and HOUR(dc.hora) = horarios.hora24 and MINUTE(dc.hora) = 0 and dc.id_estado != 3 AND dc.id_estado !=2 and dc.estado_cupo IS null ) as total00,
+                (select COUNT(*) from detalle_cupos dc
+                WHERE dc.id_cupo = ? and HOUR(dc.hora) = horarios.hora24 and MINUTE(dc.hora) = 30 and dc.id_estado != 3 AND dc.id_estado !=2 and dc.estado_cupo IS null ) as total30,
+                cupos.cant_citas', [$request->idcupo, $request->idcupo])
+             ->leftJoin('horarios', 'cupos_horarios.id_horario', '=', 'horarios.id')
+             ->join('cupos', 'cupos.id', '=', 'cupos_horarios.id_cupo')
+             ->where('cupos_horarios.id_cupo', '=', $request->idcupo)
+             ->get();
+
+             $cantCitas = DB::connection('mysql2')->table('cupos')
+                ->join("oficinas","oficinas.id","=","cupos.id_oficina")
+                ->select("cupos.*","oficinas.nombre as nombreoficina") 
+                ->where("cupos.id","=", $request->idcupo)
+                ->first();
+        }
 
         return response()->json(['hora' => $hora, 'cantCitas' => $cantCitas],200);
     
@@ -585,50 +606,101 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function oficinas($idcita)
+    public function oficinas(Request $request)
     {
 
         $fechaActual = date('Y-m-d');
 
-        $cita= DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
-        ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
-        ->select('cupos.start','oficinas.id')
-        ->where('detalle_cupos.id','=',$idcita)
-        ->first();
+        if($request->vista == 'fisica'){
 
-        $ofi= Oficina::join("cupos","cupos.id_oficina", "=", "oficinas.id")
-        ->select('oficinas.id','oficinas.nombre')
-        ->where('cupos.start','>=', $fechaActual)
-        //->where('cupos.start','>=', $cita->start)
-        ->groupBy('oficinas.id','oficinas.nombre')
-        ->get();
+            $cita= DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+            ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+            ->select('cupos.start','oficinas.id')
+            ->where('detalle_cupos.id','=',$request->idcita)
+            ->first();
+    
+            $ofi= Oficina::join("cupos","cupos.id_oficina", "=", "oficinas.id")
+            ->select('oficinas.id','oficinas.nombre')
+            ->where('cupos.start','>=', $fechaActual)
+            //->where('cupos.start','>=', $cita->start)
+            ->groupBy('oficinas.id','oficinas.nombre')
+            ->get();
+    
+            $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
+            ->where('cupos.id_oficina','=', $cita->id)
+            //->where('cupos.start','>', $cita->start)
+            ->where('cupos.start','>=', $fechaActual)
+            ->orderBy('cupos.start','asc')
+            ->get();
 
-        $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
-        ->where('cupos.id_oficina','=', $cita->id)
-        //->where('cupos.start','>', $cita->start)
-        ->where('cupos.start','>=', $fechaActual)
-        ->orderBy('cupos.start','asc')
-        ->get();
+        }else if($request->vista == 'virtual') {
 
+            $cita = DB::connection('mysql2')
+            ->table('detalle_cupos')
+            ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
+            ->join('oficinas', 'oficinas.id', '=', 'cupos.id_oficina')
+            ->select('cupos.start', 'oficinas.id')
+            ->where('detalle_cupos.id', '=', $request->idcita)
+            ->first();
+
+            $ofi = DB::connection('mysql2')
+            ->table('oficinas')
+            ->join("cupos","cupos.id_oficina", "=", "oficinas.id")
+            ->select('oficinas.id','oficinas.nombre')
+            //->where('cupos.start','>=', $fechaActual)
+            ->groupBy('oficinas.id','oficinas.nombre')
+            ->get();
+            
+            $cupos = DB::connection('mysql2')
+            ->table('cupos')
+            ->select('cupos.start','cupos.id','cupos.id_oficina')
+            ->where('cupos.id_oficina','=', $cita->id)
+            ->where('cupos.start','>=', $fechaActual)
+            ->orderBy('cupos.start','asc')
+            ->get();
+
+        }
+        
         return response()->json(['ofi' => $ofi, 'cupos' => $cupos],200);
     }
 
-    public function fechas($idcita,$idofi)
+    public function fechas(Request $request)
     {
         $fechaActual = date('Y-m-d');
 
-        $cita= DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
-        ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
-        ->select('cupos.start','oficinas.id')
-        ->where('detalle_cupos.id','=',$idcita)
-        ->first();
+        if($request->vista == 'fisica'){
 
-        $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
-        ->where('cupos.id_oficina','=', $idofi)
-        //->where('cupos.start','>', $cita->start)
-        ->where('cupos.start','>=', $fechaActual)
-        ->orderBy('cupos.start','asc')
-        ->get();
+            $cita= DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+            ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+            ->select('cupos.start','oficinas.id')
+            ->where('detalle_cupos.id','=',$request->idcita)
+            ->first();
+
+            $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
+            ->where('cupos.id_oficina','=', $request->oficinas)
+            //->where('cupos.start','>', $cita->start)
+            ->where('cupos.start','>=', $fechaActual)
+            ->orderBy('cupos.start','asc')
+            ->get();
+
+        }else if($request->vista == 'virtual') { 
+
+            $cita = DB::connection('mysql2')
+            ->table('detalle_cupos')
+            ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+            ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+            ->select('cupos.start','oficinas.id')
+            ->where('detalle_cupos.id','=',$request->idcita)
+            ->first();
+
+            $cupos = DB::connection('mysql2')
+            ->table('cupos')
+            ->select('cupos.start','cupos.id','cupos.id_oficina')
+            ->where('cupos.id_oficina','=', $request->oficinas)
+            ->where('cupos.start','>=', $fechaActual)
+            ->orderBy('cupos.start','asc')
+            ->get();
+        }
 
         return response()->json($cupos);
     }
