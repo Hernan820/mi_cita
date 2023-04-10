@@ -61,6 +61,8 @@ table.display {
 }
 </style>
 
+<div class="container">
+    
 <input type="hidden" value="{{$vista}}" id="tipecita" name="tipecita"></input>
 
 <input type="hidden" value="{{$cliente->idcita}}" id="idcita" name="idcita"></input>
@@ -112,7 +114,7 @@ table.display {
                 <br>
                 <li class="list-group-item cita ">
                     <p class="" style="margin-bottom: 0 !important"> HORA DE TU CITA:&nbsp;
-                    {{ \Carbon\Carbon::parse($cliente->hora)->format('h:i a') }}
+                        {{ \Carbon\Carbon::parse($cliente->hora)->format('h:i a') }}
                     </p>
                 </li>
                 <br>
@@ -134,24 +136,24 @@ table.display {
             <div class="btn-group mr-3 " role="group" aria-label="button group">
 
                 <div style="padding: 15px;text-align: center;" id="confirmar" class="border border-dark p-3">
-                    <a data-target="#" data-toggle="modal"  class="MainNavText" 
-                        href="#"><img src="{{ asset('iconos/confirmar.png') }}" class="btnexcel" /></a>
+                    <a data-target="#" data-toggle="modal" class="MainNavText" href="#"><img
+                            src="{{ asset('iconos/confirmar.png') }}" class="btnexcel" /></a>
                     <p>CONFIRMAR CITA</p>
                 </div>
 
                 <div class="container" style="width: 200px;"></div>
 
                 <div style="padding: 15px; text-align: center;" id="reagendar" class="border border-dark p-3">
-                    <a data-target="#" data-toggle="modal" id="" class="MainNavText" 
-                        href="#"><img src="{{ asset('iconos/reagendar.png') }}" class="btnexcel" /></a>
+                    <a data-target="#" data-toggle="modal" id="" class="MainNavText" href="#"><img
+                            src="{{ asset('iconos/reagendar.png') }}" class="btnexcel" /></a>
                     <p for="reagendar">REAGENDAR CITA</p>
                 </div>
 
                 <div class="container" style="width: 200px;"></div>
 
                 <div style="padding: 15px;text-align: center;" id="cancelar" class="border border-dark p-3">
-                    <a ata-target="#" data-toggle="modal"  class="MainNavText" 
-                        href="#"><img src="{{ asset('iconos/cerrar.png') }}" class="btnexcel" /></a>
+                    <a ata-target="#" data-toggle="modal" class="MainNavText" href="#"><img
+                            src="{{ asset('iconos/cerrar.png') }}" class="btnexcel" /></a>
                     <p>CANCELAR CITA</p>
                 </div>
             </div>
@@ -199,17 +201,22 @@ table.display {
                         refleje el Down-payment</p>
                     <br>
 
-                    <p class="" style="margin-bottom: 0 !important"><strong>Documentos requeridos para el programa TAX ID 3.5 Down-payment :</strong> </p>
+                    <p class="" style="margin-bottom: 0 !important"><strong>Documentos requeridos para el programa TAX
+                            ID 3.5 Down-payment :</strong> </p>
 
                     <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2021.</p>
                     <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2022.</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia o el pasaporte con vigencia mínima de 6 meses.</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia
+                        o el pasaporte con vigencia mínima de 6 meses.</p>
                     <p class="" style="margin-bottom: 0 !important">✅ Carta de TAX ID.</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment.</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Comprobante de renta por cualquier medio electrónico (No pagos en Cash).</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Los últimos 3 estado de cuenta bancario donde se
+                        refleje el Down-payment.</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Comprobante de renta por cualquier medio
+                        electrónico (No pagos en Cash).</p>
                     <br>
 
-                    <p class="" style="margin-bottom: 0 !important"><strong>¡Estos documentos son por cada persona interesada en comprar la casa!</strong> </p>
+                    <p class="" style="margin-bottom: 0 !important"><strong>¡Estos documentos son por cada persona
+                            interesada en comprar la casa!</strong> </p>
 
                     <br>
                     <p class="" style="margin-bottom: 0 !important"><strong> Si necesitas más ayuda llama al <a
@@ -224,6 +231,7 @@ table.display {
 </div>
 
 
+</div>
 
 
 
@@ -342,14 +350,19 @@ table.display {
 
                     {!! csrf_field() !!}
                     <div class="col-md-12 my-auto">
-                        <p class="" style="margin-bottom: 0 !important"><strong>Bienvenido a tu cita de Contigo Mortgage </strong> </p>
+                        <p class="" style="margin-bottom: 0 !important"><strong>Bienvenido a tu cita de Contigo Mortgage
+                            </strong> </p>
 
-<br>
-                        <p class="" style="margin-bottom: 0 !important">✅ <strong>Confirmar cita:</strong> es donde tu confirmas que asistiras a las cita que agendaste.</p>
-                       <br>
-                        <p class="" style="margin-bottom: 0 !important">📅 <strong>Reagendar cita:</strong> puedes agendar tu cita en otro dia </p>
                         <br>
-                        <p class="" style="margin-bottom: 0 !important">❌ <strong>Cancela cita:</strong>  podras cancelar tu cita, ingresar un motivo por el cual cancelas tu cita, recuerda que tienes la opcion de reagendar por si algun motivo no puedes presentarte en ese dia </p>
+                        <p class="" style="margin-bottom: 0 !important">✅ <strong>Confirmar cita:</strong> es donde tu
+                            confirmas que asistiras a las cita que agendaste.</p>
+                        <br>
+                        <p class="" style="margin-bottom: 0 !important">📅 <strong>Reagendar cita:</strong> puedes
+                            agendar tu cita en otro dia </p>
+                        <br>
+                        <p class="" style="margin-bottom: 0 !important">❌ <strong>Cancela cita:</strong> podras cancelar
+                            tu cita, ingresar un motivo por el cual cancelas tu cita, recuerda que tienes la opcion de
+                            reagendar por si algun motivo no puedes presentarte en ese dia </p>
 
                         <br>
                         <p class="" style="margin-bottom: 0 !important"><strong> Si necesitas más ayuda llama al <a

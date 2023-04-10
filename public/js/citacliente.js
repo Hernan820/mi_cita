@@ -281,9 +281,13 @@ let tipovista = $('#tipecita').val();
     $("#minutosReagendar").val("00");
 
         var hora = $("#horaReagendar").val();
-        var id = $("#fechascupos").val();
 
-    axios.post(principalUrl + "cita/listarHorario/"+id)
+        var datosfechas = new FormData();
+        datosfechas.append("vista",tipovista );
+        datosfechas.append("idcupo",$("#fechascupos").val());
+
+
+    axios.post(principalUrl + "cita/listarHorario",datosfechas)
         .then((respuesta) => { 
             respuesta.data.hora.forEach(function (element) {
                 if(element.hora24 == hora){
@@ -340,6 +344,7 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
         if (result.isConfirmed) {
 
             var reagendaCita = new FormData(formreagendar);
+            reagendaCita.append("vista",tipovista );
 
             $('#btnReagendar').attr('disabled', true);
 

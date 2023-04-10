@@ -452,6 +452,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
      //concatena hora
      $horareagenda= $request->horaReagendar.':'.$request->minutosReagendar;
 
+         if($request->vista == 'fisica'){
 
         $contadorCitas = DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
         -> where("detalle_cupos.id_cupo","=",$request->cuposid)
@@ -463,7 +464,24 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
          })
          ->count();
 
+        }else if($request->vista == 'virtual'){ 
+
+            $contadorCitas = DB::connection('mysql2')
+            ->table('detalle_cupos')
+            ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
+            ->where('detalle_cupos.id_cupo', '=', $request->cuposid)
+            ->where('detalle_cupos.hora', '=', $horareagenda)
+            ->where(function ($query) {
+                $query->where('detalle_cupos.id_estado', '!=', 3)
+                    ->where('detalle_cupos.id_estado', '!=', 2)
+                    ->where('detalle_cupos.estado_cupo', '=', null);
+            })
+            ->count();
+        }
+
          if($contadorCitas < $request->num_citas){
+
+        if($request->vista == 'fisica'){
 
             $cupo = Cupo::join("oficinas","oficinas.id", "=", "cupos.id_oficina")
             ->select("oficinas.nombre as title", "cupos.start","cupos.id")
@@ -498,6 +516,57 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             ->get()
             ->first();
 
+            $direcciondecita = "La dirección de nuestra oficina es 
+            📍 $usuario->direccion";
+
+        }else if($request->vista == 'virtual'){ 
+
+            $cupo = DB::connection('mysql2')
+            ->table('cupos')
+            ->join('oficinas', 'oficinas.id', '=', 'cupos.id_oficina')
+            ->select('oficinas.nombre as title', 'cupos.start', 'cupos.id')
+            ->where('cupos.id', '=', $request->fechascupos)
+            ->get()
+            ->first();
+
+            $cita = DB::connection('mysql2')
+            ->table('detalle_cupos')
+            ->where('id', $request->cita_id)
+            ->update([
+            'id_estado' => 3,
+            'descripcion' => "La cita ha sido reagendada para la oficina ".$cupo->title." para la fecha ". date('d-m-Y', strtotime($cupo->start))
+            ]);
+
+            $detallecita = DB::connection('mysql2')
+            ->table('detalle_cupos')
+            ->select('detalle_cupos.*')
+            ->where('id', $request->cita_id)
+            ->get()
+            ->first();
+
+            $detallecupo = DB::connection('mysql2')->table('detalle_cupos')->insert([
+                'id_cupo' => $request->fechascupos,
+                'id_cliente' => $detallecita->id_cliente,
+                'id_estado' => 4,
+                'id_usuario' => $detallecita->id_usuario,
+                'hora' => $horareagenda,
+                'descripcion' => $detallecita->descripcion
+            ]);
+                    
+            $usuario = DB::connection('mysql2')
+            ->table('detalle_cupos')
+            ->join('users', 'users.id', '=', 'detalle_cupos.id_usuario')
+            ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
+            ->join('oficinas', 'oficinas.id', '=', 'cupos.id_oficina')
+            ->join('clientes', 'clientes.id', '=', 'detalle_cupos.id_cliente')
+            ->select('users.name', 'cupos.start', 'clientes.telefono', 'oficinas.direccion')
+            ->where('detalle_cupos.id_cupo', '=', $request->fechascupos)
+            ->first();
+
+            $direcciondecita = "";
+
+        }
+
                 $fechatexto= Carbon::parse($usuario->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y');
 
                 $hora = Carbon::parse($horareagenda)->format('h:i A');
@@ -511,10 +580,9 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 
             $msg="Hola! le saluda $usuario->name de parte de *Contigo Mortgage* 🏠✅
 
-Su cita ha sido reagendada para el día $fechatexto a las $horatexto
+Su cita $request->vista ha sido reagendada para el día $fechatexto a las $horatexto
             
-La dirección de nuestra oficina es 
-📍 $usuario->direccion
+$direcciondecita 
             
 Los documentos requeridos para personas con social:
 
@@ -547,11 +615,10 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
 /****************************************************************************************************** */
 $msgtxt="¡Hola! le saluda $usuario->name de parte de *Contigo Mortgage*
 
-Su cita ha sido reagendada para el día $fechatexto a las $horatexto
+Su cita $request->vista ha sido reagendada para el día $fechatexto a las $horatexto
             
-La dirección de nuestra oficina es 
- $usuario->
-            
+$direcciondecita 
+
 Los documentos requeridos para personas con social:
 
  Comprobantes de taxes del 2020
