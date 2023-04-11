@@ -48,7 +48,7 @@ class DetalleController extends Controller
         ->join("cupos","cupos.id","=","detalle_cupos.id_cupo")
         ->join("oficinas","oficinas.id","=","cupos.id_oficina")
         ->join("estados","estados.id","=","detalle_cupos.id_estado")
-        ->select(DB::raw(''))
+        ->select(DB::raw('(CASE WHEN estados.nombre = "pendiente" THEN "PENDIENTE" ELSE (CASE WHEN estados.nombre = "confirmado" THEN "CONFIRMADA" ELSE (CASE WHEN estados.nombre = "cancelado" THEN "CANCELADA" ELSE (CASE WHEN estados.nombre = "no answer" THEN "NO ANSWER" END) END)  END) END) AS nombreestado'),"clientes.*","clientes.nombre as nombrec","detalle_cupos.*","detalle_cupos.id as idcita","cupos.*","cupos.id as idcupo","users.*","oficinas.*","oficinas.nombre as nombreo")    
         ->where("detalle_cupos.id_cliente", "=", $idcliente)
         ->where("detalle_cupos.estado_cupo", "=",null)
         ->where("detalle_cupos.id_estado", "!=",3)
@@ -265,7 +265,9 @@ Los documentos requeridos para PERSONAS CON TAX ID:
         $array =str_split($cliente->telefono);
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
 
-        $r = $this->link_send(+50379776604,$msg,$tipo=3); 
+        $r = $this->link_send(+50379776604,$msg,$tipo=4); 
+       // $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
+
 
         $sid = "AC9e1475e1b32fec62e6dd712768584a72";
         $token  = "58ea12aa01f49e1965736ea94d043b24";
@@ -289,7 +291,7 @@ Los documentos requeridos para PERSONAS CON TAX ID:
 
         if($request->vista == 'fisica'){
 
-        $cita = DetalleCupo::find($idcita);
+        $cita = DetalleCupo::find($request->idcita);
         $cita->motivo_cancelacion = $request->motivo ;
         $cita->id_estado = 2 ;
         $cita->save();   
@@ -299,7 +301,7 @@ Los documentos requeridos para PERSONAS CON TAX ID:
         ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
         ->join("clientes","clientes.id", "=", "detalle_cupos.id_cliente")
         ->select("clientes.telefono")
-        ->where("detalle_cupos.id","=",$idcita)
+        ->where("detalle_cupos.id","=",$request->idcita)
         ->get()
         ->first();
 
@@ -347,6 +349,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
          $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
         
           $r = $this->link_send(+50379776604,$msg,$tipo=4);  
+       // $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
 
           $sid = "AC9e1475e1b32fec62e6dd712768584a72";
           $token  = "58ea12aa01f49e1965736ea94d043b24";
@@ -653,6 +656,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
             $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
            
              $r = $this->link_send(+50379776604,$msg,$tipo=4);
+          // $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
 
              $sid = "AC9e1475e1b32fec62e6dd712768584a72";
              $token  = "58ea12aa01f49e1965736ea94d043b24";
