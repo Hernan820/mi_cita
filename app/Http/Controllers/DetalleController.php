@@ -603,21 +603,28 @@ $direcciondecita
             
 Los documentos requeridos para personas con social:
 
-✅ Comprobantes de taxes del 2020
 ✅ Comprobantes de taxes del 2021
+✅ Comprobantes de taxes del 2022
 ✅ Documento de identificación, puede ser la licencia o el pasaporte
-✅ Comprobantes de ingreso o colilla de pago
 ✅ Copia de Social Security Number 
-✅ El último estado de cuenta bancario donde se refleje el Down-payment
+✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 
-Los documentos requeridos para PERSONAS CON TAX ID:
+*Los documentos requeridos para PERSONAS CON TAX ID:*
 
 ✅ COPIA DE SU TAX ID
 ✅ Documento de identificación, puede ser la licencia o el pasaporte
-✅ Comprobantes de ingreso o colilla de pago
-✅ El último estado de cuenta bancario donde se refleje el Down-payment
+✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 
-Estos documentos son por cada persona interesada en comprar la casa!
+*Documentos requeridos para el programa TAX ID 3.5 Down-payment :*
+
+✅ Comprobantes de taxes del 2021.
+✅ Comprobantes de taxes del 2022.
+✅ Documento de identificación, puede ser la licencia o el pasaporte con vigencia mínima de 6 meses.
+✅ Carta de TAX ID.
+✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment.
+✅ Comprobante de renta por cualquier medio electrónico (No pagos en Cash).
+
+¡Estos documentos son por cada persona interesada en comprar la casa!!
             
 *Por favor ayúdanos a confirmar tu asistencia a través  de este WhatsApp y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos.*
             
@@ -633,36 +640,42 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
 $msgtxt="¡Hola! le saluda $usuario->name de parte de *Contigo Mortgage*
 
 Su cita $request->vista ha sido reagendada para el día $fechatexto a las $horatexto
-            
+
 $direcciondecita 
 
 Los documentos requeridos para personas con social:
 
- Comprobantes de taxes del 2020
- Comprobantes de taxes del 2021
- Documento de identificación, puede ser la licencia o el pasaporte
- Comprobantes de ingreso o colilla de pago
- Copia de Social Security Number 
- El último estado de cuenta bancario donde se refleje el Down-payment
+Comprobantes de taxes del 2021
+Comprobantes de taxes del 2022
+Documento de identificación, puede ser la licencia o el pasaporte
+Copia de Social Security Number 
+Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 
-Los documentos requeridos para PERSONAS CON TAX ID:
+*Los documentos requeridos para PERSONAS CON TAX ID:*
 
- COPIA DE SU TAX ID
- Documento de identificación, puede ser la licencia o el pasaporte
- Comprobantes de ingreso o colilla de pago
- El último estado de cuenta bancario donde se refleje el Down-payment
+COPIA DE SU TAX ID
+Documento de identificación, puede ser la licencia o el pasaporte
+Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 
-!Estos documentos son por cada persona interesada en comprar la casa!
-               
+*Documentos requeridos para el programa TAX ID 3.5 Down-payment :*
+
+Comprobantes de taxes del 2021.
+Comprobantes de taxes del 2022.
+Documento de identificación, puede ser la licencia o el pasaporte con vigencia mínima de 6 meses.
+Carta de TAX ID.
+Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment.
+Comprobante de renta por cualquier medio electrónico (No pagos en Cash).
+
+¡Estos documentos son por cada persona interesada en comprar la casa!
+
 Por favor ayúdanos a confirmar tu asistencia a través de este WhatsApp https://wa.me/message/F4D3UQUHQTFAO1
 y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos. 
-            
+
 Cualquier consulta puedes llamarnos al 631-609-9108
-            
+
 Si tiene alguna duda estoy a la orden
-              
+
 Conócenos:
-            
 https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
 
 
