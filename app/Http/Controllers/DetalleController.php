@@ -221,21 +221,28 @@ $direcciondecita
 
 Los documentos requeridos para personas con social:
 
-✅ Comprobantes de taxes del 2020
 ✅ Comprobantes de taxes del 2021
+✅ Comprobantes de taxes del 2022
 ✅ Documento de identificación, puede ser la licencia o el pasaporte
-✅ Comprobantes de ingreso o colilla de pago
 ✅ Copia de Social Security Number 
-✅ El último estado de cuenta bancario donde se refleje el Down-payment
+✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 
-Los documentos requeridos para PERSONAS CON TAX ID:
+*Los documentos requeridos para PERSONAS CON TAX ID:*
 
 ✅ COPIA DE SU TAX ID
 ✅ Documento de identificación, puede ser la licencia o el pasaporte
-✅ Comprobantes de ingreso o colilla de pago
-✅ El último estado de cuenta bancario donde se refleje el Down-payment
+✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 
-!Estos documentos son por cada persona interesada en comprar la casa!
+*Documentos requeridos para el programa TAX ID 3.5 Down-payment :*
+
+✅ Comprobantes de taxes del 2021.
+✅ Comprobantes de taxes del 2022.
+✅ Documento de identificación, puede ser la licencia o el pasaporte con vigencia mínima de 6 meses.
+✅ Carta de TAX ID.
+✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment.
+✅ Comprobante de renta por cualquier medio electrónico (No pagos en Cash).
+
+¡Estos documentos son por cada persona interesada en comprar la casa!
 ";
 /************************************************************************************** */
 $msgtxt="!Hola! le saluda $cliente->name de parte de *Contigo Mortgage* 
@@ -246,21 +253,28 @@ $direcciondecita
 
 Los documentos requeridos para personas con social:
 
- Comprobantes de taxes del 2020
- Comprobantes de taxes del 2021
- Documento de identificación, puede ser la licencia o el pasaporte
- Comprobantes de ingreso o colilla de pago
- Copia de Social Security Number 
- El último estado de cuenta bancario donde se refleje el Down-payment
+Comprobantes de taxes del 2021
+Comprobantes de taxes del 2022
+Documento de identificación, puede ser la licencia o el pasaporte
+Copia de Social Security Number 
+Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 
-Los documentos requeridos para PERSONAS CON TAX ID:
+*Los documentos requeridos para PERSONAS CON TAX ID:*
 
- COPIA DE SU TAX ID
- Documento de identificación, puede ser la licencia o el pasaporte
- Comprobantes de ingreso o colilla de pago
- El último estado de cuenta bancario donde se refleje el Down-payment
+COPIA DE SU TAX ID
+Documento de identificación, puede ser la licencia o el pasaporte
+Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 
-!Estos documentos son por cada persona interesada en comprar la casa!";
+*Documentos requeridos para el programa TAX ID 3.5 Down-payment :*
+
+Comprobantes de taxes del 2021.
+Comprobantes de taxes del 2022.
+Documento de identificación, puede ser la licencia o el pasaporte con vigencia mínima de 6 meses.
+Carta de TAX ID.
+Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment.
+Comprobante de renta por cualquier medio electrónico (No pagos en Cash).
+
+¡Estos documentos son por cada persona interesada en comprar la casa!";
 
         $array =str_split($cliente->telefono);
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
@@ -532,6 +546,13 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             ->get()
             ->first();
 
+            $detallecita = DB::connection('mysql2')
+            ->table('detalle_cupos')
+            ->select('detalle_cupos.*')
+            ->where('id', $request->cita_id)
+            ->get()
+            ->first();
+
             $cita = DB::connection('mysql2')
             ->table('detalle_cupos')
             ->where('id', $request->cita_id)
@@ -539,13 +560,6 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             'id_estado' => 3,
             'descripcion' => "La cita ha sido reagendada para la oficina ".$cupo->title." para la fecha ". date('d-m-Y', strtotime($cupo->start))
             ]);
-
-            $detallecita = DB::connection('mysql2')
-            ->table('detalle_cupos')
-            ->select('detalle_cupos.*')
-            ->where('id', $request->cita_id)
-            ->get()
-            ->first();
 
             $detallecupo = DB::connection('mysql2')->table('detalle_cupos')->insert([
                 'id_cupo' => $request->fechascupos,
