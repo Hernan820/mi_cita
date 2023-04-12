@@ -673,10 +673,7 @@ y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te es
 
 Cualquier consulta puedes llamarnos al 631-609-9108
 
-Si tiene alguna duda estoy a la orden
-
-Conócenos:
-https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s";
+Si tiene alguna duda estoy a la orden";
 
 
             $array =str_split($usuario->telefono);
