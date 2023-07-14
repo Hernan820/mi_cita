@@ -16,7 +16,7 @@ use Twilio\Rest\Client;
 
 define('WB_TOKEN', '963fe4d6878286fc02a3b4571b84162f6176c9f6c3fc4');
 define('WB_FROM', '16315067068');
-//date_default_timezone_set("America/New_York");
+date_default_timezone_set("America/New_York");
 
 
 class DetalleController extends Controller
@@ -179,12 +179,20 @@ class DetalleController extends Controller
             ->join("users","users.id", "=", "detalle_cupos.id_usuario")
             ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
             ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
-            ->select("users.name","cupos.start","clientes.telefono","oficinas.direccion","detalle_cupos.hora")
+            ->select("users.name","cupos.start","clientes.telefono","clientes.id as cliente_id","clientes.nombre","oficinas.direccion","detalle_cupos.hora","detalle_cupos.id")
             ->where('detalle_cupos.id','=',$request->idcita)
             ->first();
 
             $direcciondecita = "La dirección de nuestra oficina es 
             📍 $cliente->direccion";
+
+            $bitacora = DB::connection('mysql')->table('bitacoras')->insert([
+                'fecha' => date('Y-m-d H:i:s'),
+                'accion' => 'Cita confirmada',
+                'estado' => 'confirmado',
+                'usuario' => 'Cliente - '.$cliente->nombre,
+                'id_cita' => $cliente->id,
+            ]);
 
         }else if($request->vista == 'virtual'){
 
@@ -195,9 +203,17 @@ class DetalleController extends Controller
              ->join("users","users.id", "=", "detalle_cupos.id_usuario")
              ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
              ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
-             ->select("users.name","cupos.start","clientes.telefono","oficinas.direccion","detalle_cupos.hora")
+             ->select("users.name","cupos.start","clientes.telefono","clientes.id as cliente_id","clientes.nombre","oficinas.direccion","detalle_cupos.hora","detalle_cupos.id")
              ->where('detalle_cupos.id','=',$request->idcita)
              ->first();
+
+             $bitacora = DB::connection('mysql2')->table('bitacoras')->insert([
+                'fecha' => date('Y-m-d H:i:s'),
+                'accion' => 'Cita confirmada',
+                'estado' => 'confirmado',
+                'usuario' => 'Cliente - '.$cliente->nombre,
+                'id_cita' => $cliente->id,
+            ]);
 
              $direcciondecita = "";
         }
@@ -314,10 +330,18 @@ Comprobante de renta por cualquier medio electrónico (No pagos en Cash).
         ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
         ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
         ->join("clientes","clientes.id", "=", "detalle_cupos.id_cliente")
-        ->select("clientes.telefono")
+        ->select("clientes.telefono","clientes.id as cliente_id","clientes.nombre","detalle_cupos.id")
         ->where("detalle_cupos.id","=",$request->idcita)
         ->get()
         ->first();
+
+        $bitacora = DB::connection('mysql')->table('bitacoras')->insert([
+            'fecha' => date('Y-m-d H:i:s'),
+            'accion' => 'Cita Cancelada',
+            'estado' => 'cancelado',
+            'usuario' => 'Cliente - '.$usuario->nombre,
+            'id_cita' => $usuario->id,
+        ]);
 
         }else if($request->vista == 'virtual'){ 
 
@@ -333,9 +357,17 @@ Comprobante de renta por cualquier medio electrónico (No pagos en Cash).
              ->join("users","users.id", "=", "detalle_cupos.id_usuario")
              ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
              ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
-             ->select("users.name","cupos.start","clientes.telefono","oficinas.direccion","detalle_cupos.hora")
+             ->select("users.name","cupos.start","clientes.telefono","clientes.id as cliente_id","oficinas.direccion","detalle_cupos.hora","clientes.nombre","detalle_cupos.id")
              ->where('detalle_cupos.id','=',$request->idcita)
              ->first();
+
+             $bitacora = DB::connection('mysql2')->table('bitacoras')->insert([
+                'fecha' => date('Y-m-d H:i:s'),
+                'accion' => 'Cita Cancelada',
+                'estado' => 'cancelado',
+                'usuario' => 'Cliente - '.$usuario->nombre,
+                'id_cita' => $usuario->id,
+            ]);
         }
 
         $msg="¡Hola! recuerda que puedes reagendar tu cita, contactándonos al 631-609-9108
@@ -523,7 +555,6 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             $cita->descripcion ="La cita ha sido reagendada para la oficina ".$cupo->title." para la fecha ". date('d-m-Y', strtotime($cupo->start));
             $cita->save(); 
             
-            
             $usuario = DetalleCupo::join("users","users.id", "=", "detalle_cupos.id_usuario")
             ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
             ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
@@ -532,6 +563,40 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             ->where("detalle_cupos.id_cupo","=",$request->fechascupos)
             ->get()
             ->first();
+                        
+            $datosbitacora = DetalleCupo::join("users","users.id", "=", "detalle_cupos.id_usuario")
+            ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+            ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+            ->join("clientes","clientes.id", "=", "detalle_cupos.id_cliente") 
+            ->select("clientes.telefono","clientes.nombre","clientes.id as cliente_id","detalle_cupos.id")
+            ->where("detalle_cupos.id","=",$request->cita_id)
+            ->get()
+            ->first();
+
+            $datosbitacoracitanueva = DetalleCupo::join("users","users.id", "=", "detalle_cupos.id_usuario")
+            ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+            ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+            ->join("clientes","clientes.id", "=", "detalle_cupos.id_cliente") 
+            ->select("clientes.telefono","clientes.nombre","clientes.id as cliente_id","detalle_cupos.id")
+            ->where("detalle_cupos.id","=",$detallecupo->id)
+            ->get()
+            ->first();
+
+            $bitacora = DB::connection('mysql')->table('bitacoras')->insert([
+                'fecha' => date('Y-m-d H:i:s'),
+                'accion' => 'Cita reagendada',
+                'estado' => 'reagendado',
+                'usuario' => 'Cliente - '.$datosbitacora->nombre,
+                'id_cita' => $datosbitacora->id,
+            ]);
+                                    
+            $bitacora = DB::connection('mysql')->table('bitacoras')->insert([
+                'fecha' => date('Y-m-d H:i:s'),
+                'accion' => 'Cita Creada , viene reagendada',
+                'estado' => 'pendiente',
+                'usuario' => 'Cliente - '.$datosbitacoracitanueva->nombre,
+                'id_cita' => $datosbitacoracitanueva->id,
+            ]);
 
             $direcciondecita = "La dirección de nuestra oficina es 
             📍 $usuario->direccion";
@@ -561,7 +626,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             'descripcion' => "La cita ha sido reagendada para la oficina ".$cupo->title." para la fecha ". date('d-m-Y', strtotime($cupo->start))
             ]);
 
-            $detallecupo = DB::connection('mysql2')->table('detalle_cupos')->insert([
+            $detallecupo = DB::connection('mysql2')->table('detalle_cupos')->insertGetId([
                 'id_cupo' => $request->fechascupos,
                 'id_cliente' => $detallecita->id_cliente,
                 'id_estado' => 4,
@@ -579,6 +644,41 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             ->select('users.name', 'cupos.start', 'clientes.telefono', 'oficinas.direccion')
             ->where('detalle_cupos.id_cupo', '=', $request->fechascupos)
             ->first();
+
+               
+            $datosbitacora = DB::connection('mysql2')->table('detalle_cupos')
+            ->join("clientes","clientes.id", "=", "detalle_cupos.id_cliente")
+            ->join("users","users.id", "=", "detalle_cupos.id_usuario")
+            ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+            ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+            ->select("clientes.telefono","clientes.nombre","clientes.id as cliente_id","detalle_cupos.id")
+            ->where('detalle_cupos.id','=',$request->cita_id)
+            ->first();
+
+            $datosbitacoracitanueva = DB::connection('mysql2')->table('detalle_cupos')
+            ->join("clientes","clientes.id", "=", "detalle_cupos.id_cliente")
+            ->join("users","users.id", "=", "detalle_cupos.id_usuario")
+            ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+            ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
+            ->select("clientes.telefono","clientes.nombre","clientes.id as cliente_id","detalle_cupos.id")
+            ->where("detalle_cupos.id","=",$detallecupo)
+            ->first();
+
+            $bitacora1 = DB::connection('mysql2')->table('bitacoras')->insert([
+                'fecha' => date('Y-m-d H:i:s'),
+                'accion' => 'Cita reagendada',
+                'estado' => 'reagendado',
+                'usuario' => 'Cliente - '.$datosbitacora->nombre,
+                'id_cita' => $datosbitacora->id,
+            ]);
+                                    
+            $bitacora2 = DB::connection('mysql2')->table('bitacoras')->insert([
+                'fecha' => date('Y-m-d H:i:s'),
+                'accion' => 'Cita Creada , viene reagendada',
+                'estado' => 'pendiente',
+                'usuario' => 'Cliente - '.$datosbitacoracitanueva->nombre,
+                'id_cita' => $datosbitacoracitanueva->id,
+            ]);
 
             $direcciondecita = "";
 
