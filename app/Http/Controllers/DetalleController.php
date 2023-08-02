@@ -461,6 +461,19 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
                               ->select("cupos.*","oficinas.nombre as nombreoficina") 
                               ->where("cupos.id","=", $request->idcupo)
                               ->first();
+
+
+            $sql = "select h.hora12,h.hora24,  
+            (select COUNT(*) from detalle_cupos dc WHERE dc.id_cupo = ".$request->idcupo." and TIME_FORMAT(dc.hora, '%H:%i') = h.hora24  and dc.id_estado != 3 AND dc.id_estado !=2 and dc.estado_cupo IS null ) as total00, ch.cant_citas
+            from cupos_horarios ch
+            left JOIN horarios h on ch.id_horario = h.id
+            WHERE ch.id_cupo = ".$request->idcupo." ;";
+
+            $contadorHorascitas = DB::select($sql);
+
+
+           return response()->json(['hora' => $hora, 'cantCitas' => $cantCitas, 'contadorHorascitas' => $contadorHorascitas],200);
+
             
         }else if($request->vista == 'virtual'){ 
 
@@ -482,11 +495,14 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
                 ->select("cupos.*","oficinas.nombre as nombreoficina") 
                 ->where("cupos.id","=", $request->idcupo)
                 ->first();
+
+                return response()->json(['hora' => $hora, 'cantCitas' => $cantCitas],200);
+
         }
 
-        return response()->json(['hora' => $hora, 'cantCitas' => $cantCitas],200);
     
     }
+
 
     /**
      * Update the specified resource in storage.

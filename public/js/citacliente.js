@@ -199,24 +199,26 @@ let tipovista = $('#tipecita').val();
         var datosfechas = new FormData();
         datosfechas.append("vista",tipovista );
         datosfechas.append("idcupo",$("#fechascupos").val());
-
-        $("#horaReagendar").html("");
+        $("#horaReagendar").html("");            
 
     axios.post(principalUrl + "cita/listarHorario",datosfechas)
         .then((respuesta) => { 
 
+
             $("#nombreofic").val(respuesta.data.cantCitas.nombreoficina);
             $("#num_citas").val(respuesta.data.cantCitas.cant_citas);
             $("#fecharea").val( moment(respuesta.data.cantCitas.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY"));
-           
-            $("#horaReagendar").append(
-                "<option enabled selected value=''>Horas</option>"
-                );
+            $("#horaReagendar").html('');
+
+
+            if(respuesta.data.hora[0].cant_citas != null){
+
+            $("#horaReagendar").append("<option enabled selected value=''>Horas</option>");
 
                 var horasvacias = 0;
                 respuesta.data.hora.forEach(function (element) {
                     if(element.total00 < element.cant_citas || element.total30 < element.cant_citas ){
-                        $("#horaReagendar").append("<option value=" +element.hora24 +">"+element.hora12+"</option>");
+                        $("#horaReagendar").append("<option value=" +element.hora24.split(':')[0] +">"+element.hora12.split(':')[0]+"</option>");
                         horasvacias++;
                     }
                 });
@@ -224,6 +226,44 @@ let tipovista = $('#tipecita').val();
                 if(horasvacias == 0){
                     $("#horaReagendar").append("<option readonly='true' value=''>No hay horas vacias</option>");
                 }
+
+            }else{
+
+                $("#horaReagendar").append("<option enabled selected value=''>Horas</option>");
+
+                var horasvacias = 0;
+                respuesta.data.contadorHorascitas.forEach(function (element) {
+
+                            if(element.total00 < element.cant_citas ){
+                                horasvacias++;
+
+                                if(element.hora12.split(':')[1] == '00'){
+                                    $("#horaReagendar").append("<option value=" +element.hora24.split(':')[0] +">"+element.hora12.split(':')[0]+"</option>");
+                                }else{
+                                    var elementoExiste = respuesta.data.contadorHorascitas.some(function(item) {
+
+                                        if( item.hora12 === element.hora12.split(':')[0]+':00'){
+                                            if(item.total00  < item.cant_citas){
+                                                return true;
+                                            }else{
+                                                return false;
+                                            }
+                                        }
+                                    });
+
+                                    if(elementoExiste == true){
+                                    }else{
+                                        $("#horaReagendar").append("<option value=" +element.hora24.split(':')[0] +">"+element.hora12.split(':')[0]+"</option>");
+                                    }
+                                }
+                            }
+                });
+                if(horasvacias == 0){
+                    $("#horaReagendar").append("<option readonly='true' value=''>No hay horas vacias</option>");
+                }
+
+            }
+
         })
         .catch((error) => {
             if (error.response) {
