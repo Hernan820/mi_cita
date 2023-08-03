@@ -11,6 +11,7 @@ use App\Models\Cliente;
 use App\Models\DetalleCupo;
 use App\Models\CuposHorario;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 use Twilio\Rest\Client;
 
@@ -518,16 +519,64 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
      $horareagenda= $request->horaReagendar.':'.$request->minutosReagendar;
 
          if($request->vista == 'fisica'){
+                         
+             $horarionuevo = DB::select("SELECT horarios.hora24,
+                                                horarios.hora12,
+                                                cupos_horarios.cant_citas AS cant_horarionuevo,
+                                                cupos.cant_citas AS cant_horarioantiguo
+                                        FROM cupos_horarios
+                                        JOIN cupos ON cupos.id = cupos_horarios.id_cupo
+                                        JOIN horarios ON horarios.id = cupos_horarios.id_horario
+                                        WHERE cupos_horarios.id_cupo = $request->fechascupos ;
+                                        ");
 
-        $contadorCitas = DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
-        -> where("detalle_cupos.id_cupo","=",$request->cuposid)
-        ->where("detalle_cupos.hora","=",$horareagenda)
-        ->where(function ($query) {
-             $query->where("detalle_cupos.id_estado","!=",3)
-                   ->where("detalle_cupos.id_estado","!=",2)
-                   ->where("detalle_cupos.estado_cupo","=",null);
-         })
-         ->count();
+            if($horarionuevo[0]->cant_horarioantiguo != null){
+
+                $cita = DetalleCupo::find($request->cita_id);
+
+                $contadorCitas = DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
+                -> where("detalle_cupos.id_cupo","=",$cita->id_cupo)
+                ->where("detalle_cupos.hora","=",$horareagenda)
+                ->where(function ($query) {
+                    $query->where("detalle_cupos.id_estado","!=",3)
+                        ->where("detalle_cupos.id_estado","!=",2)
+                        ->where("detalle_cupos.estado_cupo","=",null);
+                })
+                ->count();
+
+                if($contadorCitas >= $request->num_citas){
+                    return 2 ;
+                }
+
+            }else{
+                $cita = DetalleCupo::find($request->cita_id);
+
+                $contadorCitas = DetalleCupo::join("cupos", "cupos.id", "=", "detalle_cupos.id_cupo")
+                ->where("detalle_cupos.id_cupo", $cita->id_cupo)
+                ->where("detalle_cupos.hora", $request->horaReagendar . ':' . $request->minutosReagendar)
+                ->whereNotIn("detalle_cupos.id_estado", [2, 3])
+                ->whereNull("detalle_cupos.estado_cupo")
+                ->count();
+
+                $existecupucitas = 0;
+                foreach ($horarionuevo as $datos_hora) {
+                    if($datos_hora->hora24 ==  $request->horaReagendar.':'.$request->minutosReagendar){ 
+                       $existecupucitas++;
+                    }
+                }
+
+                if ($existecupucitas == 0) {
+                    return 2;     
+                }
+
+                 foreach ($horarionuevo as $datos_hora) {
+                    if($datos_hora->hora24 ==  $request->horaReagendar.':'.$request->minutosReagendar){
+                        if($contadorCitas >= $datos_hora->cant_horarionuevo ){
+                           return 2;  
+                        }
+                    }
+                 }
+            }
 
         }else if($request->vista == 'virtual'){ 
 
@@ -542,9 +591,12 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
                     ->where('detalle_cupos.estado_cupo', '=', null);
             })
             ->count();
-        }
 
-         if($contadorCitas < $request->num_citas){
+            if($contadorCitas >= $request->num_citas){
+
+                return 2 ;
+            }
+        }
 
         if($request->vista == 'fisica'){
 
@@ -805,10 +857,8 @@ Si tiene alguna duda estoy a la orden";
              
             // $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
         
-        return 1 ;
-         }else{
-            return 2;
-         }
+            return 1 ;
+
         }
 
     /**

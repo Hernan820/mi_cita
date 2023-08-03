@@ -401,9 +401,24 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
                             title: "Cita Reagendada exitosamente!",
                             showConfirmButton: false,
                         });
+                        location.reload();
 
+                    }else if(respuesta.data == 2){
+
+                        Swal.fire({
+                            title: 'La cita no se pudo reagendar. Los cupos para esa hora ya están ocupados.',
+                            showDenyButton: false,
+                            showCancelButton: false,
+                            confirmButtonText: 'Ok, entendido',
+                            denyButtonText: false,
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            } else if (result.isDenied) {
+                              Swal.fire('Changes are not saved', '', 'info')
+                            }
+                          })
                     }
-                    location.reload();
 
                 })
                 .catch((error) => {
