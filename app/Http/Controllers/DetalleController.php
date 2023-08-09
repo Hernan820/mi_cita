@@ -12,6 +12,8 @@ use App\Models\DetalleCupo;
 use App\Models\CuposHorario;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use DateTime;
+use DateInterval;
 
 use Twilio\Rest\Client;
 
@@ -515,10 +517,43 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
     public function reagendar(Request $request)
     {
 
+
+  //-----------------------------------------------
      //concatena hora
      $horareagenda= $request->horaReagendar.':'.$request->minutosReagendar;
 
          if($request->vista == 'fisica'){
+
+            $cita_telefono = DetalleCupo::join('clientes','clientes.id','=','detalle_cupos.id_cliente')
+                                        ->select('clientes.*')
+                                        ->where('detalle_cupos.id','=',$request->cita_id)
+                                        ->get();
+
+            $telefono = $cita_telefono[0]->telefono;
+
+            Log::info($cita_telefono[0]->telefono); 
+
+            $actualfecha = new DateTime();  
+            $actualfecha->sub(new DateInterval('P1Y'));  
+            $fechahaceunano = $actualfecha->format('Y-m-d');
+    
+            $historial = DB::select("SELECT COUNT(*) as total_registros FROM `detalle_cupos`
+            INNER JOIN clientes ON clientes.id = detalle_cupos.id_cliente
+            INNER JOIN estados ON estados.id = detalle_cupos.id_estado
+            INNER JOIN users ON users.id = detalle_cupos.id_usuario
+            INNER JOIN cupos ON cupos.id = detalle_cupos.id_cupo
+            WHERE clientes.telefono = '$telefono' AND detalle_cupos.estado_cupo IS NULL AND cupos.start > '$fechahaceunano' AND detalle_cupos.id_estado IN(2,3,5);");
+    
+    Log::info($historial); 
+    Log::info($fechahaceunano); 
+    Log::info($request); 
+
+
+                if( $historial[0]->total_registros >= 3){
+                    return 55;
+                }
+    
+
                          
              $horarionuevo = DB::select("SELECT horarios.hora24,
                                                 horarios.hora12,

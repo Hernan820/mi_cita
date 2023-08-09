@@ -418,6 +418,24 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
                               Swal.fire('Changes are not saved', '', 'info')
                             }
                           })
+                    }else if(respuesta.data == 55 ){
+
+                        Swal.fire({
+                            title: '<strong>Tu cita</strong>',
+                            icon: 'error',
+                            html:
+                              'Has alcanzado el límite máximo de citas físicas agendadas. Por favor, considere agendar una cita virtual.<br><strong> Si necesitas más ayuda llama al <a href="tel:+1631-609-9108">631-609-9108</a></strong>',
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            focusConfirm: false,
+                            confirmButtonText:
+                              'Ok, entendido!',
+                            confirmButtonAriaLabel: 'Thumbs up, great!',
+                            cancelButtonText: false,
+                            cancelButtonAriaLabel: 'Thumbs down'
+                          })
+
+
                     }
 
                 })
