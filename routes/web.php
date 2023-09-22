@@ -37,3 +37,5 @@ Route::post('cita/listarHorario', [App\Http\Controllers\DetalleController::class
 
 Route::post('cita/reagendar', [App\Http\Controllers\DetalleController::class, 'reagendar']);
 
+Route::post('crear/citafisica', [App\Http\Controllers\DetalleController::class, 'store']);
+

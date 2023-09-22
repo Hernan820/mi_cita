@@ -159,7 +159,7 @@ let tipovista = $('#tipecita').val();
         axios.post(principalUrl + "cliente/oficinas",datoscita)
         .then((respuesta) => {
             moment.locale("es");
-            $("#oficinas").append( "<option  disabled='true'  value=''>Elige una Fecha &nbsp;&nbsp;&nbsp;&nbsp; Oficina</option>");
+            $("#oficinas").append( "<option selected  disabled='true'  value=''>Elige una Oficina</option>");
             $("#fechascupos").append("<option selected disabled='true' value=''>Fechas</option>");
 
                 respuesta.data.ofi.forEach(function (element) {   
@@ -169,6 +169,9 @@ let tipovista = $('#tipecita').val();
                     $("#oficinas").append("<option value=" +element.id+">"+element.nombre+"</option>");
                     }
                 });
+                if(tipovista === "fisica"){
+                $("#oficinas").append( "<option  value='oficina_virtual'> Cita Virtual  <b>( Llamada )</b> </option>");
+                }
 
                if(respuesta.data.cupos.length > 0 ){
                 respuesta.data.cupos.forEach(function (element) {  
@@ -197,8 +200,15 @@ let tipovista = $('#tipecita').val();
         
         $(".hora").val("");
         var datosfechas = new FormData();
+          var ofinaquetraer =$("#oficinas").val();
+          var idcuposeleccionado = $("#fechascupos").val();
+
+         if(ofinaquetraer === "oficina_virtual"){
+            datosfechas.append("vista","virtual" );
+         }else{
         datosfechas.append("vista",tipovista );
-        datosfechas.append("idcupo",$("#fechascupos").val());
+         }
+        datosfechas.append("idcupo",idcuposeleccionado);
         $("#horaReagendar").html("");            
 
     axios.post(principalUrl + "cita/listarHorario",datosfechas)
@@ -294,7 +304,13 @@ let tipovista = $('#tipecita').val();
 
                 if(respuesta.data.length > 0 ){
                     respuesta.data.forEach(function (element) {   
-                        $("#fechascupos").append("<option  value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+"</option>");
+
+                        var fecha_actual = moment().format('YYYY-MM-DD');
+                        var fecha_cupo = moment(element.start).format('YYYY-MM-DD');
+
+                        if(fecha_cupo > fecha_actual){
+                            $("#fechascupos").append("<option  value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+"</option>");
+                        }
                     });
     
                    }else{
@@ -365,12 +381,92 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
     var oficina = $("#nombreofic").val();
     var fecha = $("#fecharea").val();
 
-
     if (cupo === "" || hora === "" ) {
         Swal.fire("¡Debe llenar todos los datos requeridos!");
         return;
     }
 
+    var reagendaCita = new FormData(formreagendar);
+    reagendaCita.append("vista",tipovista );
+   // reagendaCita.append("cita_oficina",tipovista );
+
+    if(tipovista === "fisica" && $("#oficinas").val() === "oficina_virtual" ){
+
+
+    
+        Swal.fire({
+            title: "Reagendar cita virtual",
+            text: "¿Estás seguro de que deseas cambiar tu cita física a una cita virtual para "+fecha+" ?" ,
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "SI",
+            cancelButtonText: "Cancelar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#btnReagendar').attr('disabled', true);
+                axios.post(principalUrl + "crear/citafisica", reagendaCita)
+                    .then((respuesta) => {  
+                        $('#btnReagendar').attr('disabled', false);
+                        if(respuesta.data.validacion == 1){
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Cita Reagendada exitosamente!",
+                                showConfirmButton: false,
+                            });
+
+                            location.href = principalUrl + "virtual/" + respuesta.data.id_citanueva;
+
+                           // location.reload();
+                        }else if(respuesta.data.validacion == 2){
+                            Swal.fire({
+                                title: '¡Lo siento, no es posible reprogramar la cita, la hora elegida ya está ocupada.!',
+                                showDenyButton: false,
+                                showCancelButton: false,
+                                confirmButtonText: 'Ok, entendido',
+                                denyButtonText: false,
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                   // location.reload();
+                                } else if (result.isDenied) {
+                                  Swal.fire('Changes are not saved', '', 'info')
+                                }
+                              })
+                        }else if(respuesta.data.validacion == 55 ){
+                            Swal.fire({
+                                title: '<strong>Tu cita</strong>',
+                                icon: 'error',
+                                html:
+                                  'Has alcanzado el límite máximo de citas físicas agendadas. Por favor, considere agendar una cita virtual.<br><strong> Si necesitas más ayuda llama al <a href="tel:+1631-609-9108">631-609-9108</a></strong>',
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                focusConfirm: false,
+                                confirmButtonText:
+                                  'Ok, entendido!',
+                                confirmButtonAriaLabel: 'Thumbs up, great!',
+                                cancelButtonText: false,
+                                cancelButtonAriaLabel: 'Thumbs down'
+                              })
+                        }else if(respuesta.data.validacion === 35){
+                            Swal.fire({
+                                position: "top-center",
+                                icon: "info",
+                                title: "¡Ya existe una cita con tu número de teléfono para la fecha que deseas reagendar tu cita!",
+                                showConfirmButton: false,
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            console.log(error.response.data);
+                        }
+                    });
+            } else {
+                $("#popup_reagendar").modal("hide");
+            }
+        });    
+    }else{
 
     Swal.fire({
         title: "Reagendar cita",
@@ -382,19 +478,11 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
         cancelButtonText: "Cancelar",
     }).then((result) => {
         if (result.isConfirmed) {
-
-            var reagendaCita = new FormData(formreagendar);
-            reagendaCita.append("vista",tipovista );
-
             $('#btnReagendar').attr('disabled', true);
-
-
             axios.post(principalUrl + "cita/reagendar", reagendaCita)
                 .then((respuesta) => {
                     $('#btnReagendar').attr('disabled', false);
-
                     if(respuesta.data == 1){
-
                         Swal.fire({
                             position: "top-end",
                             icon: "success",
@@ -402,9 +490,7 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
                             showConfirmButton: false,
                         });
                         location.reload();
-
                     }else if(respuesta.data == 2){
-
                         Swal.fire({
                             title: 'La cita no se pudo reagendar. Los cupos para esa hora ya están ocupados.',
                             showDenyButton: false,
@@ -419,7 +505,6 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
                             }
                           })
                     }else if(respuesta.data == 55 ){
-
                         Swal.fire({
                             title: '<strong>Tu cita</strong>',
                             icon: 'error',
@@ -434,10 +519,7 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
                             cancelButtonText: false,
                             cancelButtonAriaLabel: 'Thumbs down'
                           })
-
-
                     }
-
                 })
                 .catch((error) => {
                     if (error.response) {
@@ -448,6 +530,7 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
             $("#popup_reagendar").modal("hide");
         }
     });
+ }
 
 });
 
