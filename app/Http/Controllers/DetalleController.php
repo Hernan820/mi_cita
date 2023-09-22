@@ -776,21 +776,83 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 
         }else if($request->vista == 'virtual'){ 
 
-            $contadorCitas = DB::connection('mysql2')
+            
+            $cita_telefono = DB::connection('mysql2')
             ->table('detalle_cupos')
-            ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
-            ->where('detalle_cupos.id_cupo', '=', $request->cuposid)
-            ->where('detalle_cupos.hora', '=', $horareagenda)
-            ->where(function ($query) {
-                $query->where('detalle_cupos.id_estado', '!=', 3)
-                    ->where('detalle_cupos.id_estado', '!=', 2)
-                    ->where('detalle_cupos.estado_cupo', '=', null);
-            })
-            ->count();
+            ->join('clientes', 'clientes.id', '=', 'detalle_cupos.id_cliente')
+            ->select('clientes.*')
+            ->where('detalle_cupos.id', '=', $request->cita_id)
+            ->get();
+        
+            $telefono = $cita_telefono[0]->telefono;
 
-            if($contadorCitas >= $request->num_citas){
+            $actualfecha = new DateTime();  
+            $actualfecha->sub(new DateInterval('P1Y'));  
+            $fechahaceunano = $actualfecha->format('Y-m-d');
+    
+            $historial = DB::connection('mysql2')->select("SELECT COUNT(*) as total_registros FROM `detalle_cupos`
+            INNER JOIN clientes ON clientes.id = detalle_cupos.id_cliente
+            INNER JOIN estados ON estados.id = detalle_cupos.id_estado
+            INNER JOIN users ON users.id = detalle_cupos.id_usuario
+            INNER JOIN cupos ON cupos.id = detalle_cupos.id_cupo
+            WHERE clientes.telefono = '$telefono' AND detalle_cupos.estado_cupo IS NULL AND cupos.start > '$fechahaceunano' AND detalle_cupos.id_estado IN(2,3,5);");
 
-                return 2 ;
+            if( $historial[0]->total_registros >= 3){
+                return 55;
+            }
+
+             $horarionuevo = DB::connection('mysql2')->select("SELECT horarios.hora24,horarios.hora12,cupos_horarios.cant_citas AS cant_horarionuevo, cupos.cant_citas AS cant_horarioantiguo
+                                        FROM cupos_horarios JOIN cupos ON cupos.id = cupos_horarios.id_cupo
+                                        JOIN horarios ON horarios.id = cupos_horarios.id_horario
+                                        WHERE cupos_horarios.id_cupo = $request->fechascupos ;");
+
+            if($horarionuevo[0]->cant_horarioantiguo != null){
+
+                $contadorCitas = DB::connection('mysql2')
+                    ->table('detalle_cupos')
+                    ->join("cupos", "cupos.id", "=", "detalle_cupos.id_cupo")
+                    ->where("detalle_cupos.id_cupo", "=", $request->fechascupos)
+                    ->where("detalle_cupos.hora", "=", $horareagenda.':00')
+                    ->where(function ($query) {
+                        $query->where("detalle_cupos.id_estado", "!=", 3)
+                            ->where("detalle_cupos.id_estado", "!=", 2)
+                            ->where("detalle_cupos.estado_cupo", "=", null);
+                    })
+                    ->count();
+
+                if($contadorCitas >= $request->num_citas){
+                    return 2;
+                }
+
+            }else{
+
+                $contadorCitas = DB::connection('mysql2')
+                ->table('detalle_cupos')
+                ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
+                ->where('detalle_cupos.id_cupo', $request->fechascupos)
+                ->where('detalle_cupos.hora', $horareagenda.':00')
+                ->whereNotIn('detalle_cupos.id_estado', [2, 3])
+                ->whereNull('detalle_cupos.estado_cupo')
+                ->count();
+
+                $existecupucitas = 0;
+                foreach ($horarionuevo as $datos_hora) {
+                    if($datos_hora->hora24 === $horareagenda){ 
+                       $existecupucitas++;
+                    }
+                }
+
+                if ($existecupucitas == 0) {
+                    return 2;
+                }
+
+                 foreach ($horarionuevo as $datos_hora) {
+                    if($datos_hora->hora24 === $horareagenda ){
+                        if($contadorCitas >= $datos_hora->cant_horarionuevo ){
+                            return 2;
+                        }
+                    }
+                 }
             }
         }
 
@@ -1104,7 +1166,7 @@ Si tiene alguna duda estoy a la orden";
             ->table('oficinas')
             ->join("cupos","cupos.id_oficina", "=", "oficinas.id")
             ->select('oficinas.id','oficinas.nombre')
-            //->where('cupos.start','>=', $fechaActual)
+            ->where('cupos.start','>=', $fechaActual)
             ->groupBy('oficinas.id','oficinas.nombre')
             ->get();
             
@@ -1112,7 +1174,7 @@ Si tiene alguna duda estoy a la orden";
             ->table('cupos')
             ->select('cupos.start','cupos.id','cupos.id_oficina')
             ->where('cupos.id_oficina','=', $cita->id)
-            ->where('cupos.start','>=', $fechaActual)
+            ->where('cupos.start','>', $fechaActual)
             ->orderBy('cupos.start','asc')
             ->get();
 
