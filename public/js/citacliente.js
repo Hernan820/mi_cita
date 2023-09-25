@@ -212,7 +212,7 @@ let tipovista = $('#tipecita').val();
 
          if(ofinaquetraer === "oficina_virtual"){
             datosfechas.append("vista","virtual" );
-         }else if(oficinaseleccionanda !== "Oficina Virtual"){
+         }else if(oficinaseleccionanda != "Oficina Virtual"){
             datosfechas.append("vista","fisica" );
          }else{
         datosfechas.append("vista",tipovista );
@@ -309,6 +309,8 @@ let tipovista = $('#tipecita').val();
         datosoficinas.append("oficinas",$("#oficinas").val() );
         datosoficinas.append("idcita",$("#idcita").val());
 
+        var fecha_de_cita= moment($("#fechacita").val()).utc().locale('es').format("YYYY-MM-DD"); 
+
         $("#fechascupos").html("");
         //$("#oficinas").html("");
        // var ofici = $("#nombreoficina").val();
@@ -325,7 +327,7 @@ let tipovista = $('#tipecita').val();
                         var fecha_actual = moment().format('YYYY-MM-DD');
                         var fecha_cupo = moment.utc(element.start).format('YYYY-MM-DD');
 
-                        if(fecha_cupo > fecha_actual){
+                        if(fecha_cupo > fecha_actual && fecha_de_cita != fecha_cupo){
                             $("#fechascupos").append("<option  value=" +element.id+">"+moment(element.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY")+"</option>");
                         }
                     });
@@ -609,6 +611,13 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
                             cancelButtonText: false,
                             cancelButtonAriaLabel: 'Thumbs down'
                           })
+                    }else if(respuesta.data === 35){
+                        Swal.fire({
+                            position: "top-center",
+                            icon: "info",
+                            title: "¡Ya existe una cita con tu número de teléfono para la fecha que deseas reagendar tu cita!",
+                            showConfirmButton: false,
+                        });
                     }
                 })
                 .catch((error) => {

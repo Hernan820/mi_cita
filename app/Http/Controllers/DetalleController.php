@@ -953,9 +953,9 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             INNER JOIN cupos ON cupos.id = detalle_cupos.id_cupo
             WHERE clientes.telefono = '$telefono' AND detalle_cupos.estado_cupo IS NULL AND cupos.start > '$fechahaceunano' AND detalle_cupos.id_estado IN(2,3,5);");
 
-            if( $historial[0]->total_registros >= 3){
-                return 55;
-            }
+            // if( $historial[0]->total_registros >= 3){
+            //     return 55;
+            // }
 
              $horarionuevo = DB::connection('mysql2')->select("SELECT horarios.hora24,horarios.hora12,cupos_horarios.cant_citas AS cant_horarionuevo, cupos.cant_citas AS cant_horarioantiguo
                                         FROM cupos_horarios JOIN cupos ON cupos.id = cupos_horarios.id_cupo
@@ -1009,6 +1009,23 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
                         }
                     }
                  }
+            }
+
+            $telefonovalida = DB::connection('mysql2')
+            ->table('clientes')
+            ->join('detalle_cupos', 'detalle_cupos.id_cliente', '=', 'clientes.id')
+            ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
+            ->where('detalle_cupos.id_cupo', '=', $request->fechascupos)
+            ->where('clientes.telefono', '=', $telefono)
+            ->where(function ($query) {
+                $query->where('detalle_cupos.id_estado', '!=', 3)
+                      ->where('detalle_cupos.id_estado', '!=', 2)
+                      ->where('detalle_cupos.estado_cupo', '=', null);
+            })  
+            ->count();
+
+            if($telefonovalida > 0){
+                return 35;
             }
         }
 
@@ -1284,7 +1301,7 @@ Si tiene alguna duda estoy a la orden";
     public function oficinas(Request $request)
     {
 
-        $fechaActual = date('Y-m-d');
+        $fechaActual = date('Y-m-d').' 00:00:00';
 
         if($request->vista == 'fisica'){
 
