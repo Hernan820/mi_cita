@@ -322,6 +322,162 @@ class DetalleController extends Controller
             $validacion = 1;
 
             return response()->json(['validacion' => $validacion , 'id_citanueva' =>  $id_citanueva = $idcliente],200);
+
+        }else{
+ //   NUEVA CITA FISICA DESDE LA CITA FISICA      
+               
+            $cita_telefono = DB::connection('mysql2')
+            ->table('detalle_cupos')
+            ->join('clientes', 'clientes.id', '=', 'detalle_cupos.id_cliente')
+            ->select('clientes.*')
+            ->where('detalle_cupos.id', '=', $request->cita_id)
+            ->get();
+
+            $telefono = $cita_telefono[0]->telefono;
+
+            $actualfecha = new DateTime();  
+            $actualfecha->sub(new DateInterval('P1Y'));  
+            $fechahaceunano = $actualfecha->format('Y-m-d');
+    
+            $historial = DB::connection('mysql')->select("SELECT COUNT(*) as total_registros FROM `detalle_cupos`
+            INNER JOIN clientes ON clientes.id = detalle_cupos.id_cliente
+            INNER JOIN estados ON estados.id = detalle_cupos.id_estado
+            INNER JOIN users ON users.id = detalle_cupos.id_usuario
+            INNER JOIN cupos ON cupos.id = detalle_cupos.id_cupo
+            WHERE clientes.telefono = '$telefono' AND detalle_cupos.estado_cupo IS NULL AND cupos.start > '$fechahaceunano' AND detalle_cupos.id_estado IN(2,3,5);");
+
+                if( $historial[0]->total_registros >= 3){
+                    return response()->json(['validacion' => $validacion = 55, 'id_citanueva' =>  $id_citanueva = ''],200);
+                }
+
+             $horarionuevo = DB::connection('mysql')->select("SELECT horarios.hora24,horarios.hora12,cupos_horarios.cant_citas AS cant_horarionuevo, cupos.cant_citas AS cant_horarioantiguo
+                                        FROM cupos_horarios JOIN cupos ON cupos.id = cupos_horarios.id_cupo
+                                        JOIN horarios ON horarios.id = cupos_horarios.id_horario
+                                        WHERE cupos_horarios.id_cupo = $request->fechascupos ;");
+
+            if($horarionuevo[0]->cant_horarioantiguo != null){
+
+                $contadorCitas = DB::connection('mysql')
+                    ->table('detalle_cupos')
+                    ->join("cupos", "cupos.id", "=", "detalle_cupos.id_cupo")
+                    ->where("detalle_cupos.id_cupo", "=", $request->fechascupos)
+                    ->where("detalle_cupos.hora", "=", $horaconcatenada.':00')
+                    ->where(function ($query) {
+                        $query->where("detalle_cupos.id_estado", "!=", 3)
+                            ->where("detalle_cupos.id_estado", "!=", 2)
+                            ->where("detalle_cupos.estado_cupo", "=", null);
+                    })
+                    ->count();
+
+                if($contadorCitas >= $request->num_citas){
+                    return response()->json(['validacion' => $validacion = 2, 'id_citanueva' =>  $id_citanueva = ''],200);
+                }
+
+            }else{
+
+                $contadorCitas = DB::connection('mysql')
+                ->table('detalle_cupos')
+                ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
+                ->where('detalle_cupos.id_cupo', $request->fechascupos)
+                ->where('detalle_cupos.hora', $horaconcatenada.':00')
+                ->whereNotIn('detalle_cupos.id_estado', [2, 3])
+                ->whereNull('detalle_cupos.estado_cupo')
+                ->count();
+
+                $existecupucitas = 0;
+                foreach ($horarionuevo as $datos_hora) {
+                    if($datos_hora->hora24 === $horaconcatenada){ 
+                       $existecupucitas++;
+                    }
+                }
+
+                if ($existecupucitas == 0) {
+                    return response()->json(['validacion' => $validacion = 2, 'id_citanueva' =>  $id_citanueva = ''],200);
+                }
+
+                 foreach ($horarionuevo as $datos_hora) {
+                    if($datos_hora->hora24 === $horaconcatenada ){
+                        if($contadorCitas >= $datos_hora->cant_horarionuevo ){
+                            return response()->json(['validacion' => $validacion = 2, 'id_citanueva' =>  $id_citanueva = ''],200);
+                        }
+                    }
+                 }
+            }
+
+            $telefonovalida = DB::connection('mysql')
+            ->table('clientes')
+            ->join('detalle_cupos', 'detalle_cupos.id_cliente', '=', 'clientes.id')
+            ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
+            ->where('detalle_cupos.id_cupo', '=', $request->fechascupos)
+            ->where('clientes.telefono', '=', $telefono)
+            ->where(function ($query) {
+                $query->where('detalle_cupos.id_estado', '!=', 3)
+                      ->where('detalle_cupos.id_estado', '!=', 2)
+                      ->where('detalle_cupos.estado_cupo', '=', null);
+            })
+            ->count();
+        
+            if($telefonovalida > 0){
+                return response()->json(['validacion' => $validacion = 35, 'id_citanueva' =>  $id_citanueva = ''],200);
+            }
+
+            $cupo_oficina = DB::connection('mysql')->table('cupos')
+                        ->join("oficinas", "oficinas.id", "=", "cupos.id_oficina")
+                        ->where("cupos.id","=", $request->fechascupos)
+                        ->get();
+
+            $datos_cliente = DB::connection('mysql2')
+            ->table('detalle_cupos')
+            ->join('clientes', 'clientes.id', '=', 'detalle_cupos.id_cliente')
+            ->where('detalle_cupos.id', '=', $request->cita_id)
+            ->get();
+
+                $cliente = DB::connection('mysql')->table('clientes')->insertGetId([
+                    'nombre' => $datos_cliente[0]->nombre,
+                    'apellidos' => $datos_cliente[0]->apellidos,
+                    'direccion' => $datos_cliente[0]->direccion,
+                    'correo' => $datos_cliente[0]->correo,
+                    'telefono2' => $datos_cliente[0]->telefono2,
+                    'telefono' => $datos_cliente[0]->telefono,
+                    'estado_cliente' => $datos_cliente[0]->estado_cliente
+                ]);
+
+            $detallecupo = DB::connection('mysql')->table('detalle_cupos')->insertGetId([
+                'id_cupo' => $request->fechascupos,
+                'id_cliente' => $cliente,
+                'id_estado' => 4,
+                'id_usuario' => $datos_cliente[0]->id_usuario,
+                'hora' => $horaconcatenada.':00',   
+                'descripcion' => $datos_cliente[0]->descripcion
+            ]);
+
+           DB::connection('mysql2')->table('detalle_cupos')
+            ->where('id', $request->cita_id)
+            ->update([
+                'id_estado' => 3,
+                'descripcion' => "La cita ha sido reagendada por el cliente a " . $cupo_oficina[0]->nombre . " para la fecha " . date('d-m-Y', strtotime($cupo_oficina[0]->start))
+            ]);
+
+            $bitacora = DB::connection('mysql2')->table('bitacoras')->insert([
+                'fecha' => date('Y-m-d H:i:s'),
+                'accion' => 'Cita reagendada a cita virtual por el cliente',
+                'estado' => 'reagendado',
+                'usuario' => 'Cliente - '.$datos_cliente[0]->nombre,
+                'id_cita' => $request->cita_id,
+            ]);
+                                    
+            $bitacora = DB::connection('mysql')->table('bitacoras')->insert([
+                'fecha' => date('Y-m-d H:i:s'),
+                'accion' => 'Cita Creada por el cliente, reagendada de cita física ',
+                'estado' => 'pendiente',
+                'usuario' => 'Cliente - '.$datos_cliente[0]->nombre,
+                'id_cita' => $detallecupo,
+            ]);
+
+            $idcliente =  base64_encode($cliente);
+            $validacion = 1;
+
+            return response()->json(['validacion' => $validacion , 'id_citanueva' =>  $id_citanueva = $idcliente],200);
         }
      }
      /**
@@ -1147,10 +1303,12 @@ Si tiene alguna duda estoy a la orden";
     
             $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
             ->where('cupos.id_oficina','=', $cita->id)
-            //->where('cupos.start','>', $cita->start)
-            ->where('cupos.start','>=', $fechaActual)
+            ->where('cupos.start','>', $cita->start)
+            ->where('cupos.start','>', $fechaActual)
             ->orderBy('cupos.start','asc')
             ->get();
+
+            $ofifisica="";
 
         }else if($request->vista == 'virtual') {
 
@@ -1178,9 +1336,16 @@ Si tiene alguna duda estoy a la orden";
             ->orderBy('cupos.start','asc')
             ->get();
 
+            $ofifisica= Oficina::join("cupos","cupos.id_oficina", "=", "oficinas.id")
+            ->select('oficinas.id','oficinas.nombre')
+            ->where('cupos.start','>=', $fechaActual)
+            //->where('cupos.start','>=', $cita->start)
+            ->groupBy('oficinas.id','oficinas.nombre')
+            ->get();
+
         }
         
-        return response()->json(['ofi' => $ofi, 'cupos' => $cupos],200);
+        return response()->json(['ofi' => $ofi, 'cupos' => $cupos, 'ofifisica' => $ofifisica ],200);
     }
 
     public function fechas(Request $request)
