@@ -17,6 +17,7 @@ use DateInterval;
 
 use Twilio\Rest\Client;
 
+// WHATSAPP MESSAGES
 define('WB_TOKEN', '963fe4d6878286fc02a3b4571b84162f6176c9f6c3fc4');
 define('WB_FROM', '16315067068');
 date_default_timezone_set("America/New_York");
@@ -615,8 +616,8 @@ Comprobante de renta por cualquier medio electrónico (No pagos en Cash).
         $array =str_split($cliente->telefono);
         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
 
-        $r = $this->link_send(+50379776604,$msg,$tipo=4); 
-       // $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
+        //$r = $this->link_send(+50379776604,$msg,$tipo=4); 
+       $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
 
 
         $sid = "AC9e1475e1b32fec62e6dd712768584a72";
@@ -714,8 +715,8 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
          $array =str_split($usuario->telefono);
          $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
         
-          $r = $this->link_send(+50379776604,$msg,$tipo=4);  
-       // $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
+        //  $r = $this->link_send(+50379776604,$msg,$tipo=4);  
+        $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
 
           $sid = "AC9e1475e1b32fec62e6dd712768584a72";
           $token  = "58ea12aa01f49e1965736ea94d043b24";
@@ -1278,8 +1279,8 @@ Si tiene alguna duda estoy a la orden";
             $array =str_split($usuario->telefono);
             $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
            
-             $r = $this->link_send(+50379776604,$msg,$tipo=4);
-          // $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
+           //  $r = $this->link_send(+50379776604,$msg,$tipo=4);
+           $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
 
              $sid = "AC9e1475e1b32fec62e6dd712768584a72";
              $token  = "58ea12aa01f49e1965736ea94d043b24";
@@ -1308,20 +1309,27 @@ Si tiene alguna duda estoy a la orden";
             $cita= DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
             ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
             ->select('cupos.start','oficinas.id')
+            ->whereNull('cupos.estado_cupo')
+
             ->where('detalle_cupos.id','=',$request->idcita)
             ->first();
     
             $ofi= Oficina::join("cupos","cupos.id_oficina", "=", "oficinas.id")
             ->select('oficinas.id','oficinas.nombre')
+            ->whereNull('cupos.estado_cupo')
+
             ->where('cupos.start','>=', $fechaActual)
             //->where('cupos.start','>=', $cita->start)
             ->groupBy('oficinas.id','oficinas.nombre')
             ->get();
     
             $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
-            ->where('cupos.id_oficina','=', $cita->id)
-            ->where('cupos.start','>', $cita->start)
-            ->where('cupos.start','>', $fechaActual)
+            ->where(function ($query) use ($cita,$fechaActual) {
+                $query->where('cupos.id_oficina','=', $cita->id)
+                ->where('cupos.start','>', $cita->start)
+                ->where('cupos.start','>', $fechaActual)
+                ->whereNull('cupos.estado_cupo');
+            })
             ->orderBy('cupos.start','asc')
             ->get();
 
@@ -1334,6 +1342,8 @@ Si tiene alguna duda estoy a la orden";
             ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
             ->join('oficinas', 'oficinas.id', '=', 'cupos.id_oficina')
             ->select('cupos.start', 'oficinas.id')
+            ->whereNull('cupos.estado_cupo')
+
             ->where('detalle_cupos.id', '=', $request->idcita)
             ->first();
 
@@ -1342,20 +1352,25 @@ Si tiene alguna duda estoy a la orden";
             ->join("cupos","cupos.id_oficina", "=", "oficinas.id")
             ->select('oficinas.id','oficinas.nombre')
             ->where('cupos.start','>=', $fechaActual)
+            ->whereNull('cupos.estado_cupo')
             ->groupBy('oficinas.id','oficinas.nombre')
             ->get();
             
             $cupos = DB::connection('mysql2')
             ->table('cupos')
             ->select('cupos.start','cupos.id','cupos.id_oficina')
-            ->where('cupos.id_oficina','=', $cita->id)
-            ->where('cupos.start','>', $fechaActual)
+            ->where(function ($query) use ($cita,$fechaActual) {
+                $query->where('cupos.id_oficina','=', $cita->id)
+                ->where('cupos.start','>', $fechaActual)
+                ->whereNull('cupos.estado_cupo');
+            })
             ->orderBy('cupos.start','asc')
             ->get();
 
             $ofifisica= Oficina::join("cupos","cupos.id_oficina", "=", "oficinas.id")
             ->select('oficinas.id','oficinas.nombre')
             ->where('cupos.start','>=', $fechaActual)
+            ->whereNull('cupos.estado_cupo')
             //->where('cupos.start','>=', $cita->start)
             ->groupBy('oficinas.id','oficinas.nombre')
             ->get();
@@ -1374,6 +1389,7 @@ Si tiene alguna duda estoy a la orden";
             ->select('cupos.start','cupos.id','cupos.id_oficina')
             // ->where('cupos.id_oficina','=', $request->oficinas)
             ->where('cupos.start','>=', $fechaActual)
+            ->whereNull('cupos.estado_cupo')
             ->orderBy('cupos.start','asc')
             ->get();
             return response()->json($cupos);
@@ -1381,21 +1397,20 @@ Si tiene alguna duda estoy a la orden";
 
         if($request->vista == 'fisica'){
 
-
-
             $cupos= Cupo::select('cupos.start','cupos.id','cupos.id_oficina')
             ->where('cupos.id_oficina','=', $request->oficinas)
             //->where('cupos.start','>', $cita->start)
+            ->whereNull('cupos.estado_cupo')
             ->where('cupos.start','>=', $fechaActual)
             ->orderBy('cupos.start','asc')
             ->get();
 
         }else if($request->vista == 'virtual') { 
 
-
             $cupos = DB::connection('mysql2')
             ->table('cupos')
             ->select('cupos.start','cupos.id','cupos.id_oficina')
+            ->whereNull('cupos.estado_cupo')
             ->where('cupos.id_oficina','=', $request->oficinas)
             ->where('cupos.start','>=', $fechaActual)
             ->orderBy('cupos.start','asc')

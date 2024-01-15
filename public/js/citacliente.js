@@ -301,7 +301,6 @@ let tipovista = $('#tipecita').val();
         var oficinaseleccionanda = $("#oficinas option:selected").text();
 
         if(oficinaseleccionanda !== "Oficina Virtual"){
-            console.log("oficina seleccionanda "+oficinaseleccionanda);
             datosoficinas.append("vista","fisica" );
         }else{
         datosoficinas.append("vista",tipovista );
@@ -312,9 +311,6 @@ let tipovista = $('#tipecita').val();
         var fecha_de_cita= moment($("#fechacita").val()).utc().locale('es').format("YYYY-MM-DD"); 
 
         $("#fechascupos").html("");
-        //$("#oficinas").html("");
-       // var ofici = $("#nombreoficina").val();
-        console.log(idcita);
         axios.post(principalUrl + "cliente/fechasoficinas", datosoficinas )
         .then((respuesta) => {
             moment.locale("es");
