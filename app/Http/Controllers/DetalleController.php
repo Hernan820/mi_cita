@@ -570,15 +570,6 @@ Los documentos requeridos para personas con social:
 ✅ Documento de identificación, puede ser la licencia o el pasaporte
 ✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 
-*Documentos requeridos para el programa TAX ID 3.5 Down-payment :*
-
-✅ Comprobantes de taxes del 2021.
-✅ Comprobantes de taxes del 2022.
-✅ Documento de identificación, puede ser la licencia o el pasaporte con vigencia mínima de 6 meses.
-✅ Carta de TAX ID.
-✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment.
-✅ Comprobante de renta por cualquier medio electrónico (No pagos en Cash).
-
 ¡Estos documentos son por cada persona interesada en comprar la casa!
 ";
 /************************************************************************************** */
@@ -601,15 +592,6 @@ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 COPIA DE SU TAX ID
 Documento de identificación, puede ser la licencia o el pasaporte
 Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
-
-*Documentos requeridos para el programa TAX ID 3.5 Down-payment :*
-
-Comprobantes de taxes del 2021.
-Comprobantes de taxes del 2022.
-Documento de identificación, puede ser la licencia o el pasaporte con vigencia mínima de 6 meses.
-Carta de TAX ID.
-Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment.
-Comprobante de renta por cualquier medio electrónico (No pagos en Cash).
 
 ¡Estos documentos son por cada persona interesada en comprar la casa!";
 
@@ -1215,15 +1197,6 @@ Los documentos requeridos para personas con social:
 ✅ Documento de identificación, puede ser la licencia o el pasaporte
 ✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 
-*Documentos requeridos para el programa TAX ID 3.5 Down-payment :*
-
-✅ Comprobantes de taxes del 2021.
-✅ Comprobantes de taxes del 2022.
-✅ Documento de identificación, puede ser la licencia o el pasaporte con vigencia mínima de 6 meses.
-✅ Carta de TAX ID.
-✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment.
-✅ Comprobante de renta por cualquier medio electrónico (No pagos en Cash).
-
 ¡Estos documentos son por cada persona interesada en comprar la casa!!
             
 *Por favor ayúdanos a confirmar tu asistencia a través  de este WhatsApp y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos.*
@@ -1256,15 +1229,6 @@ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 COPIA DE SU TAX ID
 Documento de identificación, puede ser la licencia o el pasaporte
 Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
-
-*Documentos requeridos para el programa TAX ID 3.5 Down-payment :*
-
-Comprobantes de taxes del 2021.
-Comprobantes de taxes del 2022.
-Documento de identificación, puede ser la licencia o el pasaporte con vigencia mínima de 6 meses.
-Carta de TAX ID.
-Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment.
-Comprobante de renta por cualquier medio electrónico (No pagos en Cash).
 
 ¡Estos documentos son por cada persona interesada en comprar la casa!
 
