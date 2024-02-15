@@ -18,8 +18,8 @@ use DateInterval;
 use Twilio\Rest\Client;
 
 // WHATSAPP MESSAGES
-define('WB_TOKEN', '963fe4d6878286fc02a3b4571b84162f6176c9f6c3fc4');
-define('WB_FROM', '16315067068');
+define('WB_TOKEN', 'token');
+define('WB_FROM', 'number');
 date_default_timezone_set("America/New_York");
 
 
@@ -31,8 +31,11 @@ class DetalleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-  
-     
+     public $sid = "sid";
+     public $token  = "token";
+     public $from= "+number";
+     public $tipo = 3;
+ 
    public function encriptacion($valor){
         $encrypted_data = base64_decode($valor);
         return openssl_decrypt($valor, 'aes-256-cbc', '1234567812345678', false, '1234567812345678');
@@ -41,9 +44,11 @@ class DetalleController extends Controller
 
     public function index($vista,$idc)
     {
-       // $idcliente = $this->encriptacion($idc);
 
        $idcliente =base64_decode($idc);
+       $fechaActual             = new DateTime();
+       $fechaAnterior           = $fechaActual->sub(new DateInterval('P12M'));
+       $fecha12mesesantes       = $fechaAnterior->format('Y-m-d');
 
        if($vista == 'fisica'){
 
@@ -53,9 +58,10 @@ class DetalleController extends Controller
         ->join("oficinas","oficinas.id","=","cupos.id_oficina")
         ->join("estados","estados.id","=","detalle_cupos.id_estado")
         ->select(DB::raw('(CASE WHEN estados.nombre = "pendiente" THEN "PENDIENTE" ELSE (CASE WHEN estados.nombre = "confirmado" THEN "CONFIRMADA" ELSE (CASE WHEN estados.nombre = "cancelado" THEN "CANCELADA" ELSE (CASE WHEN estados.nombre = "no answer" THEN "NO ANSWER" END) END)  END) END) AS nombreestado'),"clientes.*","clientes.nombre as nombrec","detalle_cupos.*","detalle_cupos.id as idcita","cupos.*","cupos.id as idcupo","users.*","oficinas.*","oficinas.nombre as nombreo")    
-        ->where("detalle_cupos.id_cliente", "=", $idcliente)
+        ->where("detalle_cupos.id_cliente", "=",$idcliente)
         ->where("detalle_cupos.estado_cupo", "=",null)
         ->where("detalle_cupos.id_estado", "!=",3)
+        ->where("cupos.start", ">=",$fecha12mesesantes.' 00:00:00')
         ->orderBy("detalle_cupos.hora", 'asc')
         ->first();
 
@@ -72,6 +78,7 @@ class DetalleController extends Controller
         ->where('detalle_cupos.id_cliente', $idcliente)
         ->whereNull('detalle_cupos.estado_cupo')
         ->where('detalle_cupos.id_estado', '<>', 3)
+        ->where("cupos.start", ">=",$fecha12mesesantes.' 00:00:00')
         ->orderBy('detalle_cupos.hora', 'ASC')
         ->first();
 
@@ -595,23 +602,17 @@ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 
 ¡Estos documentos son por cada persona interesada en comprar la casa!";
 
-        $array =str_split($cliente->telefono);
-        $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
+    $numeroCompleto = "+1" . preg_replace("/[^0-9]/", "", $cliente->telefono);
+    $r = $this->link_send($numeroCompleto,$msg,$this->tipo); 
 
-        //$r = $this->link_send(+50379776604,$msg,$tipo=4); 
-       $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
-
-
-        $sid = "AC9e1475e1b32fec62e6dd712768584a72";
-        $token  = "58ea12aa01f49e1965736ea94d043b24";
-        $from= "+18334941535";
-        $twilio = new Client($sid, $token);
-            
-      //  $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
-      $idcliente = $this->encriptacion("RUHaptvoSjpyoQX1/G8gww==");
-      
-      return (response()->json($idcliente));
+    try {
+        $twilio = new Client($this->sid, $this->token);      
+        $twilio->messages->create($numeroCompleto, ['from' => $this->from,'body' => $msgtxt,] );
+    } catch (\Exception $e) {
+        $res_twlio = false;
+        Log::error('Error en el envío de mensaje: ' . $e->getMessage());
     }
+}
 
     /**
      * Store a newly created resource in storage.
@@ -693,22 +694,19 @@ Puedes comunicarte a través de este WhatsApp https://wa.me/message/F4D3UQUHQTFA
 https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 ";
 
+    $numeroCompleto = "+1" . preg_replace("/[^0-9]/", "", $usuario->telefono);
+    $r = $this->link_send($numeroCompleto,$msg,$this->tipo);
 
-         $array =str_split($usuario->telefono);
-         $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
-        
-        //  $r = $this->link_send(+50379776604,$msg,$tipo=4);  
-        $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
-
-          $sid = "AC9e1475e1b32fec62e6dd712768584a72";
-          $token  = "58ea12aa01f49e1965736ea94d043b24";
-          $from= "+18334941535";
-          $twilio = new Client($sid, $token);
-             
-        //  $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+    try {
+        $twilio = new Client($this->sid, $this->token);      
+        $twilio->messages->create($numeroCompleto, ['from' => $this->from,'body' => $msgtxt,] );
+    } catch (\Exception $e) {
+        $res_twlio = false;
+        Log::error('Error en el envío de mensaje: ' . $e->getMessage());
+    }
 
         return 1 ;
-     }
+}
 
     /**
      * Display the specified resource.
@@ -1239,23 +1237,20 @@ Cualquier consulta puedes llamarnos al 631-609-9108
 
 Si tiene alguna duda estoy a la orden";
 
+    $numeroCompleto = "+1" . preg_replace("/[^0-9]/", "", $usuario->telefono);
+    $r = $this->link_send($numeroCompleto,$msg,$this->tipo);
 
-            $array =str_split($usuario->telefono);
-            $numeroCompleto="+1".$array[1].$array[2].$array[3].$array[6].$array[7].$array[8].$array[10].$array[11].$array[12].$array[13];
-           
-           //  $r = $this->link_send(+50379776604,$msg,$tipo=4);
-           $r = $this->link_send($numeroCompleto,$msg,$tipo=3); 
-
-             $sid = "AC9e1475e1b32fec62e6dd712768584a72";
-             $token  = "58ea12aa01f49e1965736ea94d043b24";
-             $from= "+18334941535";
-             $twilio = new Client($sid, $token);
-             
-            // $twilio->messages->create( +6318943177, ['from' => $from,'body' => $msgtxt,] );
+    try {
+        $twilio = new Client($this->sid, $this->token);      
+        $twilio->messages->create($numeroCompleto, ['from' => $this->from,'body' => $msgtxt,] );
+    } catch (\Exception $e) {
+        $res_twlio = false;
+        Log::error('Error en el envío de mensaje: ' . $e->getMessage());
+    }
         
-            return 1 ;
+    return 1 ;
 
-        }
+}
 
     /**
      * Remove the specified resource from storage.
