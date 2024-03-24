@@ -180,47 +180,27 @@ table.display {
                     <p class="" style="margin-bottom: 0 !important"><strong>Los documentos requeridos para PERSONAS CON
                             SOCIAL:</strong> </p>
 
-                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2020</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2021</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia
-                        o el pasaporte</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2022</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2023</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia o el pasaporte</p>
                     <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de ingreso o colilla de pago</p>
                     <p class="" style="margin-bottom: 0 !important">✅ Copia de Social Security Number </p>
-                    <p class="" style="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se
-                        refleje el Down-payment</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se refleje el Down-payment</p>
 
                     <br>
-                    <p class="" style="margin-bottom: 0 !important"><strong>Los documentos requeridos para PERSONAS CON
-                            TAX ID:</strong> </p>
+                    <p class="" style="margin-bottom: 0 !important"><strong>Los documentos requeridos para PERSONAS CON TAX ID:</strong> </p>
 
                     <p class="" style="margin-bottom: 0 !important">✅ COPIA DE SU TAX ID</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia
-                        o el pasaporte</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de ingreso o colilla de pago</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se
-                        refleje el Down-payment</p>
-                    <br>
-
-                    <p class="" style="margin-bottom: 0 !important"><strong>Documentos requeridos para el programa TAX
-                            ID 3.5 Down-payment :</strong> </p>
-
-                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2021.</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Comprobantes de taxes del 2022.</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia
-                        o el pasaporte con vigencia mínima de 6 meses.</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Carta de TAX ID.</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Los últimos 3 estado de cuenta bancario donde se
-                        refleje el Down-payment.</p>
-                    <p class="" style="margin-bottom: 0 !important">✅ Comprobante de renta por cualquier medio
-                        electrónico (No pagos en Cash).</p>
-                    <br>
-
-                    <p class="" style="margin-bottom: 0 !important"><strong>¡Estos documentos son por cada persona
-                            interesada en comprar la casa!</strong> </p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Documento de identificación, puede ser la licencia o el pasaporte</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ El último estado de cuenta bancario donde se refleje el Down-payment</p>
+                    <p class="" style="margin-bottom: 0 !important">✅ Pasaporte (6 meses de vigencia minina)</p>
 
                     <br>
-                    <p class="" style="margin-bottom: 0 !important"><strong> Si necesitas más ayuda llama al <a
-                                href="tel:+1631-609-9108">631-609-9108</a></strong></p>
+
+                    <p class="" style="margin-bottom: 0 !important"><strong>¡Estos documentos son por cada persona interesada en comprar la casa!</strong> </p>
+
+                    <br>
+                    <p class="" style="margin-bottom: 0 !important"><strong> Si necesitas más ayuda llama al <a  href="tel:+1631-609-9108">631-609-9108</a></strong></p>
 
                 </div>
             </div>

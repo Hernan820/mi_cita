@@ -565,8 +565,8 @@ $direcciondecita
 
 Los documentos requeridos para personas con social:
 
-✅ Comprobantes de taxes del 2021
 ✅ Comprobantes de taxes del 2022
+✅ Comprobantes de taxes del 2023
 ✅ Documento de identificación, puede ser la licencia o el pasaporte
 ✅ Copia de Social Security Number 
 ✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
@@ -576,6 +576,7 @@ Los documentos requeridos para personas con social:
 ✅ COPIA DE SU TAX ID
 ✅ Documento de identificación, puede ser la licencia o el pasaporte
 ✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
+✅ Pasaporte (6 meses de vigencia minina)
 
 ¡Estos documentos son por cada persona interesada en comprar la casa!
 ";
@@ -588,8 +589,8 @@ $direcciondecita
 
 Los documentos requeridos para personas con social:
 
-Comprobantes de taxes del 2021
 Comprobantes de taxes del 2022
+Comprobantes de taxes del 2023
 Documento de identificación, puede ser la licencia o el pasaporte
 Copia de Social Security Number 
 Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
@@ -599,6 +600,7 @@ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 COPIA DE SU TAX ID
 Documento de identificación, puede ser la licencia o el pasaporte
 Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
+Pasaporte (6 meses de vigencia minina)
 
 ¡Estos documentos son por cada persona interesada en comprar la casa!";
 
@@ -1183,8 +1185,8 @@ $direcciondecita
             
 Los documentos requeridos para personas con social:
 
-✅ Comprobantes de taxes del 2021
 ✅ Comprobantes de taxes del 2022
+✅ Comprobantes de taxes del 2023
 ✅ Documento de identificación, puede ser la licencia o el pasaporte
 ✅ Copia de Social Security Number 
 ✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
@@ -1194,6 +1196,7 @@ Los documentos requeridos para personas con social:
 ✅ COPIA DE SU TAX ID
 ✅ Documento de identificación, puede ser la licencia o el pasaporte
 ✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
+✅ Pasaporte (6 meses de vigencia minina)
 
 ¡Estos documentos son por cada persona interesada en comprar la casa!!
             
@@ -1216,8 +1219,8 @@ $direcciondecita
 
 Los documentos requeridos para personas con social:
 
-Comprobantes de taxes del 2021
 Comprobantes de taxes del 2022
+Comprobantes de taxes del 2023
 Documento de identificación, puede ser la licencia o el pasaporte
 Copia de Social Security Number 
 Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
@@ -1227,6 +1230,7 @@ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
 COPIA DE SU TAX ID
 Documento de identificación, puede ser la licencia o el pasaporte
 Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
+Pasaporte (6 meses de vigencia minina)
 
 ¡Estos documentos son por cada persona interesada en comprar la casa!
 
