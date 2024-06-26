@@ -14,14 +14,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use DateTime;
 use DateInterval;
-
 use Twilio\Rest\Client;
 
-// WHATSAPP MESSAGES
-define('WB_TOKEN', 'token');
-define('WB_FROM', 'number');
 date_default_timezone_set("America/New_York");
-
 
 class DetalleController extends Controller
 {
@@ -31,17 +26,23 @@ class DetalleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public $sid = "sid";
-     public $token  = "token";
-     public $from= "+number";
-     public $tipo = 3;
- 
-   public function encriptacion($valor){
+
+    // credenciales de Twilio
+    protected $sid;
+    protected $token;
+    protected $from;
+
+    // credenciales WAAPI
+    protected $ID_WAAPI;
+    protected $TOKEN_WAAPI;
+
+    public  $tipo =3;
+     
+    public function encriptacion($valor){
         $encrypted_data = base64_decode($valor);
         return openssl_decrypt($valor, 'aes-256-cbc', '1234567812345678', false, '1234567812345678');
     }
  
-
     public function index($vista,$idc)
     {
 
@@ -101,74 +102,54 @@ class DetalleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function link_send($to,$url,$tipo)
-    {
-
-        $custom_uid = "unique-" . time();
-        $to = filter_var($to, FILTER_SANITIZE_NUMBER_INT);
-        $msg = urlencode($url);
-      
-        
-      
-        switch ($tipo) {
-            case 1:
-                // Link with preview
-                $data = "https://www.waboxapp.com/api/send/link?token=" . WB_TOKEN . "&uid=" . WB_FROM ."&custom_uid=" . $custom_uid . "&to=" . $to . "&url=" . $url ;
-                break;
-      
-            case 2:
-             //Send Media Media
-                $description = '¡Todo-lo-que-necesitas-saber!';
-            $caption =  '¿Como-tener-tu-casa-propia?';
-                $url_thumb = "https://casademisuenos-usa.com/sms/team_acevedo.png";
-                $data = "https://www.waboxapp.com/api/send/media?token=" . WB_TOKEN . "&uid=" . WB_FROM ."&custom_uid=" . $custom_uid . "&to=" . $to. "&caption=" .$caption. "&description=" .$description. "&url_thumb=" .$url_thumb. "&url=" .$url ;
-                break;
-      
-            case 3:
-                // Send message
-                $data = "https://www.waboxapp.com/api/send/chat?token=" . WB_TOKEN . "&uid=" . WB_FROM . "&custom_uid=" . $custom_uid . "&to=" . $to . "&text=" . $msg;
-            break;
-      
-            default:
-                return false;
-                break;
-        }
-      
-        $curl = curl_init();
-      
-        curl_setopt($curl, CURLOPT_URL, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-      
-        $result = curl_exec($curl);
-        curl_close($curl);
-        $resp = json_decode($result);
-      
-        if ($resp == true) {
-              return $resp;
-          }else{
-      
-              for ($i=1; $i < 3 ; $i++) { 
-      
-                  $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, $data);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                $result = curl_exec($curl);
-                $resp = json_decode($result);
-      
-                if ($resp->success == 1) {
-                         $respuesta = $resp;
-                         break;
-                }else{
-                    $respuesta = false;
-                }
-                  
-              }
-              return $respuesta;
-          }
-      
-          return false;
-    }
-
+    public function __construct(){
+        $this->sid = env('TWILIO_SID');
+        $this->token = env('TWILIO_AUTH_TOKEN');
+        $this->from = env('TWILIO_NUMBER');
+ 
+        $this->ID_WAAPI = env('WAAPI_INSTANCE_ID');
+        $this->TOKEN_WAAPI = env('WAAPI_API_TOKEN');
+     }
+     /**
+      *  funcion de whatsapp
+      */
+     public function EnviaMessageWA($numero,$message,$tipo){
+ 
+         if ($tipo == 3) {
+ 
+             $curl = curl_init();
+             
+             curl_setopt_array($curl, [
+                 CURLOPT_URL => "https://waapi.app/api/v1/instances/".$this->ID_WAAPI."/client/action/send-message",
+                 CURLOPT_RETURNTRANSFER => true,
+                 CURLOPT_ENCODING => "",
+                 CURLOPT_MAXREDIRS => 10,
+                 CURLOPT_TIMEOUT => 30,
+                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                 CURLOPT_CUSTOMREQUEST => "POST",
+                 CURLOPT_POSTFIELDS => json_encode([
+                 'chatId' => $numero.'@c.us',
+                 'message' => $message,
+                 ]),
+                 CURLOPT_HTTPHEADER => [
+                 "accept: application/json",
+                 "authorization: Bearer ".$this->TOKEN_WAAPI,
+                 "content-type: application/json"
+                 ],
+             ]);
+             
+             $response = curl_exec($curl); 
+             $err = curl_error($curl);
+             
+             curl_close($curl);
+             
+             if ($err) {
+                 return "cURL Error #:" . $err;
+             } else {
+                 return /*'Mensaje enviado true';*/  $response;
+             }
+         }
+     }
 
     /**
      * separacion.
@@ -604,12 +585,12 @@ Pasaporte (6 meses de vigencia minina)
 
 ¡Estos documentos son por cada persona interesada en comprar la casa!";
 
-    $numeroCompleto = "+1" . preg_replace("/[^0-9]/", "", $cliente->telefono);
-    $r = $this->link_send($numeroCompleto,$msg,$this->tipo); 
+    $numeroCompleto = "1" . preg_replace("/[^0-9]/", "", $cliente->telefono);
+    $r = $this->EnviaMessageWA($numeroCompleto,$msg,$this->tipo); 
 
     try {
         $twilio = new Client($this->sid, $this->token);      
-        $twilio->messages->create($numeroCompleto, ['from' => $this->from,'body' => $msgtxt,] );
+        $twilio->messages->create("+".$numeroCompleto, ['from' => $this->from,'body' => $msgtxt,] );
     } catch (\Exception $e) {
         $res_twlio = false;
         Log::error('Error en el envío de mensaje: ' . $e->getMessage());
@@ -696,12 +677,12 @@ Puedes comunicarte a través de este WhatsApp https://wa.me/message/F4D3UQUHQTFA
 https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 ";
 
-    $numeroCompleto = "+1" . preg_replace("/[^0-9]/", "", $usuario->telefono);
-    $r = $this->link_send($numeroCompleto,$msg,$this->tipo);
+    $numeroCompleto = "1" . preg_replace("/[^0-9]/", "", $usuario->telefono);
+    $r = $this->EnviaMessageWA($numeroCompleto,$msg,$this->tipo);
 
     try {
         $twilio = new Client($this->sid, $this->token);      
-        $twilio->messages->create($numeroCompleto, ['from' => $this->from,'body' => $msgtxt,] );
+        $twilio->messages->create("+".$numeroCompleto, ['from' => $this->from,'body' => $msgtxt,] );
     } catch (\Exception $e) {
         $res_twlio = false;
         Log::error('Error en el envío de mensaje: ' . $e->getMessage());
@@ -811,7 +792,6 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             return response()->json(['hora' => $hora, 'cantCitas' => $cantCitas, 'contadorHorascitas' => $contadorHorascitas],200);
         }
 
-    
     }
 
 
@@ -1241,12 +1221,12 @@ Cualquier consulta puedes llamarnos al 631-609-9108
 
 Si tiene alguna duda estoy a la orden";
 
-    $numeroCompleto = "+1" . preg_replace("/[^0-9]/", "", $usuario->telefono);
-    $r = $this->link_send($numeroCompleto,$msg,$this->tipo);
+    $numeroCompleto = "1" . preg_replace("/[^0-9]/", "", $usuario->telefono);
+    $r = $this->EnviaMessageWA($numeroCompleto,$msg,$this->tipo);
 
     try {
         $twilio = new Client($this->sid, $this->token);      
-        $twilio->messages->create($numeroCompleto, ['from' => $this->from,'body' => $msgtxt,] );
+        $twilio->messages->create("+".$numeroCompleto, ['from' => $this->from,'body' => $msgtxt,] );
     } catch (\Exception $e) {
         $res_twlio = false;
         Log::error('Error en el envío de mensaje: ' . $e->getMessage());

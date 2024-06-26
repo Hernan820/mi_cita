@@ -2,10 +2,28 @@ var principalUrl = "http://localhost/mi_cita/public/";
 
 //var principalUrl = "https://clientes.dailyappsetter.com/";
 
-
 let formCancelar = document.getElementById("cancelarCita");
 let formreagendar = document.getElementById("reagendarform");
 let tipovista = $('#tipecita').val();
+
+function mostrarAnimacion(mensaje_noti) {
+    let timerInterval;
+    Swal.fire({
+      title: mensaje_noti,
+      //html: "I will close in <b></b> milliseconds.",
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+        const timer = Swal.getPopup().querySelector("b");
+        timerInterval = setInterval(() => {
+          timer.textContent = `${Swal.getTimerLeft()}`;
+        }, 100);
+      },
+      willClose: () => {
+        clearInterval(timerInterval);
+      }
+    });
+}
 
     document.getElementById("confirmar").addEventListener("click", function () {
 
@@ -41,12 +59,12 @@ let tipovista = $('#tipecita').val();
             var datosconfirm = new FormData();
             datosconfirm.append("vista",tipovista );
             datosconfirm.append("idcita",$("#idcita").val());
-
+            mostrarAnimacion("Confirmando Cita");
     
             axios.post(principalUrl + "cliente/confirmar",datosconfirm)
             .then((respuesta) => {
                 $('#confirmar').attr('disabled', false);
-
+                Swal.close();
                 if(respuesta.data == 1){
                     Swal.fire({
                         position: "top-end",
@@ -87,15 +105,13 @@ let tipovista = $('#tipecita').val();
         cancelButtonText: "NO",
     }).then((result) => {
         if (result.isConfirmed) {
-
+            mostrarAnimacion("Cancelando Cita");
             $('#btnCancelar').attr('disabled', true);
 
            axios.post(principalUrl + "cliente/cancelar" , datoscancel )
             .then((respuesta) => {
-
+                Swal.close();
               $('#btnCancelar').attr('disabled', false);
-
-        
                 if(respuesta.data == 1){
                     Swal.fire({
                         position: "top-end",
