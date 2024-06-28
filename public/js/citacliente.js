@@ -219,92 +219,49 @@ function mostrarAnimacion(mensaje_noti) {
     });
 
     $('#fechascupos').on('change', function() {
+            
+        var id_cupo = $(this).val(); 
+        var oficina = $("#oficinas").val(); 
+
+        $("#horas_cupo").html("");
+
+        axios.post(principalUrl + "cupos/horario/"+id_cupo+"/"+oficina )
+        .then((respuesta) => {
+
+            moment.locale("es");
+            $("#horas_cupo").append("<option selected readonly value=''>Horas Cupo</option>");
+
+                    respuesta.data.forEach(function (element) {
+
+                        if(element.total00 < element.cant_citas ){
+
         
-        $(".hora").val("");
-        var datosfechas = new FormData();
-          var ofinaquetraer =$("#oficinas").val();
-          var idcuposeleccionado = $("#fechascupos").val();
-          var oficinaseleccionanda = $("#oficinas option:selected").text();
-
-         if(ofinaquetraer === "oficina_virtual"){
-            datosfechas.append("vista","virtual" );
-         }else if(oficinaseleccionanda != "Oficina Virtual"){
-            datosfechas.append("vista","fisica" );
-         }else{
-        datosfechas.append("vista",tipovista );
-         }
-        datosfechas.append("idcupo",idcuposeleccionado);
-        $("#horaReagendar").html("");            
-
-    axios.post(principalUrl + "cita/listarHorario",datosfechas)
-        .then((respuesta) => { 
-
-
-            $("#nombreofic").val(respuesta.data.cantCitas.nombreoficina);
-            $("#num_citas").val(respuesta.data.cantCitas.cant_citas);
-            $("#fecharea").val( moment(respuesta.data.cantCitas.start).utc().locale('es').format("dddd DD [de] MMMM [del] YYYY"));
-            $("#horaReagendar").html('');
-
-
-            if(respuesta.data.hora[0].cant_citas != null){
-
-            $("#horaReagendar").append("<option enabled selected value=''>Horas</option>");
-
-                var horasvacias = 0;
-                respuesta.data.hora.forEach(function (element) {
-                    if(element.total00 < element.cant_citas || element.total30 < element.cant_citas ){
-                        $("#horaReagendar").append("<option value=" +element.hora24.split(':')[0] +">"+element.hora12.split(':')[0]+"</option>");
-                        horasvacias++;
-                    }
-                });
-
-                if(horasvacias == 0){
-                    $("#horaReagendar").append("<option readonly='true' value=''>No hay horas vacias</option>");
-                }
-
-            }else{
-
-                $("#horaReagendar").append("<option enabled selected value=''>Horas</option>");
-
-                var horasvacias = 0;
-                respuesta.data.contadorHorascitas.forEach(function (element) {
-
-                            if(element.total00 < element.cant_citas ){
-                                horasvacias++;
-
-                                if(element.hora12.split(':')[1] == '00'){
-                                    $("#horaReagendar").append("<option value=" +element.hora24.split(':')[0] +">"+element.hora12.split(':')[0]+"</option>");
-                                }else{
-                                    var elementoExiste = respuesta.data.contadorHorascitas.some(function(item) {
-
-                                        if( item.hora12 === element.hora12.split(':')[0]+':00'){
-                                            if(item.total00  < item.cant_citas){
-                                                return true;
-                                            }else{
-                                                return false;
-                                            }
-                                        }
-                                    });
-
-                                    if(elementoExiste == true){
-                                    }else{
-                                        $("#horaReagendar").append("<option value=" +element.hora24.split(':')[0] +">"+element.hora12.split(':')[0]+"</option>");
-                                    }
-                                }
+                            if(element.hora24.split(':')[0] < 12){
+                                $("#horas_cupo").append("<option value=" +element.hora24 +">"+element.hora12+" am DISPONIBLE</option>");
+                            }else if(element.hora24.split(':')[0] >= 12){
+                                $("#horas_cupo").append("<option value=" +element.hora24+">"+element.hora12+" pm DISPONIBLE</option>");
                             }
-                });
-                if(horasvacias == 0){
-                    $("#horaReagendar").append("<option readonly='true' value=''>No hay horas vacias</option>");
-                }
 
-            }
+                        }else{
+                            if(element.hora24.split(':')[0] < 12){
+                                $("#horas_cupo").append("<option style='background-color:#C5C3C3' disabled value=" +element.hora24 +">"+element.hora12+" am COMPLETO</option>");
+                            }else if(element.hora24.split(':')[0] >= 12){
+                                $("#horas_cupo").append("<option style='background-color:#C5C3C3' disabled value=" +element.hora24+">"+element.hora12+" pm COMPLETO</option>");
+                            }
+                        }
 
-        })
-        .catch((error) => {
+                    });
+            
+                    $("#cantidad_citas").val("0");
+        
+
+
+
+        }).catch((error) => {
             if (error.response) {
                 console.log(error.response.data);
             }
-        }); 
+        });
     });
 
 

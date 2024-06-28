@@ -1362,5 +1362,30 @@ Si tiene alguna duda estoy a la orden";
 
         return response()->json($cupos);
     }
+    /**
+     * 
+     */
+    function horasdecupo($id,$oficina){
 
+        if ($oficina == "oficina_virtual") {
+
+            $horarionuevo = DB::connection('mysql2')->select("select h.hora12,h.hora24,  
+            (select COUNT(*) from detalle_cupos dc WHERE dc.id_cupo = ".$id." and TIME_FORMAT(dc.hora, '%H:%i') = h.hora24  and dc.id_estado != 3 AND dc.id_estado !=2 and dc.estado_cupo IS null ) as total00, ch.cant_citas
+            from cupos_horarios ch
+            left JOIN horarios h on ch.id_horario = h.id
+            WHERE ch.id_cupo = ".$id." ;");
+
+        }else{
+
+            $horarionuevo = DB::select("select h.hora12,h.hora24,  
+            (select COUNT(*) from detalle_cupos dc WHERE dc.id_cupo = ".$id." and TIME_FORMAT(dc.hora, '%H:%i') = h.hora24  and dc.id_estado != 3 AND dc.id_estado !=2 and dc.estado_cupo IS null ) as total00, ch.cant_citas
+            from cupos_horarios ch
+            left JOIN horarios h on ch.id_horario = h.id
+            WHERE ch.id_cupo = ".$id." ;");
+    
+        }
+
+
+        return response()->json($horarionuevo);
+    }
 }

@@ -277,7 +277,14 @@ table.display {
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group ">
+                        <label for="start">Horario:</label>
+                        <select name="horas_cupo" id="horas_cupo" class="form-control">
+                        </select>
+                    </div>
+
+
+                    <div class="form-group" style="display: none">
                         <label for="hora">Hora Cita </label>
                         <div style="display: flex;justify-content: space-around;">
                             <select name="horaReagendar" onchange="" id="horaReagendar"
