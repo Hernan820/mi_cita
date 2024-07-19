@@ -279,7 +279,7 @@ table.display {
 
                     <div class="form-group ">
                         <label for="start">Horario:</label>
-                        <select name="horas_cupo" id="horas_cupo" class="form-control">
+                        <select name="horas_cupo" id="horas_cupo" class="form-control hora" >
                         </select>
                     </div>
 
@@ -304,8 +304,8 @@ table.display {
                     <input type="hidden" value="" id="num_citas" name="num_citas"></input>
                     <input type="hidden" id="cita_id" name="cita_id" value="{{$cliente->idcita}}" />
 
-                    <input type="hidden" id="fecharea" name="fecharea" value="" />
-                    <input type="hidden" id="nombreofic" name="nombreofic" value="" />
+                    {{-- <input type="hidden" id="fecharea" name="fecharea" value="" />
+                    <input type="hidden" id="nombreofic" name="nombreofic" value="" /> --}}
 
 
                 </form>

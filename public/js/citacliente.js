@@ -214,6 +214,7 @@ function mostrarAnimacion(mensaje_noti) {
         });
 
         $(".hora").val("");
+        $("#horas_cupo").html("");
         $("#reagendar").trigger("reset");
         $("#popup_reagendar").modal("show");
     });
@@ -231,37 +232,37 @@ function mostrarAnimacion(mensaje_noti) {
             moment.locale("es");
             $("#horas_cupo").append("<option selected readonly value=''>Horas Cupo</option>");
 
-                    respuesta.data.forEach(function (element) {
+            respuesta.data.forEach(function (element) {
 
-                        if(element.total00 < element.cant_citas ){
+                if(element.total00 < element.cant_citas ){
 
+                    if(element.hora24.split(':')[0] < 12){
+                        $("#horas_cupo").append("<option data-extra='"+element.cant_citas+"' value=" +element.hora24 +">"+element.hora12+" am DISPONIBLE</option>");
+                    }else if(element.hora24.split(':')[0] >= 12){
+                        $("#horas_cupo").append("<option data-extra='"+element.cant_citas+"' value=" +element.hora24+">"+element.hora12+" pm DISPONIBLE</option>");
+                    }
+
+                }else{
+                    if(element.hora24.split(':')[0] < 12){
+                        $("#horas_cupo").append("<option data-extra='"+element.cant_citas+"' style='background-color:#C5C3C3' disabled value=" +element.hora24 +">"+element.hora12+" am COMPLETO</option>");
+                    }else if(element.hora24.split(':')[0] >= 12){
+                        $("#horas_cupo").append("<option data-extra='"+element.cant_citas+"' style='background-color:#C5C3C3' disabled value=" +element.hora24+">"+element.hora12+" pm COMPLETO</option>");
+                    }
+                }
+
+            });
         
-                            if(element.hora24.split(':')[0] < 12){
-                                $("#horas_cupo").append("<option value=" +element.hora24 +">"+element.hora12+" am DISPONIBLE</option>");
-                            }else if(element.hora24.split(':')[0] >= 12){
-                                $("#horas_cupo").append("<option value=" +element.hora24+">"+element.hora12+" pm DISPONIBLE</option>");
-                            }
-
-                        }else{
-                            if(element.hora24.split(':')[0] < 12){
-                                $("#horas_cupo").append("<option style='background-color:#C5C3C3' disabled value=" +element.hora24 +">"+element.hora12+" am COMPLETO</option>");
-                            }else if(element.hora24.split(':')[0] >= 12){
-                                $("#horas_cupo").append("<option style='background-color:#C5C3C3' disabled value=" +element.hora24+">"+element.hora12+" pm COMPLETO</option>");
-                            }
-                        }
-
-                    });
-            
-                    $("#cantidad_citas").val("0");
-        
-
-
-
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response.data);
             }
         });
+    });
+
+    document.getElementById('horas_cupo').addEventListener('change', function() {
+        var selectedOption = this.options[this.selectedIndex];
+        var extraValue = selectedOption.getAttribute('data-extra');
+        $("#num_citas").val(extraValue);
     });
 
 
@@ -364,26 +365,35 @@ function mostrarAnimacion(mensaje_noti) {
 
 
 document.getElementById("btnReagendar").addEventListener("click", function () {
-    var cupo = $("#fechascupos").val();
-    var hora = $("#horaReagendar").val();
-    var oficina = $("#nombreofic").val();
-    var fecha = $("#fecharea").val();
 
-    if (cupo === "" || hora === "" ) {
+    var fechatext = $( "#fechascupos option:selected" ).text();
+    var oficinaseleccionanda = $("#oficinas option:selected").text();
+
+    var oficina = $("#oficinas").val();
+    var fecha = $("#fechascupos").val();
+    var horas = $("#horas_cupo").val();
+    var citaid = $("#cita_id").val();
+    var cantidadcitas = $("#num_citas").val();
+
+    if (fecha === "" || horas === "" ) {
         Swal.fire("¡Debe llenar todos los datos requeridos!");
         return;
     }
 
-    var reagendaCita = new FormData(formreagendar);
+    var reagendaCita = new FormData();
     reagendaCita.append("vista",tipovista );
-   // reagendaCita.append("cita_oficina",tipovista );
-   var oficinaseleccionanda = $("#oficinas option:selected").text();
+    reagendaCita.append("Id_oficina",oficina );
+    reagendaCita.append("Id_cupo",fecha );
+    reagendaCita.append("hora_cita",horas );
+    reagendaCita.append("Id_cita",citaid );
+    reagendaCita.append("TotalCitasHora",cantidadcitas );
+
 
     if(tipovista === "fisica" && $("#oficinas").val() === "oficina_virtual" ){
 
         Swal.fire({
             title: "Reagendar cita virtual",
-            text: "¿Estás seguro de que deseas cambiar tu cita física a una cita virtual para "+fecha+" ?" ,
+            text: "¿Estás seguro de que deseas cambiar tu cita física a una cita virtual para "+fechatext+" ?" ,
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
@@ -457,7 +467,7 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
 
         Swal.fire({
             title: "Reagendar cita física",
-            text: "¿Estás seguro de que deseas cambiar tu cita virtual a una cita física para "+fecha+" en la "+oficinaseleccionanda+" ?" ,
+            text: "¿Estás seguro de que deseas cambiar tu cita virtual a una cita física para "+fechatext+" en la "+oficinaseleccionanda+" ?" ,
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
@@ -531,7 +541,7 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
 
     Swal.fire({
         title: "Reagendar cita",
-        text: "¿Estas seguro de reagendar cita para la fecha: "+fecha+", en la oficina: "+oficina+" ?",
+        text: "¿Estas seguro de reagendar cita para la fecha: "+fechatext+", en la oficina: "+oficinaseleccionanda+" ?",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",

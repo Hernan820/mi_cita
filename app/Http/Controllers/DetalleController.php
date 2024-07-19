@@ -808,13 +808,13 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 
   //-----------------------------------------------
      //concatena hora
-     $horareagenda= $request->horaReagendar.':'.$request->minutosReagendar;
+     $horareagenda= $request->hora_cita;
 
          if($request->vista == 'fisica'){
 
             $cita_telefono = DetalleCupo::join('clientes','clientes.id','=','detalle_cupos.id_cliente')
                                         ->select('clientes.*')
-                                        ->where('detalle_cupos.id','=',$request->cita_id)
+                                        ->where('detalle_cupos.id','=',$request->Id_cita)
                                         ->get();
 
             $telefono = $cita_telefono[0]->telefono;
@@ -842,12 +842,12 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
                                         FROM cupos_horarios
                                         JOIN cupos ON cupos.id = cupos_horarios.id_cupo
                                         JOIN horarios ON horarios.id = cupos_horarios.id_horario
-                                        WHERE cupos_horarios.id_cupo = $request->fechascupos ;
+                                        WHERE cupos_horarios.id_cupo = $request->Id_cupo ;
                                         ");
 
             if($horarionuevo[0]->cant_horarioantiguo != null){
 
-                $cita = DetalleCupo::find($request->cita_id);
+                $cita = DetalleCupo::find($request->Id_cita);
 
                 $contadorCitas = DetalleCupo::join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
                 -> where("detalle_cupos.id_cupo","=",$cita->id_cupo)
@@ -859,23 +859,23 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
                 })
                 ->count();
 
-                if($contadorCitas >= $request->num_citas){
+                if($contadorCitas >= $request->TotalCitasHora){
                     return 2 ;
                 }
 
             }else{
-                $cita = DetalleCupo::find($request->cita_id);
+                $cita = DetalleCupo::find($request->Id_cita);
 
                 $contadorCitas = DetalleCupo::join("cupos", "cupos.id", "=", "detalle_cupos.id_cupo")
                 ->where("detalle_cupos.id_cupo", $cita->id_cupo)
-                ->where("detalle_cupos.hora", $request->horaReagendar . ':' . $request->minutosReagendar)
+                ->where("detalle_cupos.hora", $horareagenda)
                 ->whereNotIn("detalle_cupos.id_estado", [2, 3])
                 ->whereNull("detalle_cupos.estado_cupo")
                 ->count();
 
                 $existecupucitas = 0;
                 foreach ($horarionuevo as $datos_hora) {
-                    if($datos_hora->hora24 ==  $request->horaReagendar.':'.$request->minutosReagendar){ 
+                    if($datos_hora->hora24 ==  $horareagenda){ 
                        $existecupucitas++;
                     }
                 }
@@ -885,7 +885,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
                 }
 
                  foreach ($horarionuevo as $datos_hora) {
-                    if($datos_hora->hora24 ==  $request->horaReagendar.':'.$request->minutosReagendar){
+                    if($datos_hora->hora24 ==  $horareagenda){
                         if($contadorCitas >= $datos_hora->cant_horarionuevo ){
                            return 2;  
                         }
@@ -900,7 +900,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             ->table('detalle_cupos')
             ->join('clientes', 'clientes.id', '=', 'detalle_cupos.id_cliente')
             ->select('clientes.*')
-            ->where('detalle_cupos.id', '=', $request->cita_id)
+            ->where('detalle_cupos.id', '=', $request->Id_cita)
             ->get();
         
             $telefono = $cita_telefono[0]->telefono;
@@ -923,14 +923,14 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
              $horarionuevo = DB::connection('mysql2')->select("SELECT horarios.hora24,horarios.hora12,cupos_horarios.cant_citas AS cant_horarionuevo, cupos.cant_citas AS cant_horarioantiguo
                                         FROM cupos_horarios JOIN cupos ON cupos.id = cupos_horarios.id_cupo
                                         JOIN horarios ON horarios.id = cupos_horarios.id_horario
-                                        WHERE cupos_horarios.id_cupo = $request->fechascupos ;");
+                                        WHERE cupos_horarios.id_cupo = $request->Id_cupo ;");
 
             if($horarionuevo[0]->cant_horarioantiguo != null){
 
                 $contadorCitas = DB::connection('mysql2')
                     ->table('detalle_cupos')
                     ->join("cupos", "cupos.id", "=", "detalle_cupos.id_cupo")
-                    ->where("detalle_cupos.id_cupo", "=", $request->fechascupos)
+                    ->where("detalle_cupos.id_cupo", "=", $request->Id_cupo)
                     ->where("detalle_cupos.hora", "=", $horareagenda.':00')
                     ->where(function ($query) {
                         $query->where("detalle_cupos.id_estado", "!=", 3)
@@ -939,7 +939,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
                     })
                     ->count();
 
-                if($contadorCitas >= $request->num_citas){
+                if($contadorCitas >= $request->TotalCitasHora){
                     return 2;
                 }
 
@@ -948,7 +948,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
                 $contadorCitas = DB::connection('mysql2')
                 ->table('detalle_cupos')
                 ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
-                ->where('detalle_cupos.id_cupo', $request->fechascupos)
+                ->where('detalle_cupos.id_cupo', $request->Id_cupo)
                 ->where('detalle_cupos.hora', $horareagenda.':00')
                 ->whereNotIn('detalle_cupos.id_estado', [2, 3])
                 ->whereNull('detalle_cupos.estado_cupo')
@@ -978,7 +978,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             ->table('clientes')
             ->join('detalle_cupos', 'detalle_cupos.id_cliente', '=', 'clientes.id')
             ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
-            ->where('detalle_cupos.id_cupo', '=', $request->fechascupos)
+            ->where('detalle_cupos.id_cupo', '=', $request->Id_cupo)
             ->where('clientes.telefono', '=', $telefono)
             ->where(function ($query) {
                 $query->where('detalle_cupos.id_estado', '!=', 3)
@@ -996,16 +996,16 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
 
             $cupo = Cupo::join("oficinas","oficinas.id", "=", "cupos.id_oficina")
             ->select("oficinas.nombre as title", "cupos.start","cupos.id")
-            ->where("cupos.id", "=", $request->fechascupos)
+            ->where("cupos.id", "=", $request->Id_cupo)
             ->get()
             ->first();
     
            //reagenda la cita
-            $cita = DetalleCupo::find($request->cita_id);
+            $cita = DetalleCupo::find($request->Id_cita);
     
             //crea una cita con las mismas propiedades
             $detallecupo= new DetalleCupo;
-            $detallecupo->id_cupo = $request->fechascupos;
+            $detallecupo->id_cupo = $request->Id_cupo;
             $detallecupo->id_cliente =$cita->id_cliente;
             $detallecupo->id_estado = 4;
             $detallecupo->id_usuario = $cita->id_usuario;
@@ -1022,7 +1022,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
             ->join("clientes","clientes.id", "=", "detalle_cupos.id_cliente") 
             ->select("users.name","cupos.start","clientes.telefono","oficinas.direccion")
-            ->where("detalle_cupos.id_cupo","=",$request->fechascupos)
+            ->where("detalle_cupos.id_cupo","=",$request->Id_cupo)
             ->get()
             ->first();
                         
@@ -1031,7 +1031,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
             ->join("clientes","clientes.id", "=", "detalle_cupos.id_cliente") 
             ->select("clientes.telefono","clientes.nombre","clientes.id as cliente_id","detalle_cupos.id")
-            ->where("detalle_cupos.id","=",$request->cita_id)
+            ->where("detalle_cupos.id","=",$request->Id_cita)
             ->get()
             ->first();
 
@@ -1069,27 +1069,27 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             ->table('cupos')
             ->join('oficinas', 'oficinas.id', '=', 'cupos.id_oficina')
             ->select('oficinas.nombre as title', 'cupos.start', 'cupos.id')
-            ->where('cupos.id', '=', $request->fechascupos)
+            ->where('cupos.id', '=', $request->Id_cupo)
             ->get()
             ->first();
 
             $detallecita = DB::connection('mysql2')
             ->table('detalle_cupos')
             ->select('detalle_cupos.*')
-            ->where('id', $request->cita_id)
+            ->where('id', $request->Id_cita)
             ->get()
             ->first();
 
             $cita = DB::connection('mysql2')
             ->table('detalle_cupos')
-            ->where('id', $request->cita_id)
+            ->where('id', $request->Id_cita)
             ->update([
             'id_estado' => 3,
             'descripcion' => "La cita ha sido reagendada para la oficina ".$cupo->title." para la fecha ". date('d-m-Y', strtotime($cupo->start))
             ]);
 
             $detallecupo = DB::connection('mysql2')->table('detalle_cupos')->insertGetId([
-                'id_cupo' => $request->fechascupos,
+                'id_cupo' => $request->Id_cupo,
                 'id_cliente' => $detallecita->id_cliente,
                 'id_estado' => 4,
                 'id_usuario' => $detallecita->id_usuario,
@@ -1104,7 +1104,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             ->join('oficinas', 'oficinas.id', '=', 'cupos.id_oficina')
             ->join('clientes', 'clientes.id', '=', 'detalle_cupos.id_cliente')
             ->select('users.name', 'cupos.start', 'clientes.telefono', 'oficinas.direccion')
-            ->where('detalle_cupos.id_cupo', '=', $request->fechascupos)
+            ->where('detalle_cupos.id_cupo', '=', $request->Id_cupo)
             ->first();
 
                
@@ -1114,7 +1114,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             ->join("cupos","cupos.id", "=", "detalle_cupos.id_cupo")
             ->join("oficinas","oficinas.id", "=", "cupos.id_oficina")
             ->select("clientes.telefono","clientes.nombre","clientes.id as cliente_id","detalle_cupos.id")
-            ->where('detalle_cupos.id','=',$request->cita_id)
+            ->where('detalle_cupos.id','=',$request->Id_cita)
             ->first();
 
             $datosbitacoracitanueva = DB::connection('mysql2')->table('detalle_cupos')
@@ -1235,7 +1235,6 @@ Si tiene alguna duda estoy a la orden";
     return 1 ;
 
 }
-
     /**
      * Remove the specified resource from storage.
      *
