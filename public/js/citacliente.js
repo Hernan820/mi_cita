@@ -178,13 +178,19 @@ function mostrarAnimacion(mensaje_noti) {
             $("#oficinas").append( "<option selected  disabled='true'  value=''>Elige una Oficina</option>");
             $("#fechascupos").append("<option selected disabled='true' value=''>Fechas</option>");
 
-                respuesta.data.ofi.forEach(function (element) {   
-                    if(element.nombre == ofici){     
-                    $("#oficinas").append("<option selected value=" +element.id+">"+element.nombre+"</option>");
+                respuesta.data.ofi.forEach(function (element) {  
+                    
+                    if (tipovista == "virtual") {
+                        $("#oficinas").append("<option selected value='oficina_virtual' >"+element.nombre+"</option>");
                     }else{
-                    $("#oficinas").append("<option value=" +element.id+">"+element.nombre+"</option>");
+                        if(element.nombre == ofici){     
+                            $("#oficinas").append("<option selected value='"+element.id+"' >"+element.nombre+"</option>");
+                        }else{
+                            $("#oficinas").append("<option value='"+element.id+"' >"+element.nombre+"</option>");
+                        }
                     }
                 });
+
                 if(tipovista === "fisica"){
                 $("#oficinas").append( "<option  value='oficina_virtual'> Cita Virtual  <b>( Llamada )</b> </option>");
                 }else if(tipovista === "virtual"){
@@ -285,6 +291,8 @@ function mostrarAnimacion(mensaje_noti) {
         var fecha_de_cita= moment($("#fechacita").val()).utc().locale('es').format("YYYY-MM-DD"); 
 
         $("#fechascupos").html("");
+        $("#horas_cupo").html("");
+
         axios.post(principalUrl + "cliente/fechasoficinas", datosoficinas )
         .then((respuesta) => {
             moment.locale("es");
