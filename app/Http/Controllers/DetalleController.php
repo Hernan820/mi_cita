@@ -158,13 +158,14 @@ class DetalleController extends Controller
      */
 
      public function store(Request $request){
-        $horaconcatenada= $request->horaReagendar.':'.$request->minutosReagendar;
 
-        if($request->oficinas === "oficina_virtual"){
+        $horaconcatenada= $request->hora_cita;
+
+        if($request->Id_oficina === "oficina_virtual"){
 
             $cita_telefono = DetalleCupo::join('clientes','clientes.id','=','detalle_cupos.id_cliente')
                                         ->select('clientes.*')
-                                        ->where('detalle_cupos.id','=',$request->cita_id)
+                                        ->where('detalle_cupos.id','=',$request->Id_cita)
                                         ->get();
 
             $telefono = $cita_telefono[0]->telefono;
@@ -187,14 +188,14 @@ class DetalleController extends Controller
              $horarionuevo = DB::connection('mysql2')->select("SELECT horarios.hora24,horarios.hora12,cupos_horarios.cant_citas AS cant_horarionuevo, cupos.cant_citas AS cant_horarioantiguo
                                         FROM cupos_horarios JOIN cupos ON cupos.id = cupos_horarios.id_cupo
                                         JOIN horarios ON horarios.id = cupos_horarios.id_horario
-                                        WHERE cupos_horarios.id_cupo = $request->fechascupos ;");
+                                        WHERE cupos_horarios.id_cupo = $request->Id_cupo ;");
 
             if($horarionuevo[0]->cant_horarioantiguo != null){
 
                 $contadorCitas = DB::connection('mysql2')
                     ->table('detalle_cupos')
                     ->join("cupos", "cupos.id", "=", "detalle_cupos.id_cupo")
-                    ->where("detalle_cupos.id_cupo", "=", $request->fechascupos)
+                    ->where("detalle_cupos.id_cupo", "=", $request->Id_cupo)
                     ->where("detalle_cupos.hora", "=", $horaconcatenada.':00')
                     ->where(function ($query) {
                         $query->where("detalle_cupos.id_estado", "!=", 3)
@@ -203,7 +204,7 @@ class DetalleController extends Controller
                     })
                     ->count();
 
-                if($contadorCitas >= $request->num_citas){
+                if($contadorCitas >= $request->TotalCitasHora){
                     return response()->json(['validacion' => $validacion = 2, 'id_citanueva' =>  $id_citanueva = ''],200);
                 }
 
@@ -212,7 +213,7 @@ class DetalleController extends Controller
                 $contadorCitas = DB::connection('mysql2')
                 ->table('detalle_cupos')
                 ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
-                ->where('detalle_cupos.id_cupo', $request->fechascupos)
+                ->where('detalle_cupos.id_cupo', $request->Id_cupo)
                 ->where('detalle_cupos.hora', $horaconcatenada.':00')
                 ->whereNotIn('detalle_cupos.id_estado', [2, 3])
                 ->whereNull('detalle_cupos.estado_cupo')
@@ -243,7 +244,7 @@ class DetalleController extends Controller
             ->table('clientes')
             ->join('detalle_cupos', 'detalle_cupos.id_cliente', '=', 'clientes.id')
             ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
-            ->where('detalle_cupos.id_cupo', '=', $request->fechascupos)
+            ->where('detalle_cupos.id_cupo', '=', $request->Id_cupo)
             ->where('clientes.telefono', '=', $telefono)
             ->where(function ($query) {
                 $query->where('detalle_cupos.id_estado', '!=', 3)
@@ -258,11 +259,11 @@ class DetalleController extends Controller
 
             $cupo_oficina = DB::connection('mysql2')->table('cupos')
                         ->join("oficinas", "oficinas.id", "=", "cupos.id_oficina")
-                        ->where("cupos.id","=", $request->fechascupos)
+                        ->where("cupos.id","=", $request->Id_cupo)
                         ->get();
 
             $datos_cliente = DetalleCupo::join("clientes", "clientes.id", "=", "detalle_cupos.id_cliente")
-                ->where("detalle_cupos.id","=",$request->cita_id)
+                ->where("detalle_cupos.id","=",$request->Id_cita)
                 ->get();
 
 
@@ -276,10 +277,10 @@ class DetalleController extends Controller
                     'estado_cliente' => $datos_cliente[0]->estado_cliente
                 ]);
 
-            $citafisicaactual = DetalleCupo::find($request->cita_id);
+            $citafisicaactual = DetalleCupo::find($request->Id_cita);
 
             $detallecupo = DB::connection('mysql2')->table('detalle_cupos')->insertGetId([
-                'id_cupo' => $request->fechascupos,
+                'id_cupo' => $request->Id_cupo,
                 'id_cliente' => $cliente,
                 'id_estado' => 4,
                 'id_usuario' => $citafisicaactual->id_usuario,
@@ -296,7 +297,7 @@ class DetalleController extends Controller
                 'accion' => 'Cita reagendada a cita virtual por el cliente',
                 'estado' => 'reagendado',
                 'usuario' => 'Cliente - '.$datos_cliente[0]->nombre,
-                'id_cita' => $request->cita_id,
+                'id_cita' => $request->Id_cita,
             ]);
                                     
             $bitacora = DB::connection('mysql2')->table('bitacoras')->insert([
@@ -319,7 +320,7 @@ class DetalleController extends Controller
             ->table('detalle_cupos')
             ->join('clientes', 'clientes.id', '=', 'detalle_cupos.id_cliente')
             ->select('clientes.*')
-            ->where('detalle_cupos.id', '=', $request->cita_id)
+            ->where('detalle_cupos.id', '=', $request->Id_cita)
             ->get();
 
             $telefono = $cita_telefono[0]->telefono;
@@ -342,14 +343,14 @@ class DetalleController extends Controller
              $horarionuevo = DB::connection('mysql')->select("SELECT horarios.hora24,horarios.hora12,cupos_horarios.cant_citas AS cant_horarionuevo, cupos.cant_citas AS cant_horarioantiguo
                                         FROM cupos_horarios JOIN cupos ON cupos.id = cupos_horarios.id_cupo
                                         JOIN horarios ON horarios.id = cupos_horarios.id_horario
-                                        WHERE cupos_horarios.id_cupo = $request->fechascupos ;");
+                                        WHERE cupos_horarios.id_cupo = $request->Id_cupo ;");
 
             if($horarionuevo[0]->cant_horarioantiguo != null){
 
                 $contadorCitas = DB::connection('mysql')
                     ->table('detalle_cupos')
                     ->join("cupos", "cupos.id", "=", "detalle_cupos.id_cupo")
-                    ->where("detalle_cupos.id_cupo", "=", $request->fechascupos)
+                    ->where("detalle_cupos.id_cupo", "=", $request->Id_cupo)
                     ->where("detalle_cupos.hora", "=", $horaconcatenada.':00')
                     ->where(function ($query) {
                         $query->where("detalle_cupos.id_estado", "!=", 3)
@@ -358,7 +359,7 @@ class DetalleController extends Controller
                     })
                     ->count();
 
-                if($contadorCitas >= $request->num_citas){
+                if($contadorCitas >= $request->TotalCitasHora){
                     return response()->json(['validacion' => $validacion = 2, 'id_citanueva' =>  $id_citanueva = ''],200);
                 }
 
@@ -367,7 +368,7 @@ class DetalleController extends Controller
                 $contadorCitas = DB::connection('mysql')
                 ->table('detalle_cupos')
                 ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
-                ->where('detalle_cupos.id_cupo', $request->fechascupos)
+                ->where('detalle_cupos.id_cupo', $request->Id_cupo)
                 ->where('detalle_cupos.hora', $horaconcatenada.':00')
                 ->whereNotIn('detalle_cupos.id_estado', [2, 3])
                 ->whereNull('detalle_cupos.estado_cupo')
@@ -397,7 +398,7 @@ class DetalleController extends Controller
             ->table('clientes')
             ->join('detalle_cupos', 'detalle_cupos.id_cliente', '=', 'clientes.id')
             ->join('cupos', 'cupos.id', '=', 'detalle_cupos.id_cupo')
-            ->where('detalle_cupos.id_cupo', '=', $request->fechascupos)
+            ->where('detalle_cupos.id_cupo', '=', $request->Id_cupo)
             ->where('clientes.telefono', '=', $telefono)
             ->where(function ($query) {
                 $query->where('detalle_cupos.id_estado', '!=', 3)
@@ -412,13 +413,13 @@ class DetalleController extends Controller
 
             $cupo_oficina = DB::connection('mysql')->table('cupos')
                         ->join("oficinas", "oficinas.id", "=", "cupos.id_oficina")
-                        ->where("cupos.id","=", $request->fechascupos)
+                        ->where("cupos.id","=", $request->Id_cupo)
                         ->get();
 
             $datos_cliente = DB::connection('mysql2')
             ->table('detalle_cupos')
             ->join('clientes', 'clientes.id', '=', 'detalle_cupos.id_cliente')
-            ->where('detalle_cupos.id', '=', $request->cita_id)
+            ->where('detalle_cupos.id', '=', $request->Id_cita)
             ->get();
 
                 $cliente = DB::connection('mysql')->table('clientes')->insertGetId([
@@ -432,7 +433,7 @@ class DetalleController extends Controller
                 ]);
 
             $detallecupo = DB::connection('mysql')->table('detalle_cupos')->insertGetId([
-                'id_cupo' => $request->fechascupos,
+                'id_cupo' => $request->Id_cupo,
                 'id_cliente' => $cliente,
                 'id_estado' => 4,
                 'id_usuario' => $datos_cliente[0]->id_usuario,
@@ -441,7 +442,7 @@ class DetalleController extends Controller
             ]);
 
            DB::connection('mysql2')->table('detalle_cupos')
-            ->where('id', $request->cita_id)
+            ->where('id', $request->Id_cita)
             ->update([
                 'id_estado' => 3,
                 'descripcion' => "La cita ha sido reagendada por el cliente a " . $cupo_oficina[0]->nombre . " para la fecha " . date('d-m-Y', strtotime($cupo_oficina[0]->start))
@@ -452,7 +453,7 @@ class DetalleController extends Controller
                 'accion' => 'Cita reagendada a cita virtual por el cliente',
                 'estado' => 'reagendado',
                 'usuario' => 'Cliente - '.$datos_cliente[0]->nombre,
-                'id_cita' => $request->cita_id,
+                'id_cita' => $request->Id_cita,
             ]);
                                     
             $bitacora = DB::connection('mysql')->table('bitacoras')->insert([
