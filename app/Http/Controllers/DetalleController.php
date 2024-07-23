@@ -181,7 +181,7 @@ class DetalleController extends Controller
             INNER JOIN cupos ON cupos.id = detalle_cupos.id_cupo
             WHERE clientes.telefono = '$telefono' AND detalle_cupos.estado_cupo IS NULL AND cupos.start > '$fechahaceunano' AND detalle_cupos.id_estado IN(2,3,5);");
 
-                if( $historial[0]->total_registros >= 3){
+                if( $historial[0]->total_registros >= 10){
                     return response()->json(['validacion' => $validacion = 55, 'id_citanueva' =>  $id_citanueva = ''],200);
                 }
 
@@ -267,15 +267,15 @@ class DetalleController extends Controller
                 ->get();
 
 
-                $cliente = DB::connection('mysql2')->table('clientes')->insertGetId([
-                    'nombre' => $datos_cliente[0]->nombre,
-                    'apellidos' => $datos_cliente[0]->apellidos,
-                    'direccion' => $datos_cliente[0]->direccion,
-                    'correo' => $datos_cliente[0]->correo,
-                    'telefono2' => $datos_cliente[0]->telefono2,
-                    'telefono' => $datos_cliente[0]->telefono,
-                    'estado_cliente' => $datos_cliente[0]->estado_cliente
-                ]);
+            $cliente = DB::connection('mysql2')->table('clientes')->insertGetId([
+                'nombre' => $datos_cliente[0]->nombre,
+                'apellidos' => $datos_cliente[0]->apellidos,
+                'direccion' => $datos_cliente[0]->direccion,
+                'correo' => $datos_cliente[0]->correo,
+                'telefono2' => $datos_cliente[0]->telefono2,
+                'telefono' => $datos_cliente[0]->telefono,
+                'estado_cliente' => $datos_cliente[0]->estado_cliente
+            ]);
 
             $citafisicaactual = DetalleCupo::find($request->Id_cita);
 
@@ -311,10 +311,67 @@ class DetalleController extends Controller
             $idcliente =  base64_encode($cliente);
             $validacion = 1;
 
+
+            $datosMensaje = DB::connection('mysql2')->table('detalle_cupos')
+            ->select("detalle_cupos.hora","cupos.start","oficinas.direccion","users.name","clientes.telefono")
+            ->join("cupos","cupos.id","=","detalle_cupos.id_cupo")
+            ->join("oficinas","oficinas.id","=","cupos.id_oficina")
+            ->join("users","users.id","=","detalle_cupos.id_usuario")
+            ->join("clientes","clientes.id","=","detalle_cupos.id_cliente")
+            ->where("detalle_cupos.id","=",$detallecupo)
+            ->first();
+
+            $fechatexto= Carbon::parse($datosMensaje->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y');
+            $hora = Carbon::parse($datosMensaje->hora)->format('h:i A');
+            $oficina_reagendada = $datosMensaje->direccion;
+
+            $horamedia = explode(" ", $hora);
+            if($horamedia[1] == "PM"){
+               $horatexto= $horamedia[0]." de la tarde"; 
+            }else if($horamedia[1] == "AM"){
+                $horatexto= $horamedia[0]." de la mañana"; 
+            }
+        
+            $msg="¡Hola! le saluda $datosMensaje->name de parte de *Contigo Mortgage*  🏠✅
+
+Su cita ha sido reagendada a una cita virtual para el día $fechatexto a las $horatexto
+
+*Los documentos requeridos para personas con social:*
+
+✅ Comprobantes de taxes del 2022
+✅ Comprobantes de taxes del 2023
+✅ Documento de identificación, puede ser la licencia o el pasaporte
+✅ Copia de Social Security Number 
+✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
+
+*Los documentos requeridos para PERSONAS CON TAX ID:*
+
+✅ COPIA DE SU TAX ID
+✅ Documento de identificación, puede ser la licencia o el pasaporte
+✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
+✅ Pasaporte (6 meses de vigencia minina)
+
+¡Estos documentos son por cada persona interesada en comprar la casa!
+
+*Por favor ayúdanos a confirmar tu asistencia a través de este whatsapp y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos.*
+
+Cualquier consulta puedes llamarnos al 631-609-9108
+
+Si tiene alguna duda estoy a la orden✅
+
+Conócenos:
+
+https://youtube.com/shorts/s50aV7Mv29s?feature=share 
+            ";
+                        
+            $telefono = "1" . preg_replace("/[^0-9]/", "", $datosMensaje->telefono );
+            $result = $this->EnviaMessageWA($telefono, $msg, $this->tipo);
+
             return response()->json(['validacion' => $validacion , 'id_citanueva' =>  $id_citanueva = $idcliente],200);
 
         }else{
- //   NUEVA CITA FISICA DESDE LA CITA FISICA      
+
+           // NUEVA CITA FISICA DESDE LA CITA FISICA      
                
             $cita_telefono = DB::connection('mysql2')
             ->table('detalle_cupos')
@@ -336,7 +393,7 @@ class DetalleController extends Controller
             INNER JOIN cupos ON cupos.id = detalle_cupos.id_cupo
             WHERE clientes.telefono = '$telefono' AND detalle_cupos.estado_cupo IS NULL AND cupos.start > '$fechahaceunano' AND detalle_cupos.id_estado IN(2,3,5);");
 
-                if( $historial[0]->total_registros >= 3){
+                if( $historial[0]->total_registros >= 33){
                     return response()->json(['validacion' => $validacion = 55, 'id_citanueva' =>  $id_citanueva = ''],200);
                 }
 
@@ -463,6 +520,64 @@ class DetalleController extends Controller
                 'usuario' => 'Cliente - '.$datos_cliente[0]->nombre,
                 'id_cita' => $detallecupo,
             ]);
+
+            $datosMensaje = DB::connection('mysql')->table('detalle_cupos')
+            ->select("detalle_cupos.hora","cupos.start","oficinas.direccion","users.name","clientes.telefono")
+            ->join("cupos","cupos.id","=","detalle_cupos.id_cupo")
+            ->join("oficinas","oficinas.id","=","cupos.id_oficina")
+            ->join("users","users.id","=","detalle_cupos.id_usuario")
+            ->join("clientes","clientes.id","=","detalle_cupos.id_cliente")
+            ->where("detalle_cupos.id","=",$detallecupo)
+            ->first();
+
+            $fechatexto= Carbon::parse($datosMensaje->start)->locale('es')->isoformat('dddd D \d\e MMMM \d\e\l Y');
+            $hora = Carbon::parse($datosMensaje->hora)->format('h:i A');
+            $oficina_reagendada = $datosMensaje->direccion;
+
+            $horamedia = explode(" ", $hora);
+            if($horamedia[1] == "PM"){
+               $horatexto= $horamedia[0]." de la tarde"; 
+            }else if($horamedia[1] == "AM"){
+                $horatexto= $horamedia[0]." de la mañana"; 
+            }
+        
+            $msg="¡Hola! le saluda $datosMensaje->name de parte de *Contigo Mortgage*  🏠✅
+
+Su cita ha sido reagendada a una cita física para el día $fechatexto a las $horatexto
+
+La dirección de nuestra oficina es 
+📍 $oficina_reagendada
+
+*Los documentos requeridos para personas con social:*
+
+✅ Comprobantes de taxes del 2022
+✅ Comprobantes de taxes del 2023
+✅ Documento de identificación, puede ser la licencia o el pasaporte
+✅ Copia de Social Security Number 
+✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
+
+*Los documentos requeridos para PERSONAS CON TAX ID:*
+
+✅ COPIA DE SU TAX ID
+✅ Documento de identificación, puede ser la licencia o el pasaporte
+✅ Los últimos 3 estado de cuenta bancario donde se refleje el Down-payment
+✅ Pasaporte (6 meses de vigencia minina)
+
+¡Estos documentos son por cada persona interesada en comprar la casa!
+
+*Por favor ayúdanos a confirmar tu asistencia a través de este whatsapp y atenderte de la mejor manera. Será un gusto tenerte en nuestra oficina, te esperamos.*
+
+Cualquier consulta puedes llamarnos al 631-609-9108
+
+Si tiene alguna duda estoy a la orden✅
+
+Conócenos:
+
+https://youtube.com/shorts/s50aV7Mv29s?feature=share 
+            ";
+
+            $telefono = "1" . preg_replace("/[^0-9]/", "", $datosMensaje->telefono );
+            $result = $this->EnviaMessageWA($telefono, $msg, $this->tipo);
 
             $idcliente =  base64_encode($cliente);
             $validacion = 1;
