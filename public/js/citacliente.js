@@ -409,9 +409,11 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
             cancelButtonText: "Cancelar",
         }).then((result) => {
             if (result.isConfirmed) {
+                mostrarAnimacion("Reagendando Cita");
                 $('#btnReagendar').attr('disabled', true);
                 axios.post(principalUrl + "crear/citafisica", reagendaCita)
-                    .then((respuesta) => {  
+                    .then((respuesta) => { 
+                        Swal.close(); 
                         $('#btnReagendar').attr('disabled', false);
                         if(respuesta.data.validacion == 1){
                             Swal.fire({
@@ -483,9 +485,11 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
             cancelButtonText: "Cancelar",
         }).then((result) => {
             if (result.isConfirmed) {
+                mostrarAnimacion("Reagendando Cita");
                 $('#btnReagendar').attr('disabled', true);
                 axios.post(principalUrl + "crear/citafisica", reagendaCita)
                     .then((respuesta) => {  
+                        Swal.close();
                         $('#btnReagendar').attr('disabled', false);
                         if(respuesta.data.validacion == 1){
                             Swal.fire({
@@ -557,9 +561,11 @@ document.getElementById("btnReagendar").addEventListener("click", function () {
         cancelButtonText: "Cancelar",
     }).then((result) => {
         if (result.isConfirmed) {
+            mostrarAnimacion("Reagendando Cita");
             $('#btnReagendar').attr('disabled', true);
             axios.post(principalUrl + "cita/reagendar", reagendaCita)
                 .then((respuesta) => {
+                    Swal.close();
                     $('#btnReagendar').attr('disabled', false);
                     if(respuesta.data == 1){
                         Swal.fire({

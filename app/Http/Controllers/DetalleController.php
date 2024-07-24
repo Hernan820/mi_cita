@@ -920,11 +920,8 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
      */
     public function reagendar(Request $request)
     {
-
-
-  //-----------------------------------------------
-     //concatena hora
-     $horareagenda= $request->hora_cita;
+        //concatena hora
+        $horareagenda= $request->hora_cita;
 
          if($request->vista == 'fisica'){
 
@@ -947,7 +944,7 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
             WHERE clientes.telefono = '$telefono' AND detalle_cupos.estado_cupo IS NULL AND cupos.start > '$fechahaceunano' AND detalle_cupos.id_estado IN(2,3,5);");
     
 
-                if( $historial[0]->total_registros >= 3){
+                if( $historial[0]->total_registros >= 30){
                     return 55;
                 }
     
@@ -983,8 +980,8 @@ https://www.youtube.com/watch?v=UilV0wxXLaY&t=22s
                 $cita = DetalleCupo::find($request->Id_cita);
 
                 $contadorCitas = DetalleCupo::join("cupos", "cupos.id", "=", "detalle_cupos.id_cupo")
-                ->where("detalle_cupos.id_cupo", $cita->id_cupo)
-                ->where("detalle_cupos.hora", $horareagenda)
+                ->where("detalle_cupos.id_cupo", $request->Id_cupo)
+                ->where("detalle_cupos.hora", $horareagenda.":00")
                 ->whereNotIn("detalle_cupos.id_estado", [2, 3])
                 ->whereNull("detalle_cupos.estado_cupo")
                 ->count();
